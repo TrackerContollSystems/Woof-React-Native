@@ -81,9 +81,6 @@ export default function SignUp() {
         </Text>
         <View style={style.iconWrapper}>
           <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
-          <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
-          <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
-          <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
         </View>
       </View>
     </View>

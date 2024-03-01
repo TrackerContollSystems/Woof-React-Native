@@ -63,9 +63,6 @@ const Login = () => {
         <Text>Or log in with:</Text>
         <View style={style.iconWrapper}>
           <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
-          <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
-          <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
-          <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
         </View>
         <Text>
           No account yet ?
