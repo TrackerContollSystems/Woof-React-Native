@@ -5,15 +5,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import RootNavigation from "./navigation/RootNavigator";
 import TabNavigator from "./navigation/TabNavigator";
 import { Provider } from "react-redux";
+import { LanguageContextProvider } from "./Contexts/LanguageContext";
 import store from "./Store/Store";
 function App() {
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <RootNavigation />
-        <TabNavigator />
-      </NavigationContainer>
-    </Provider>
+    <LanguageContextProvider>
+      <Provider store={store}>
+        <NavigationContainer>
+          <RootNavigation />
+          <TabNavigator />
+        </NavigationContainer>
+      </Provider>
+    </LanguageContextProvider>
   );
 }
 

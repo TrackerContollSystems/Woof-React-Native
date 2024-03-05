@@ -1,15 +1,16 @@
 import Intro from "../screens/Introduction/Introduction";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../screens/Home/Home";
-import Login from "../screens/Auth/Login";
-import SignUp from "../screens/Auth/SignUp";
+import Login from "../screens/Auth/Login/Login";
+import SignUp from "../screens/Auth/SignUp/SignUp";
+import MoreSignUpInfio from "../screens/Auth/SignUp/MoreSignUpInfo";
+
 import Enter from "../screens/Enter/Enter";
 import React from "react";
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
 
   return (
-    // @ts-ignore
     <Stack.Navigator>
       <Stack.Screen
         name="Enter"
@@ -24,6 +25,7 @@ export default function RootNavigation({ children }: any) {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={SignUp} />
+      <Stack.Screen name="User Info" component={MoreSignUpInfio} />
       <Stack.Screen
         name="Intro"
         component={Intro}
