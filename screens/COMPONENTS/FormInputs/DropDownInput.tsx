@@ -5,9 +5,13 @@ import {
   StyleSheet,
   TextInput,
   Pressable,
+  Image,
 } from "react-native";
 import React, { FC, useState } from "react";
-
+// @ts-ignore
+import ArrowUp from "../../../assets/Icons/arrowUp.png";
+// @ts-ignore
+import ArrowDown from "../../../assets/Icons/arrowDown.png";
 type DropInputProp = {
   Data: any[];
   name: string;
@@ -21,11 +25,18 @@ const DropDownInput: FC<DropInputProp> = ({ Data, name, id }) => {
     val[name].toLowerCase().includes(search.toLowerCase())
   );
   return (
-    <View>
-      <Pressable onPress={() => setShowDropDown(!showDropDown)}>
+    <View style={styles.mainDiv}>
+      <Pressable
+        style={styles.pressableComp}
+        onPress={() => setShowDropDown(!showDropDown)}
+      >
         <TextInput onChangeText={(e) => setSearch(e)} placeholder="City" />
         <View>
-          <Text>ARROW</Text>
+          {showDropDown ? (
+            <Image style={styles.arrowIcon} source={ArrowUp} />
+          ) : (
+            <Image style={styles.arrowIcon} source={ArrowDown} />
+          )}
         </View>
       </Pressable>
 
@@ -33,7 +44,7 @@ const DropDownInput: FC<DropInputProp> = ({ Data, name, id }) => {
         <ScrollView style={styles.DropContainer}>
           {filteredData.map((val: any) => (
             <View style={styles.singleItem} key={val[id]}>
-              <Text style={{ fontSize: 20 }}>{val[name]}</Text>
+              <Text style={{ fontSize: 20, color: "gray" }}>{val[name]}</Text>
             </View>
           ))}
         </ScrollView>
@@ -42,15 +53,26 @@ const DropDownInput: FC<DropInputProp> = ({ Data, name, id }) => {
   );
 };
 const styles = StyleSheet.create({
+  mainDiv: {
+    display: "flex",
+    position: "relative",
+  },
+  pressableComp: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 1,
+  },
   DropContainer: {
     backgroundColor: "white",
     zIndex: 2,
-    top: 40,
-    left: 8,
+    top: 0,
+    left: 0,
     display: "flex",
     positioan: "absolute",
-    width: "95%",
-    maxHeighta: 200,
+    width: "100%",
+    maxHeight: 200,
     borderRadius: 20,
     gap: 40,
     paddingVertical: 20,
@@ -59,6 +81,10 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     alignItems: "center",
+  },
+  arrowIcon: {
+    width: 15,
+    height: 15,
   },
 });
 export default DropDownInput;
