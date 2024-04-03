@@ -16,21 +16,31 @@ type DropInputProp = {
   Data: any[];
   name: string;
   id: string;
+  setDispatch: any;
 };
 
-const DropDownInput: FC<DropInputProp> = ({ Data, name, id }) => {
+const DropDownInput: FC<DropInputProp> = ({ Data, name, id, setDispatch }) => {
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const [selectName, setSelectName] = useState("");
   const filteredData = Data.filter((val: any) =>
     val[name].toLowerCase().includes(search.toLowerCase())
   );
+  const handleDispatchSet = (id: any, name: string) => {
+    setDispatch(id);
+    setShowDropDown(false);
+    setSelectName(name);
+  };
   return (
     <View style={styles.mainDiv}>
       <Pressable
         style={styles.pressableComp}
         onPress={() => setShowDropDown(!showDropDown)}
       >
-        <TextInput onChangeText={(e) => setSearch(e)} placeholder="City" />
+        <TextInput
+          placeholder={selectName && selectName}
+          onChangeText={(e) => setSearch(e)}
+        />
         <View>
           {showDropDown ? (
             <Image style={styles.arrowIcon} source={ArrowUp} />
@@ -44,7 +54,12 @@ const DropDownInput: FC<DropInputProp> = ({ Data, name, id }) => {
         <ScrollView style={styles.DropContainer}>
           {filteredData.map((val: any) => (
             <View style={styles.singleItem} key={val[id]}>
-              <Text style={{ fontSize: 20, color: "gray" }}>{val[name]}</Text>
+              <Text
+                onPress={() => handleDispatchSet(val[id], val[name])}
+                style={{ fontSize: 20, color: "gray" }}
+              >
+                {val[name]}
+              </Text>
             </View>
           ))}
         </ScrollView>

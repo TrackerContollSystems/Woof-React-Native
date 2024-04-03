@@ -13,7 +13,7 @@ export const GetCoutnryData = createAsyncThunk("get/countries", async () => {
     console.log(res.data);
     return res.data;
   } catch (error) {
-    console.log("ERROR");
+    console.log(error);
     const err: any = error;
     throw new Error(err);
   }
@@ -30,6 +30,7 @@ export const GetGenderData = createAsyncThunk("get/gender", async () => {
     console.log(res.data);
     return res.data;
   } catch (error) {
+    console.log(error);
     const err: any = error;
     throw new Error(err);
   }

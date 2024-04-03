@@ -14,32 +14,53 @@ import closeEye from "../../../assets/Icons/find.png";
 import witness from "../../../assets/Icons/witness.png";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setName,
+  setEmail,
+  setPassword,
+  setPhoneNumber,
+} from "../../../Store/Auth/Auth.slice";
 
 export default function SignUp() {
   const [showPass, setShowPass] = useState(true);
   const navigation: any = useNavigation();
-
+  const dispatch = useDispatch();
+  const { name, email } = useSelector(
+    (state: any) => state.AuthSlice.userInputForm
+  );
   return (
     <View style={style.mainView}>
       <View style={style.multyInputWrapper}>
         <View style={style.inputWrapper}>
           <Text style={style.lable}>Full name</Text>
+
           <View>
-            <TextInput placeholder="jon doe" />
+            <TextInput
+              onChangeText={(text) => dispatch(setName(text))}
+              placeholder="jon doe"
+            />
             <View style={style.outLine}></View>
           </View>
         </View>
         <View style={style.inputWrapper}>
           <Text style={style.lable}>Phone Number</Text>
           <View>
-            <TextInput placeholder="+995 555 555" />
+            <TextInput
+              onChangeText={(e) => dispatch(setPhoneNumber(e))}
+              placeholder="+995 555 555"
+            />
             <View style={style.outLine}></View>
           </View>
         </View>
         <View style={style.inputWrapper}>
           <Text style={style.lable}>Email</Text>
+
           <View>
-            <TextInput placeholder="example@gmail.com" />
+            <TextInput
+              onChangeText={(text) => dispatch(setEmail(text))}
+              placeholder="example@gmail.com"
+            />
             <View style={style.outLine}></View>
           </View>
         </View>
@@ -47,7 +68,11 @@ export default function SignUp() {
           <Text style={style.lable}>Password</Text>
           <View>
             <View style={style.passwordInputWrapper}>
-              <TextInput secureTextEntry={showPass} placeholder="**********" />
+              <TextInput
+                onChangeText={(e) => dispatch(setPassword(e))}
+                secureTextEntry={showPass}
+                placeholder="**********"
+              />
               <View>
                 <TouchableOpacity onPress={() => setShowPass(!showPass)}>
                   <Image

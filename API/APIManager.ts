@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const ApiManager = axios.create({
-  baseURL: `http://192.168.1.111:5165/`,
+  baseURL: `https://pwdemo.mygps.ge:4542/`,
   responseType: "json",
   withCredentials: true,
   httpsAgent: {

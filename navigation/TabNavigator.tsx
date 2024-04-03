@@ -14,11 +14,15 @@ const TabNavigator = () => {
 
       {/* <Button title="Home" onPress={() => navigation.navigate(`Home`)} /> */}
 
+      {/* 
+      <Text onPress={() => navigation.navigate(`Signup`)} style={styles.btn}>
+        Signup
+      </Text> */}
       <Text onPress={() => navigation.navigate(`Login`)} style={styles.btn}>
         Login
       </Text>
-      <Text onPress={() => navigation.navigate(`Signup`)} style={styles.btn}>
-        Signup
+      <Text onPress={() => navigation.navigate(`Home`)} style={styles.btn}>
+        Home
       </Text>
     </View>
   );

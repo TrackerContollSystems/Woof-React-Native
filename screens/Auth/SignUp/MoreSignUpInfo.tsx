@@ -2,73 +2,140 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   Image,
   TouchableOpacity,
-  Button,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import {
   GetCoutnryData,
   GetGenderData,
 } from "../../../Store/RefrenceData/RefrenceData.Thunk";
+import { Register } from "../../../Store/Auth/Auth.Thunk";
 import DropDownInput from "../../COMPONENTS/FormInputs/DropDownInput";
+// @ts-ignore
+import loadingIcon from "../../../assets/Icons/dog-treat.png";
+import DateTimePicker from "@react-native-community/datetimepicker";
+// @ts-ignore
 
+import calendar from "../../../assets/Icons/calendar.png";
+import {
+  setCityId,
+  setBirthDate,
+  setGenderId,
+} from "../../../Store/Auth/Auth.slice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
 export default function MoreSignUpInfi() {
   const [showPass, setShowPass] = useState(true);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showPicker, setShowPicker] = useState(false);
+
+  const handleDateChange = (event: any, date: any) => {
+    console.log(date);
+    setShowPicker(Platform.OS === "ios");
+    if (date) {
+      dispatch(setBirthDate(date.toISOString().slice(0, 10)));
+      setSelectedDate(date);
+    }
+  };
+
+  const showDatepicker = () => {
+    setShowPicker(true);
+  };
+
+  const setCity = (id: number) => {
+    dispatch(setCityId(id));
+  };
+  const setGender = (id: number) => {
+    dispatch(setGenderId(id));
+  };
   const { RefrenceDataloading, genderData, cityData } = useSelector(
     (state: any) => state.RefrenceReducer
   );
+  const { userInputForm, loading } = useSelector(
+    (state: any) => state.AuthSlice
+  );
+  const { cityId, genderId } = userInputForm;
   const navigation: any = useNavigation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   useEffect(() => {
-    dispatch(GetCoutnryData());
-    dispatch(GetGenderData());
+    const GetToken = async () => {
+      dispatch(GetCoutnryData());
+      dispatch(GetGenderData());
+    };
+
+    GetToken();
   }, []);
-  //   const TestNest = async () => {
-  //     console.log("SOmething");
-  //     try {
-  //       console.log("TRY");
-  //       const res = await axios.get("http://192.168.1.111:5165/City/GetCities");
-  //       //   const res = await axios.get("http://192.168.1.111:3000/user/test");
-  //       //   const res = await axios.get("http://localhost:5165/City/GetCities");
-  //       console.log(res);
-  //     } catch (err: any) {
-  //       console.log("ERRO");
-  //       console.log(err.message);
-  //     }
-  //   };
+  const SignUp = () => {
+    dispatch(Register(userInputForm));
+    navigation.navigate(`Home`);
+  };
+  if (RefrenceDataloading || loading) {
+    return <LoadingAnimation />;
+  }
+
   return (
     <View style={style.mainView}>
+      {/* <Text onPress={() => console.log(cityData)}>TEST</Text> */}
       <View style={style.multyInputWrapper}>
-        {/* <Button title="test" onPress={() => dispatch(GetCoutnryData())} />
-        <Button title="test2" onPress={() => TestNest()} /> */}
-        <View style={style.inputWrapper}>
-          <Text style={style.lable}>Gender</Text>
-          <DropDownInput Data={cityData} id="cityId" name="cityName" />
-          <View>
-            <View style={style.outLine}></View>
-          </View>
-        </View>
+        {/* <Button title="test" onPress={() => dispatch(GetCoutnryData())} /> */}
+        {/*  <Button title="test2" onPress={() => TestNest()} /> */}
         <View style={style.inputWrapper}>
           <Text style={style.lable}>City</Text>
+          <DropDownInput
+            setDispatch={setCity}
+            Data={cityData}
+            id="cityId"
+            name="cityName"
+          />
           <View>
-            <TextInput placeholder="City" />
             <View style={style.outLine}></View>
           </View>
         </View>
         <View style={style.inputWrapper}>
-          <Text style={style.lable}>Date Of Birth</Text>
+          <Text style={style.lable}>Gender</Text>
           <View>
-            <TextInput placeholder="Date Of Birth" />
+            <DropDownInput
+              setDispatch={setGender}
+              Data={genderData}
+              id="genderId"
+              name="sex"
+            />
+
             <View style={style.outLine}></View>
           </View>
         </View>
-        <Text style={style.btn}>Create Account</Text>
+        <View style={style.inputWrapper}>
+          <TouchableOpacity
+            style={style.datePickerWrapper}
+            onPress={showDatepicker}
+          >
+            <Image style={style.calendarImg} source={calendar} />
+            <Text>Show Date Picker</Text>
+          </TouchableOpacity>
+
+          <View>
+            {showPicker && (
+              <DateTimePicker
+                value={selectedDate}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={handleDateChange}
+                style={style.datePicker}
+              />
+            )}
+            <View style={style.outLine}></View>
+          </View>
+        </View>
+        <Text onPress={() => SignUp()} style={style.btn}>
+          Create Account
+        </Text>
       </View>
     </View>
   );
@@ -115,5 +182,26 @@ const style = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 20,
+  },
+
+  image: {
+    width: 100,
+    height: 100,
+  },
+  datePicker: {
+    width: 200,
+    marginBottom: 20,
+  },
+  datePickerWrapper: {
+    display: "flex",
+    alignIiems: "center",
+
+    gap: 10,
+    paddingHorizontal: 2,
+    flexDirection: "row",
+  },
+  calendarImg: {
+    width: 25,
+    height: 25,
   },
 });

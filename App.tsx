@@ -7,14 +7,17 @@ import TabNavigator from "./navigation/TabNavigator";
 import { Provider } from "react-redux";
 import { LanguageContextProvider } from "./Contexts/LanguageContext";
 import store from "./Store/Store";
+import { AuthContextProvider } from "./Contexts/AuthContext";
 function App() {
   return (
     <LanguageContextProvider>
       <Provider store={store}>
-        <NavigationContainer>
-          <RootNavigation />
-          <TabNavigator />
-        </NavigationContainer>
+        <AuthContextProvider>
+          <NavigationContainer>
+            <RootNavigation />
+            <TabNavigator />
+          </NavigationContainer>
+        </AuthContextProvider>
       </Provider>
     </LanguageContextProvider>
   );
