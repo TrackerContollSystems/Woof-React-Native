@@ -1,6 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+// @ts-ignore
+import mailGif from "../../../assets/Gifs/mail.gif";
 import {
   setEmail,
   reSetError,
@@ -32,17 +42,29 @@ const EnterEmailStep: React.FC<Props> = ({ onNext }) => {
   };
 
   return (
-    <>
-      <Text style={styles.title}>Enter Your Email</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={(text) => dispatch(setEmail(text))}
-      />
-      <Button title="Submit" onPress={handleEmailEntered} />
-    </>
+    <View style={styles.firsStepView}>
+      <View style={styles.emailGifView}>
+        <Image style={styles.emailGifImg} source={mailGif} />
+      </View>
+      <View style={styles.firsStepViewWrapper}>
+        <View style={styles.textWrapper}>
+          <Text style={styles.title}>Forgot password?</Text>
+          <Text style={styles.paragraph}>
+            Don't worry! it happens, Please enter the email address associated
+            with your account
+          </Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => dispatch(setEmail(text))}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleEmailEntered}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -136,9 +158,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
   },
+  textWrapper: {
+    display: "flex",
+    alignItems: "center",
+    textAlign: "center",
+    color: "white",
+  },
+  paragraph: { color: "#2C3F51", fontSize: 17, textAlign: "center" },
   title: {
+    color: "#2C3F51",
     fontSize: 24,
     marginBottom: 20,
   },
@@ -149,11 +178,52 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     width: "100%",
+    backgroundColor: "white",
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  firsStepView: {
+    padding: 10,
+    position: "relative",
+    display: "flex",
+    justifyContent: "space-around",
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#ffcd38",
+  },
+  firsStepViewWrapper: {
+    display: "flex",
+    justifyContent: "space-around",
+    height: "60%",
+    top: 120,
+
+    width: "100%",
+  },
+  emailGifView: {
+    position: "absolute",
+    right: 130,
+    top: -70,
+  },
+  emailGifImg: {
+    width: 320,
+    height: 320,
+  },
+
+  // BUTTON
+  button: {
+    backgroundColor: "#2C3F51",
+
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#EBEEEF",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

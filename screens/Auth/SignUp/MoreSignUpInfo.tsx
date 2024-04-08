@@ -16,7 +16,7 @@ import {
 } from "../../../Store/RefrenceData/RefrenceData.Thunk";
 import { Register } from "../../../Store/Auth/Auth.Thunk";
 import DropDownInput from "../../COMPONENTS/FormInputs/DropDownInput";
-// @ts-ignore
+
 import loadingIcon from "../../../assets/Icons/dog-treat.png";
 import DateTimePicker from "@react-native-community/datetimepicker";
 // @ts-ignore
