@@ -28,10 +28,10 @@ export const PasswordRecoveryByEmail = createAsyncThunk(
 
 export const CheckConfirmationCode = createAsyncThunk(
   "get/sendcode",
-  async (code: string) => {
+  async (Code: string) => {
     try {
       const res: any = await ApiManager(
-        `Authentication/CheckConfirmationCode?code=${code}`,
+        `Authentication/CheckConfirmationCode?code=${Code}`,
         {
           method: "GET",
         }
@@ -56,10 +56,11 @@ export const ResetPasswordByAuthCode = createAsyncThunk(
       });
       const token = res.headers["set-cookie"][0].split(";")[0].split("=")[1];
       await AsyncStorage.setItem("token", token);
-      console.log(token);
-      const decodedUserInfo = jwt_decode(token);
-      console.log(decodedUserInfo);
-      dispatch(setDecodedUserInfo(decodedUserInfo));
+      console.log(res);
+      // const decodedUserInfo = jwt_decode(token);
+      // console.log(decodedUserInfo);
+      // dispatch(setDecodedUserInfo(decodedUserInfo));
+      return token
     } catch (error) {
       console.log(error);
       const err: any = error;

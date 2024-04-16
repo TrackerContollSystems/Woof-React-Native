@@ -16,6 +16,7 @@ export type initialStateType = {
   loading: boolean;
   success: string;
   error: string;
+  step: number;
 };
 
 const initialState: initialStateType = {
@@ -27,6 +28,7 @@ const initialState: initialStateType = {
   success: "",
   error: "",
   loading: false,
+  step: 1,
 };
 
 const RecoverySlice = createSlice({
@@ -42,8 +44,8 @@ const RecoverySlice = createSlice({
     setCode(state, action) {
       state.RecoveryObj.Code = action.payload;
     },
-    reSetError(state) {
-      state.error = "";
+    reSetError(state, action) {
+      state.error = action.payload;
     },
     reSetSuccsess(state) {
       state.success = "";
@@ -57,22 +59,26 @@ const RecoverySlice = createSlice({
       .addCase(PasswordRecoveryByEmail.fulfilled, (state, action) => {
         state.loading = false;
         state.success = `გთხოვთ შეამოწმოთ თქვენი ემაილი ${state.email}`;
+        state.step += 1;
       })
       .addCase(PasswordRecoveryByEmail.rejected, (state, action) => {
         state.loading = false;
-        // state.error = action.error.errors[0].Email
-        state.error = "error";
+        // state.error = action.error.errors[0].Email\
+        console.log(action.error);
+        state.error = "wrong email";
       })
       .addCase(CheckConfirmationCode.pending, (state, action) => {
         state.loading = true;
       })
       .addCase(CheckConfirmationCode.fulfilled, (state, action) => {
         state.loading = false;
+        state.step += 1;
         state.success = `კოდი გაიგზავნა`;
       })
       .addCase(CheckConfirmationCode.rejected, (state, action) => {
         state.loading = false;
-        state.error = "error";
+
+        state.error = "Code is not correct";
       })
       .addCase(ResetPasswordByAuthCode.pending, (state) => {
         state.loading = true;
@@ -83,7 +89,7 @@ const RecoverySlice = createSlice({
       })
       .addCase(ResetPasswordByAuthCode.rejected, (state) => {
         state.loading = false;
-        state.error = "კოდი არასწორია ";
+        state.error = "ერრორ ";
       });
   },
 });

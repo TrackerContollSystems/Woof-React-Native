@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,10 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Keyboard,
+  Platform,
+  ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 // @ts-ignore
@@ -34,37 +38,68 @@ interface Props {
 
 const EnterEmailStep: React.FC<Props> = ({ onNext }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const { email } = useSelector((state: any) => state.RecoveryReducer);
+  const { email, error } = useSelector((state: any) => state.RecoveryReducer);
 
   const handleEmailEntered = async () => {
-    await dispatch(PasswordRecoveryByEmail(email));
-    onNext();
+    if (email !== "") {
+      await dispatch(PasswordRecoveryByEmail(email));
+    } else {
+      dispatch(reSetError("Put Email"));
+    }
   };
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        if (scrollViewRef.current && scrollViewRef.current.scrollToEnd) {
+          scrollViewRef.current.scrollToEnd({ animated: true });
+        }
+      }
+    );
 
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const scrollViewRef = React.createRef() as unknown | any;
   return (
-    <View style={styles.firsStepView}>
-      <View style={styles.emailGifView}>
-        <Image style={styles.emailGifImg} source={mailGif} />
-      </View>
-      <View style={styles.firsStepViewWrapper}>
-        <View style={styles.textWrapper}>
-          <Text style={styles.title}>Forgot password?</Text>
-          <Text style={styles.paragraph}>
-            Don't worry! it happens, Please enter the email address associated
-            with your account
-          </Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        ref={scrollViewRef}
+      >
+        <View style={styles.firsStepView}>
+          <View style={styles.emailGifView}>
+            <Image style={styles.emailGifImg} source={mailGif} />
+          </View>
+          <View style={styles.firsStepViewWrapper}>
+            <View style={styles.textWrapper}>
+              <Text style={styles.title}>Forgot password?</Text>
+              <Text style={styles.paragraph}>
+                Don't worry! it happens, Please enter the email address
+                associated with your account
+              </Text>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => dispatch(setEmail(text))}
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleEmailEntered}
+            >
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => dispatch(setEmail(text))}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleEmailEntered}>
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -73,8 +108,11 @@ const EnterCodeStep: React.FC<Props> = ({ onNext }) => {
   const { RecoveryObj } = useSelector((state: any) => state.RecoveryReducer);
   const { Code } = RecoveryObj;
   const handleCodeEntered = async () => {
-    await dispatch(CheckConfirmationCode(Code));
-    onNext();
+    if (Code) {
+      await dispatch(CheckConfirmationCode(Code));
+    } else {
+      dispatch(reSetError("Please Enter Code"));
+    }
   };
 
   return (
@@ -100,8 +138,12 @@ const EnterNewPasswordStep: React.FC = () => {
   const { NewPassword, Code } = RecoveryObj as RecoveryType;
 
   const handleResetPassword = async () => {
-    await dispatch(ResetPasswordByAuthCode({ NewPassword, Code }));
-    navigation.navigate(`Home`);
+    if (NewPassword && Code) {
+      await dispatch(ResetPasswordByAuthCode({ NewPassword, Code }));
+      navigation.navigate(`Home`);
+    } else {
+      dispatch(reSetError("Please provide new password"));
+    }
   };
 
   return (
@@ -123,13 +165,15 @@ const ForgotPassword: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const reSetStatus = (type: string) => {
     if (type == "error") {
-      dispatch(reSetError());
+      dispatch(reSetError(""));
     } else if (type == "succsess") {
       dispatch(reSetSuccsess());
     }
   };
   const handleNextStep = () => {
-    setStep((prevStep) => prevStep + 1);
+    if (!error) {
+      setStep((prevStep) => prevStep + 1);
+    }
   };
   const { loading, error, success } = useSelector(
     (state: any) => state.RecoveryReducer
@@ -141,8 +185,8 @@ const ForgotPassword: React.FC = () => {
     return (
       <View style={styles.container}>
         {step === 1 && <EnterEmailStep onNext={handleNextStep} />}
-        {step === 2 && <EnterCodeStep onNext={handleNextStep} />}
-        {step === 3 && <EnterNewPasswordStep />}
+        {!error && step === 2 && <EnterCodeStep onNext={handleNextStep} />}
+        {!error && step === 3 && <EnterNewPasswordStep />}
         <ErrorPopup message={error} onClose={() => reSetStatus("error")} />
         <SuccessPopup
           message={success}
@@ -154,10 +198,14 @@ const ForgotPassword: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#ffcd38",
   },
   textWrapper: {
     display: "flex",
