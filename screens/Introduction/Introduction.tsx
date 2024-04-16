@@ -4,9 +4,11 @@ import {
   View,
   Text,
   StyleSheet,
+  Button,
   Image,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,8 +38,24 @@ export default function Intro() {
       setIndex(newIndex);
     }
   };
+
+  const handleSkip = () => {
+    console.log(authUser);
+    if (authUser.email) {
+      navigation.navigate(`Home`);
+    } else {
+      navigation.navigate(`Signup`);
+    }
+  };
   return (
     <View style={style.mainView}>
+      <View style={style.skipText}>
+        <Button
+          color="green"
+          title="skip"
+          onPress={() => console.log("pressed button")}
+        />
+      </View>
       <ScrollView
         horizontal
         pagingEnabled
@@ -46,6 +64,10 @@ export default function Intro() {
         scrollEventThrottle={16}
         ref={scrollRef}
       >
+        {/* აქ მუშაობს ზევით არა ლოგი */}
+        {/* <Text style={style.skipText} onPress={() => console.log("PRESS")}>
+          LOG TEST
+        </Text> */}
         {IntroData.map((item, idx) => (
           <View style={[style.slide, { width: width }]} key={idx}>
             <View style={style.imgContainer}>
@@ -113,6 +135,14 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  skipText: {
+    fontSize: 20,
+    left: 100,
+    top: 50,
+    width: 80,
+    height: 30,
+    backgroundColor: "red",
   },
   textAndImgWrapper: {
     display: "flex",

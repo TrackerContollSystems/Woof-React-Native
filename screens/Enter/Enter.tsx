@@ -19,7 +19,7 @@ export default function Enter() {
   }, []);
   const enterHandler = () => {
     console.log(authUser);
-    if (authUser && authUser.email) {
+    if (authUser.email) {
       navigation.navigate(`Home`);
     } else {
       navigation.navigate(`Intro`);

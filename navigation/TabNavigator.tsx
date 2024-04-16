@@ -7,15 +7,14 @@ const TabNavigator = () => {
 
   return (
     <View>
-      {/* <Text onPress={() => navigation.navigate(`Enter`)}>VIDEO</Text>
+      <Text onPress={() => navigation.navigate(`Enter`)}>VIDEO</Text>
       <Text onPress={() => navigation.navigate(`Intro`)} style={styles.btn}>
         Intro
-      </Text> */}
+      </Text>
 
       {/* <Button title="Home" onPress={() => navigation.navigate(`Home`)} /> */}
 
-      {/* 
-      <Text onPress={() => navigation.navigate(`Signup`)} style={styles.btn}>
+      {/* <Text onPress={() => navigation.navigate(`Signup`)} style={styles.btn}>
         Signup
       </Text> */}
       <Text onPress={() => navigation.navigate(`Login`)} style={styles.btn}>
