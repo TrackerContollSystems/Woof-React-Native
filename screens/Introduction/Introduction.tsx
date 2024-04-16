@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IntroData } from "./IntroData";
 import {
   View,
@@ -9,17 +9,24 @@ import {
   Dimensions,
 } from "react-native";
 import Swiper from "react-native-swiper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { UseAuthContext } from "../../Contexts/AuthContext";
 
 export default function Intro() {
+  const { isUserLoggedIn } = UseAuthContext();
   const [index, setIndex] = useState<number>(0);
+
   const NextFun = () => {
     setIndex((state: number) =>
       state < IntroData.length - 1 ? state + 1 : (state = 0)
     );
   };
+  const navigation: any = useNavigation();
 
   const width = Dimensions.get("window").width;
   const scrollRef: any = useRef(null) as any | unknown;
+
   const handleScroll = (event: any) => {
     const slideWidth = event.nativeEvent.layoutMeasurement.width;
     const xOffset = event.nativeEvent.contentOffset.x;
@@ -84,9 +91,14 @@ export default function Intro() {
         onPress={() => {
           if (index < IntroData.length - 1) {
             const newIndex = index + 1;
+
             scrollRef.current.scrollTo({ x: newIndex * width, animated: true });
           } else {
-            console.log("Handle last slide logic here");
+            if (isUserLoggedIn) {
+              navigation.navigate("Home");
+            } else {
+              navigation.navigate("Signup");
+            }
           }
         }}
       >

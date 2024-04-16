@@ -17,8 +17,7 @@ import {
 import { Register } from "../../../Store/Auth/Auth.Thunk";
 import DropDownInput from "../../COMPONENTS/FormInputs/DropDownInput";
 
-import loadingIcon from "../../../assets/Icons/dog-treat.png";
-import DateTimePicker from "@react-native-community/datetimepicker";
+ import DateTimePicker from "@react-native-community/datetimepicker";
 // @ts-ignore
 
 import calendar from "../../../assets/Icons/calendar.png";
@@ -56,7 +55,7 @@ export default function MoreSignUpInfi() {
   const { RefrenceDataloading, genderData, cityData } = useSelector(
     (state: any) => state.RefrenceReducer
   );
-  const { userInputForm, loading } = useSelector(
+  const { userInputForm, loading, error, success } = useSelector(
     (state: any) => state.AuthSlice
   );
   const { cityId, genderId } = userInputForm;

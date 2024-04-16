@@ -7,8 +7,8 @@ const Home = () => {
   const userAuth = useSelector((state: any) => state.AuthSlice.authUser);
   const dispatch = useDispatch();
   const logout = async () => {
-    await AsyncStorage.clear();
-
+    
+    await AsyncStorage.setItem('token', '')
     dispatch(setDecodedUserInfo({}));
     console.log("LOG OUT");
   };

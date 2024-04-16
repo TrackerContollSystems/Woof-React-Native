@@ -3,8 +3,12 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { Video, ResizeMode } from "expo-av";
+import { UseAuthContext } from "../../Contexts/AuthContext";
+import { useSelector } from "react-redux";
 
 export default function Enter() {
+  const { isUserLoggedIn } = UseAuthContext();
+
   const video: any = React.useRef(null);
   const navigation: any = useNavigation();
 
@@ -13,7 +17,14 @@ export default function Enter() {
     setI([false, true][Math.floor(Math.random() * 2)]);
     video.current.playAsync();
   }, []);
-
+  const enterHandler = () => {
+    console.log(isUserLoggedIn);
+    if (isUserLoggedIn) {
+      navigation.navigate(`Home`);
+    } else {
+      navigation.navigate(`Intro`);
+    }
+  };
   return (
     <View style={styles.container}>
       <View
@@ -45,7 +56,7 @@ export default function Enter() {
           />
         )}
       </View>
-      <Text onPress={() => navigation.navigate(`Intro`)} style={styles.btn}>
+      <Text onPress={enterHandler} style={styles.btn}>
         Let's Go
       </Text>
     </View>

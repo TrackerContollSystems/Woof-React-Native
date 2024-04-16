@@ -1,4 +1,10 @@
-import React, { ReactNode, createContext, useContext, useEffect } from "react";
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { setDecodedUserInfo } from "../Store/Auth/Auth.slice";
 import { useDispatch, useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
@@ -7,28 +13,44 @@ type AuthChildren = {
   children: ReactNode;
 };
 
-type Cell = {};
+type Cell = {
+  isUserLoggedIn: any;
+};
 
 const AuthContext = createContext<Cell | null>(null);
 
 export const AuthContextProvider = ({ children }: AuthChildren) => {
   const dispatch = useDispatch();
-  const { userAuth } = useSelector((state: any) => state.AuthSlice);
+  const { authUser } = useSelector((state: any) => state.AuthSlice);
+  const [isUserLoggedIn, setisUserLoggedIn] = useState<any>();
 
   useEffect(() => {
-    if (!userAuth) {
+    const getToken = async () => {
+      const localStorageToken = await AsyncStorage.getItem("token");
+
+      setisUserLoggedIn(localStorageToken);
+    };
+    getToken();
+  }, []);
+  useEffect(() => {
+    console.log(authUser);
+    if (!authUser) {
       const getTokenFromLocal: any = async () => {
         let token = await AsyncStorage.getItem("token");
         if (token) {
           const decodedToken = jwt_decode(token);
-
+          console.log(token);
           dispatch(setDecodedUserInfo(decodedToken));
         }
       };
       getTokenFromLocal();
     }
   }, []);
-  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ isUserLoggedIn }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const UseAuthContext = () => {
