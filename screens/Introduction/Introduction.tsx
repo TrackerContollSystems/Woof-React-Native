@@ -12,10 +12,11 @@ import Swiper from "react-native-swiper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { UseAuthContext } from "../../Contexts/AuthContext";
+import { useSelector } from "react-redux";
 
 export default function Intro() {
-  const { isUserLoggedIn } = UseAuthContext();
   const [index, setIndex] = useState<number>(0);
+  const { authUser } = useSelector((state: any) => state.AuthSlice);
 
   const NextFun = () => {
     setIndex((state: number) =>
@@ -94,7 +95,7 @@ export default function Intro() {
 
             scrollRef.current.scrollTo({ x: newIndex * width, animated: true });
           } else {
-            if (isUserLoggedIn) {
+            if (authUser && authUser.email) {
               navigation.navigate("Home");
             } else {
               navigation.navigate("Signup");

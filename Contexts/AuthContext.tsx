@@ -34,7 +34,7 @@ export const AuthContextProvider = ({ children }: AuthChildren) => {
   }, []);
   useEffect(() => {
     console.log(authUser);
-    if (!authUser) {
+    if (!authUser.email) {
       const getTokenFromLocal: any = async () => {
         let token = await AsyncStorage.getItem("token");
         if (token) {

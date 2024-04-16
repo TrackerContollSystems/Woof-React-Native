@@ -7,7 +7,7 @@ import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useSelector } from "react-redux";
 
 export default function Enter() {
-  const { isUserLoggedIn } = UseAuthContext();
+  const { authUser } = useSelector((state: any) => state.AuthSlice);
 
   const video: any = React.useRef(null);
   const navigation: any = useNavigation();
@@ -18,8 +18,8 @@ export default function Enter() {
     video.current.playAsync();
   }, []);
   const enterHandler = () => {
-    console.log(isUserLoggedIn);
-    if (isUserLoggedIn) {
+    console.log(authUser);
+    if (authUser && authUser.email) {
       navigation.navigate(`Home`);
     } else {
       navigation.navigate(`Intro`);
