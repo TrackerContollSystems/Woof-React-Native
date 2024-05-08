@@ -6,8 +6,8 @@ import {
 } from "./PasswordRecovery.thunk";
 
 export type RecoveryType = {
-  NewPassword: string;
-  Code: number | null;
+  newPassword: string;
+  code: number | null;
 };
 
 export type initialStateType = {
@@ -21,8 +21,8 @@ export type initialStateType = {
 
 const initialState: initialStateType = {
   RecoveryObj: {
-    NewPassword: "",
-    Code: null,
+    newPassword: "",
+    code: null,
   },
   email: "",
   success: "",
@@ -39,10 +39,10 @@ const RecoverySlice = createSlice({
       state.email = action.payload;
     },
     setNewPassword(state, action) {
-      state.RecoveryObj.NewPassword = action.payload;
+      state.RecoveryObj.newPassword = action.payload;
     },
     setCode(state, action) {
-      state.RecoveryObj.Code = action.payload;
+      state.RecoveryObj.code = action.payload;
     },
     reSetError(state, action) {
       state.error = action.payload;
@@ -89,7 +89,7 @@ const RecoverySlice = createSlice({
       })
       .addCase(ResetPasswordByAuthCode.rejected, (state) => {
         state.loading = false;
-        state.error = "ერრორ ";
+        state.error = "შეცდომა ";
       });
   },
 });

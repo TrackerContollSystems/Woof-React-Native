@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // @ts-ignore
 import GooglePlus from "../../../assets/Icons/google-plus.png";
 import {
@@ -14,15 +14,20 @@ import closeEye from "../../../assets/Icons/find.png";
 // @ts-ignore
 import witness from "../../../assets/Icons/witness.png";
 import { useNavigation } from "@react-navigation/native";
-import { setEmail, setPassword } from "../../../Store/Auth/Auth.slice";
+import {
+  setEmail,
+  setPassword,
+  setReSetError,
+} from "../../../Store/Auth/Auth.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 import { LoginThunk } from "../../../Store/Auth/Auth.Thunk";
 import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
+import { ErrorPopup, SuccessPopup } from "../../COMPONENTS/Status/StatusSucErr";
 const Login = () => {
   const [showPass, setShowPass] = useState(true);
   const navigation: any = useNavigation();
-  const { userInputForm, loading } = useSelector(
+  const { userInputForm, loading, authUser, error } = useSelector(
     (state: any) => state.AuthSlice
   );
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -30,14 +35,24 @@ const Login = () => {
     console.log(userInputForm);
     const { email, password } = userInputForm;
     dispatch(LoginThunk({ email, password }));
-    navigation.navigate(`Home`);
   };
+  const closeError = () => {
+    dispatch(setReSetError());
+  };
+
+  useEffect(() => {
+    if (authUser && authUser.email) {
+      navigation.navigate(`Home`);
+    }
+  }, [authUser]);
   if (loading) {
     return <LoadingAnimation />;
   } else {
     return (
       <View style={style.mainView}>
         {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Log In</Text> */}
+        <ErrorPopup message={error} onClose={closeError} />
+        {/* <SuccessPopup message={error} onClose={closeError} /> */}
         <View style={style.multyInputWrapper}>
           <View style={style.inputWrapper}>
             <Text style={style.lable}>Email</Text>

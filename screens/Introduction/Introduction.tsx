@@ -36,6 +36,8 @@ export default function Intro() {
     const newIndex = Math.floor(xOffset / slideWidth);
     if (newIndex !== index) {
       setIndex(newIndex);
+    } else if (index > IntroData.length - 1) {
+      handleSkip();
     }
   };
 
@@ -50,11 +52,9 @@ export default function Intro() {
   return (
     <View style={style.mainView}>
       <View style={style.skipText}>
-        <Button
-          color="green"
-          title="skip"
-          onPress={() => console.log("pressed button")}
-        />
+        <Text style={style.skipBtn} onPress={handleSkip}>
+          skip
+        </Text>
       </View>
       <ScrollView
         horizontal
@@ -68,6 +68,7 @@ export default function Intro() {
         {/* <Text style={style.skipText} onPress={() => console.log("PRESS")}>
           LOG TEST
         </Text> */}
+
         {IntroData.map((item, idx) => (
           <View style={[style.slide, { width: width }]} key={idx}>
             <View style={style.imgContainer}>
@@ -137,12 +138,20 @@ const style = StyleSheet.create({
     alignItems: "center",
   },
   skipText: {
-    fontSize: 20,
-    left: 100,
+    position: "absolute",
+    zIndex: 10000,
+
+    right: 20,
     top: 50,
     width: 80,
-    height: 30,
-    backgroundColor: "red",
+    height: 40,
+  },
+  skipBtn: {
+    fontSize: 20,
+    borderColor: "#D3D3D3",
+    borderRadius: 50,
+    borderWidth: 1,
+    textAlign: "center",
   },
   textAndImgWrapper: {
     display: "flex",

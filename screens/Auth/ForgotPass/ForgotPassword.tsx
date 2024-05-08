@@ -47,6 +47,7 @@ const EnterEmailStep: React.FC<Props> = ({ onNext }) => {
       dispatch(reSetError("Put Email"));
     }
   };
+
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -106,10 +107,10 @@ const EnterEmailStep: React.FC<Props> = ({ onNext }) => {
 const EnterCodeStep: React.FC<Props> = ({ onNext }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { RecoveryObj } = useSelector((state: any) => state.RecoveryReducer);
-  const { Code } = RecoveryObj;
+  const { code } = RecoveryObj;
   const handleCodeEntered = async () => {
-    if (Code) {
-      await dispatch(CheckConfirmationCode(Code));
+    if (code) {
+      await dispatch(CheckConfirmationCode(code));
     } else {
       dispatch(reSetError("Please Enter Code"));
     }
@@ -123,7 +124,7 @@ const EnterCodeStep: React.FC<Props> = ({ onNext }) => {
       <TextInput
         style={styles.input}
         placeholder="Recovery Code"
-        value={Code}
+        value={code}
         onChangeText={(text) => dispatch(setCode(Number(text)))}
       />
       <Button title="Submit Code" onPress={handleCodeEntered} />
@@ -134,24 +135,30 @@ const EnterCodeStep: React.FC<Props> = ({ onNext }) => {
 const EnterNewPasswordStep: React.FC = () => {
   const navigation: any = useNavigation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const { RecoveryObj } = useSelector((state: any) => state.RecoveryReducer);
-  const { NewPassword, Code } = RecoveryObj as RecoveryType;
-
+  const { RecoveryObj, error } = useSelector(
+    (state: any) => state.RecoveryReducer
+  );
+  const { newPassword, code } = RecoveryObj as RecoveryType;
+  const { authUser } = useSelector((state: any) => state.AuthSlice);
   const handleResetPassword = async () => {
-    if (NewPassword && Code) {
-      await dispatch(ResetPasswordByAuthCode({ NewPassword, Code }));
-      navigation.navigate(`Home`);
+    if (newPassword && code) {
+      await dispatch(ResetPasswordByAuthCode({ newPassword, code }));
     } else {
       dispatch(reSetError("Please provide new password"));
     }
   };
-
+  useEffect(() => {
+    if (!error && authUser && authUser.email) {
+      navigation.navigate(`Home`);
+    }
+  }, [authUser]);
   return (
     <>
+      <Text>შეიყვანეთ ახალი პაროლი</Text>
       <TextInput
         style={styles.input}
         placeholder="New Password"
-        value={NewPassword}
+        value={newPassword}
         onChangeText={(text) => dispatch(setNewPassword(text))}
         secureTextEntry
       />
@@ -168,6 +175,7 @@ const ForgotPassword: React.FC = () => {
       dispatch(reSetError(""));
     } else if (type == "succsess") {
       dispatch(reSetSuccsess());
+      handleNextStep();
     }
   };
   const handleNextStep = () => {

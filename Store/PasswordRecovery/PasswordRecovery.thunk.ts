@@ -56,11 +56,11 @@ export const ResetPasswordByAuthCode = createAsyncThunk(
       });
       const token = res.headers["set-cookie"][0].split(";")[0].split("=")[1];
       await AsyncStorage.setItem("token", token);
-      console.log(res);
-      // const decodedUserInfo = jwt_decode(token);
-      // console.log(decodedUserInfo);
-      // dispatch(setDecodedUserInfo(decodedUserInfo));
-      return token
+
+      const decodedUserInfo = jwt_decode(token);
+      console.log(decodedUserInfo);
+      dispatch(setDecodedUserInfo(decodedUserInfo));
+      return token;
     } catch (error) {
       console.log(error);
       const err: any = error;

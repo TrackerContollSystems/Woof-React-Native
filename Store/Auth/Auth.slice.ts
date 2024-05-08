@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { LoginThunk, Register } from "./Auth.Thunk";
+import { decodedTokenType, userInitialState } from "./types/UserType";
+import { ResetPasswordByAuthCode } from "../PasswordRecovery/PasswordRecovery.thunk";
 //   "name": "string",
 //   "lastName": "string",
 //   "password": "string",
@@ -9,28 +11,6 @@ import { LoginThunk, Register } from "./Auth.Thunk";
 //   "genderId": 0,
 //   "birthDate": "2024-03-05"
 
-export type UserInfo = {
-  fullName: string;
-  password: string;
-  phoneNumber: string;
-  email: string;
-  cityId: number;
-  genderId: number;
-  birthDate: string;
-};
-export type decodedTokenType = {
-  exp: number;
-  iat: number;
-  id: string;
-  nbf: number;
-};
-export type userInitialState = {
-  error: string;
-  success: string;
-  loading: boolean;
-  authUser: decodedTokenType | {};
-  userInputForm: UserInfo;
-};
 const initialState: userInitialState = {
   error: "",
   loading: false,
@@ -77,6 +57,9 @@ const AuthSlice = createSlice({
     setDecodedUserInfo(state, action) {
       state.authUser = action.payload;
     },
+    setReSetError(state) {
+      state.error = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -86,6 +69,7 @@ const AuthSlice = createSlice({
       .addCase(Register.fulfilled, (state, action) => {
         state.loading = false;
         state.success = "user logged in";
+        state.authUser = action.payload;
       })
       .addCase(Register.rejected, (state, action) => {
         state.loading = false;
@@ -116,6 +100,7 @@ export const {
   setGenderId,
   setBirthDate,
   setDecodedUserInfo,
+  setReSetError,
 } = AuthSlice.actions;
 
 export default AuthSlice.reducer;
