@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   Pressable,
+  TouchableWithoutFeedback,
 } from "react-native";
 // @ts-ignore
 import thinkingDog from "../../../assets/Icons/thinkingdog.png";
@@ -22,18 +23,20 @@ interface PopupProps {
 const ErrorPopup: React.FC<PopupProps> = ({ message, onClose }) => {
   return (
     <Modal animationType="slide" transparent={true} visible={!!message}>
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>{message}</Text>
-          <Image style={styles.errorIcon} source={thinkingDog} />
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{message}</Text>
+            <Image style={styles.errorIcon} source={thinkingDog} />
 
-          <Pressable style={styles.closebtn} onPress={onClose}>
-            <Image style={styles.boneIcon} source={crossBones} />
-            <Text style={styles.closeBtnText}>Close</Text>
-            <Image style={styles.boneIcon} source={crossBones} />
-          </Pressable>
+            <Pressable style={styles.closebtn} onPress={onClose}>
+              <Image style={styles.boneIcon} source={crossBones} />
+              <Text style={styles.closeBtnText}>Close</Text>
+              <Image style={styles.boneIcon} source={crossBones} />
+            </Pressable>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

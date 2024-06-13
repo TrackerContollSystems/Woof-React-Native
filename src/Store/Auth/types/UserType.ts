@@ -15,9 +15,6 @@ export type decodedTokenType = {
   userId: string;
 };
 export type userInitialState = {
-  error: string;
-  success: string;
-  loading: boolean;
   authUser: decodedTokenType | {};
   userInputForm: UserInfo;
 };

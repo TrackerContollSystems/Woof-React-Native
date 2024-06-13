@@ -1,23 +1,28 @@
 import React from "react";
 import { withExpoSnack } from "nativewind";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { NavigationContainer } from "@react-navigation/native";
-import RootNavigation from "./navigation/RootNavigator";
-import TabNavigator from "./navigation/TabNavigator";
+import RootNavigation from "./src/navigation/RootNavigator";
+import TabNavigator from "./src/navigation/TabNavigator";
 import { Provider } from "react-redux";
-import { LanguageContextProvider } from "./Contexts/LanguageContext";
-import store from "./Store/Store";
-import { AuthContextProvider } from "./Contexts/AuthContext";
+import { LanguageContextProvider } from "./src/Contexts/LanguageContext";
+import store from "./src/Store/Store";
+import { AuthContextProvider } from "./src/Contexts/AuthContext";
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <LanguageContextProvider>
       <Provider store={store}>
-        <AuthContextProvider>
-          <NavigationContainer>
-            <RootNavigation />
-            <TabNavigator />
-          </NavigationContainer>
-        </AuthContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthContextProvider>
+            <NavigationContainer>
+              <RootNavigation />
+              <TabNavigator />
+            </NavigationContainer>
+          </AuthContextProvider>
+        </QueryClientProvider>
       </Provider>
     </LanguageContextProvider>
   );

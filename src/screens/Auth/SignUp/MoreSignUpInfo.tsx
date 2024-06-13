@@ -14,30 +14,32 @@ import {
   GetCoutnryData,
   GetGenderData,
 } from "../../../Store/RefrenceData/RefrenceData.Thunk";
-import { Register } from "../../../Store/Auth/Auth.Thunk";
+
 import DropDownInput from "../../COMPONENTS/FormInputs/DropDownInput";
 
- import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 // @ts-ignore
 
 import calendar from "../../../assets/Icons/calendar.png";
-import {
-  setCityId,
-  setBirthDate,
-  setGenderId,
-} from "../../../Store/Auth/Auth.slice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
+import { UseAuthContext } from "../../../Contexts/AuthContext";
+import { useMutation } from "@tanstack/react-query";
+import { UserInfo } from "../../../Store/Auth/types/UserType";
+import { RegistrationPostRequest } from "../../../API/Auth/AuthRequest";
+import { ErrorPopup } from "../../COMPONENTS/Status/StatusSucErr";
 export default function MoreSignUpInfi() {
-  const [showPass, setShowPass] = useState(true);
+  const { authDispatch, authState } = UseAuthContext();
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-
+  const handleDispatch = (type: any, payload: any) => {
+    authDispatch({ type, payload });
+  };
   const handleDateChange = (event: any, date: any) => {
-    console.log(date);
     setShowPicker(Platform.OS === "ios");
     if (date) {
-      dispatch(setBirthDate(date.toISOString().slice(0, 10)));
+      handleDispatch("set_birthDate", date.toISOString().slice(0, 10));
       setSelectedDate(date);
     }
   };
@@ -47,15 +49,15 @@ export default function MoreSignUpInfi() {
   };
 
   const setCity = (id: number) => {
-    dispatch(setCityId(id));
+    handleDispatch("set_cityId", id);
   };
   const setGender = (id: number) => {
-    dispatch(setGenderId(id));
+    handleDispatch("set_genderId", id);
   };
   const { RefrenceDataloading, genderData, cityData } = useSelector(
     (state: any) => state.RefrenceReducer
   );
-  const { userInputForm, loading, error, success } = useSelector(
+  const { userInputForm, loading, success } = useSelector(
     (state: any) => state.AuthSlice
   );
   const { cityId, genderId } = userInputForm;
@@ -70,20 +72,35 @@ export default function MoreSignUpInfi() {
 
     GetToken();
   }, []);
-  const SignUp = () => {
-    dispatch(Register(userInputForm));
-    navigation.navigate(`Home`);
+
+  //
+  const mutation = useMutation({
+    mutationFn: (obj: UserInfo) => {
+      return RegistrationPostRequest(obj);
+    },
+    onSuccess() {
+      navigation.navigate(`Home`);
+    },
+  });
+
+  //
+  const { isPending, isError, error } = mutation;
+  const errorMessage = (error && error.message) || "An error occurred.";
+  const closeError = () => {
+    mutation.reset();
   };
-  if (RefrenceDataloading || loading) {
+  const SignUp = async () => {
+    await mutation.mutateAsync(authState.userInputForm);
+  };
+  if (RefrenceDataloading || isPending) {
     return <LoadingAnimation />;
   }
 
   return (
     <View style={style.mainView}>
-      {/* <Text onPress={() => console.log(cityData)}>TEST</Text> */}
+      {isError && <ErrorPopup message={errorMessage} onClose={closeError} />}
+
       <View style={style.multyInputWrapper}>
-        {/* <Button title="test" onPress={() => dispatch(GetCoutnryData())} /> */}
-        {/*  <Button title="test2" onPress={() => TestNest()} /> */}
         <View style={style.inputWrapper}>
           <Text style={style.lable}>City</Text>
           <DropDownInput
@@ -193,7 +210,7 @@ const style = StyleSheet.create({
   },
   datePickerWrapper: {
     display: "flex",
-    alignIiems: "center",
+    alignItems: "center",
 
     gap: 10,
     paddingHorizontal: 2,

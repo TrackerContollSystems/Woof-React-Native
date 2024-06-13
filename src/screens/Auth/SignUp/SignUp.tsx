@@ -14,30 +14,68 @@ import closeEye from "../../../assets/Icons/find.png";
 import witness from "../../../assets/Icons/witness.png";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  setName,
-  setEmail,
-  setPassword,
-  setPhoneNumber,
-} from "../../../Store/Auth/Auth.slice";
+import { UseAuthContext } from "../../../Contexts/AuthContext";
+import { ErrorPopup } from "../../COMPONENTS/Status/StatusSucErr";
 
 export default function SignUp() {
+  const { authDispatch, authState } = UseAuthContext();
   const [showPass, setShowPass] = useState(true);
+  const [error, setError] = useState("");
   const navigation: any = useNavigation();
-  const dispatch = useDispatch();
-  const { name, email } = useSelector(
-    (state: any) => state.AuthSlice.userInputForm
-  );
+
+  const handleDispatch = (type: any, payload: string) => {
+    authDispatch({ type, payload });
+  };
+  const inputExeptionHandler = () => {
+    const { password, fullName, phoneNumber, email } = authState.userInputForm;
+
+    if (!password || !fullName || !phoneNumber || !email) {
+      const msg = `${
+        !password
+          ? "Password"
+          : !fullName
+          ? "Full Name"
+          : !phoneNumber
+          ? "Phone Number"
+          : !email
+          ? "Email"
+          : ""
+      } should not be empty`;
+
+      setError(msg);
+      return false;
+    }
+
+    if (!email.includes("@")) {
+      setError("Email bust be Email formated (example@mail.com)");
+      return false;
+    }
+    if (password.length < 10) {
+      setError("Password must be more then 10 cheractors");
+      return false;
+    }
+    return true;
+  };
+
+  const navigateToMoreSignUp = () => {
+    if (inputExeptionHandler()) {
+      navigation.navigate("User Info");
+    }
+  };
+
+  const closeError = () => {
+    setError("");
+  };
   return (
     <View style={style.mainView}>
       <View style={style.multyInputWrapper}>
         <View style={style.inputWrapper}>
           <Text style={style.lable}>Full name</Text>
+          {<ErrorPopup message={error} onClose={closeError} />}
 
           <View>
             <TextInput
-              onChangeText={(text) => dispatch(setName(text))}
+              onChangeText={(text) => handleDispatch("set_fullName", text)}
               placeholder="jon doe"
             />
             <View style={style.outLine}></View>
@@ -47,7 +85,7 @@ export default function SignUp() {
           <Text style={style.lable}>Phone Number</Text>
           <View>
             <TextInput
-              onChangeText={(e) => dispatch(setPhoneNumber(e))}
+              onChangeText={(text) => handleDispatch("set_phoneNumber", text)}
               placeholder="+995 555 555"
             />
             <View style={style.outLine}></View>
@@ -58,7 +96,7 @@ export default function SignUp() {
 
           <View>
             <TextInput
-              onChangeText={(text) => dispatch(setEmail(text))}
+              onChangeText={(text) => handleDispatch("set_email", text)}
               placeholder="example@gmail.com"
             />
             <View style={style.outLine}></View>
@@ -69,7 +107,7 @@ export default function SignUp() {
           <View>
             <View style={style.passwordInputWrapper}>
               <TextInput
-                onChangeText={(e) => dispatch(setPassword(e))}
+                onChangeText={(text) => handleDispatch("set_password", text)}
                 secureTextEntry={showPass}
                 placeholder="**********"
               />
@@ -100,10 +138,7 @@ export default function SignUp() {
       </View>
       <View style={style.optionsWrapper}>
         {/* <Text style={style.btn}>Create Account</Text> */}
-        <Text
-          onPress={() => navigation.navigate("User Info")}
-          style={style.btn}
-        >
+        <Text onPress={navigateToMoreSignUp} style={style.btn}>
           Next Step
         </Text>
         <Text>

@@ -14,51 +14,61 @@ import closeEye from "../../../assets/Icons/find.png";
 // @ts-ignore
 import witness from "../../../assets/Icons/witness.png";
 import { useNavigation } from "@react-navigation/native";
-import {
-  setEmail,
-  setPassword,
-  setReSetError,
-} from "../../../Store/Auth/Auth.slice";
-import { useDispatch, useSelector } from "react-redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
-import { LoginThunk } from "../../../Store/Auth/Auth.Thunk";
+
 import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
 import { ErrorPopup, SuccessPopup } from "../../COMPONENTS/Status/StatusSucErr";
+import { useMutation } from "@tanstack/react-query";
+import { LoginPostRequest } from "../../../API/Auth/AuthRequest";
+import { UseAuthContext } from "../../../Contexts/AuthContext";
 const Login = () => {
-  const [showPass, setShowPass] = useState(true);
-  const navigation: any = useNavigation();
-  const { userInputForm, loading, authUser, error } = useSelector(
-    (state: any) => state.AuthSlice
-  );
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const login = () => {
-    console.log(userInputForm);
-    const { email, password } = userInputForm;
-    dispatch(LoginThunk({ email, password }));
-  };
-  const closeError = () => {
-    dispatch(setReSetError());
+  const { authState, authDispatch } = UseAuthContext();
+  //
+
+  const handleDispatch = (type: any, payload: string) => {
+    authDispatch({ type, payload });
   };
 
-  useEffect(() => {
-    if (authUser && authUser.email) {
+  const navigation: any = useNavigation();
+
+  const [showPass, setShowPass] = useState(true);
+
+  const mutation = useMutation({
+    mutationFn: (obj: any) => {
+      return LoginPostRequest(obj);
+    },
+    onSuccess() {
       navigation.navigate(`Home`);
-    }
-  }, [authUser]);
-  if (loading) {
+    },
+  });
+  const { isPending, isError, isSuccess, error } = mutation;
+
+  //
+
+  const login = async () => {
+    const { email, password } = authState.userInputForm;
+    await mutation.mutateAsync({ email, password });
+  };
+  const closeError = () => {
+    mutation.reset();
+  };
+  const errorMessage = (error && error.message) || "An error occurred.";
+
+  if (isPending) {
     return <LoadingAnimation />;
   } else {
     return (
       <View style={style.mainView}>
         {/* <Text style={{ fontSize: 20, fontWeight: "bold" }}>Log In</Text> */}
-        <ErrorPopup message={error} onClose={closeError} />
+        {isError && <ErrorPopup message={errorMessage} onClose={closeError} />}
         {/* <SuccessPopup message={error} onClose={closeError} /> */}
         <View style={style.multyInputWrapper}>
+          <Text>{authState.userInputForm.email}</Text>
+
           <View style={style.inputWrapper}>
             <Text style={style.lable}>Email</Text>
             <View>
               <TextInput
-                onChangeText={(text) => dispatch(setEmail(text))}
+                onChangeText={(text) => handleDispatch("set_email", text)}
                 placeholder="email"
               />
               <View style={style.outLine}></View>
@@ -69,7 +79,7 @@ const Login = () => {
             <View>
               <View style={style.passwordInputWrapper}>
                 <TextInput
-                  onChangeText={(text) => dispatch(setPassword(text))}
+                  onChangeText={(text) => handleDispatch("set_password", text)}
                   secureTextEntry={showPass}
                   placeholder="**********"
                 />
