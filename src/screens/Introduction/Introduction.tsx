@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useSelector } from "react-redux";
 
+
 export default function Intro() {
   const { authState } = UseAuthContext();
   const { authUser } = authState;
