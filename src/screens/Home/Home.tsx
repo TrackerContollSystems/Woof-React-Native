@@ -3,6 +3,9 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UseAuthContext } from "../../Contexts/AuthContext";
+import UserNavbar from "./UserNavbar";
+import UserHeaders from "./UserHeaders";
+
 const Home = () => {
   const { authState } = UseAuthContext();
 
@@ -32,7 +35,9 @@ const Home = () => {
   } else {
     return (
       <View>
-        <Text onPress={() => console.log(authUser)}>Logged out</Text>
+        {/* <Text onPress={() => console.log(authUser)}>Logged out</Text> */}
+        <UserNavbar />
+        <UserHeaders />
       </View>
     );
   }
