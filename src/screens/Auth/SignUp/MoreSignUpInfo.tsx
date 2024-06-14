@@ -5,6 +5,9 @@ import {
   Image,
   TouchableOpacity,
   Platform,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
@@ -100,66 +103,75 @@ export default function MoreSignUpInfi() {
   }
 
   return (
-    <View style={style.mainView}>
-      <Text onPress={() => console.log(authState.userInputForm)}>
+    <KeyboardAvoidingView
+      style={style.mainView}
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={style.mainView}>
+          {/* <Text onPress={() => console.log(authState.userInputForm)}>
         LOG LOG LOG{" "}
-      </Text>
-      {isError && <ErrorPopup message={errorMessage} onClose={closeError} />}
+      </Text> */}
+          {isError && (
+            <ErrorPopup message={errorMessage} onClose={closeError} />
+          )}
 
-      <View style={style.multyInputWrapper}>
-        <View style={style.inputWrapper}>
-          <Text style={style.lable}>City</Text>
-          <DropDownInput
-            setDispatch={setCity}
-            Data={cityData.data}
-            id="cityId"
-            name="cityName"
-          />
-          <View>
-            <View style={style.outLine}></View>
-          </View>
-        </View>
-        <View style={style.inputWrapper}>
-          <Text style={style.lable}>Gender</Text>
-          <View>
-            <DropDownInput
-              setDispatch={setGender}
-              Data={genderData.data}
-              id="genderId"
-              name="sex"
-            />
-
-            <View style={style.outLine}></View>
-          </View>
-        </View>
-        <View style={style.inputWrapper}>
-          <TouchableOpacity
-            style={style.datePickerWrapper}
-            onPress={showDatepicker}
-          >
-            <Image style={style.calendarImg} source={calendar} />
-            <Text>Show Date Picker</Text>
-          </TouchableOpacity>
-
-          <View>
-            {showPicker && (
-              <DateTimePicker
-                value={selectedDate}
-                mode="date"
-                is24Hour={true}
-                display="default"
-                onChange={handleDateChange}
-                style={style.datePicker}
+          <View style={style.multyInputWrapper}>
+            <View style={style.inputWrapper}>
+              <Text style={style.lable}>City</Text>
+              <DropDownInput
+                setDispatch={setCity}
+                Data={cityData.data}
+                id="cityId"
+                name="cityName"
               />
-            )}
-            <View style={style.outLine}></View>
+              <View>
+                <View style={style.outLine}></View>
+              </View>
+            </View>
+            <View style={style.inputWrapper}>
+              <Text style={style.lable}>Gender</Text>
+              <View>
+                <DropDownInput
+                  setDispatch={setGender}
+                  Data={genderData.data}
+                  id="genderId"
+                  name="sex"
+                />
+
+                <View style={style.outLine}></View>
+              </View>
+            </View>
+            <View style={style.inputWrapper}>
+              <TouchableOpacity
+                style={style.datePickerWrapper}
+                onPress={showDatepicker}
+              >
+                <Image style={style.calendarImg} source={calendar} />
+                <Text>Show Date Picker</Text>
+              </TouchableOpacity>
+
+              <View>
+                {showPicker && (
+                  <DateTimePicker
+                    value={selectedDate}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={handleDateChange}
+                    style={style.datePicker}
+                  />
+                )}
+                <View style={style.outLine}></View>
+              </View>
+            </View>
+            <Text onPress={() => SignUp()} style={style.btn}>
+              Create Account
+            </Text>
           </View>
         </View>
-        <Text onPress={() => SignUp()} style={style.btn}>
-          Create Account
-        </Text>
-      </View>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const style = StyleSheet.create({

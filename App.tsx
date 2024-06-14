@@ -19,7 +19,7 @@ function App() {
           <AuthContextProvider>
             <NavigationContainer>
               <RootNavigation />
-              <TabNavigator />
+              {/* <TabNavigator /> */}
             </NavigationContainer>
           </AuthContextProvider>
         </QueryClientProvider>

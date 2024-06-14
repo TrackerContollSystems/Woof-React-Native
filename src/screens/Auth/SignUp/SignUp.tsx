@@ -7,13 +7,16 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 // @ts-ignore
 import closeEye from "../../../assets/Icons/find.png";
 // @ts-ignore
 import witness from "../../../assets/Icons/witness.png";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { UseAuthContext } from "../../../Contexts/AuthContext";
 import { ErrorPopup } from "../../COMPONENTS/Status/StatusSucErr";
 
@@ -66,100 +69,136 @@ export default function SignUp() {
   const closeError = () => {
     setError("");
   };
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true);
+      }
+    );
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false);
+      }
+    );
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
-    <View style={style.mainView}>
-      <View style={style.multyInputWrapper}>
-        <View style={style.inputWrapper}>
-          <Text style={style.lable}>Full name</Text>
-          {<ErrorPopup message={error} onClose={closeError} />}
+    <KeyboardAvoidingView
 
-          <View>
-            <TextInput
-              onChangeText={(text) => handleDispatch("set_fullName", text)}
-              placeholder="jon doe"
-            />
-            <View style={style.outLine}></View>
-          </View>
-        </View>
-        <View style={style.inputWrapper}>
-          <Text style={style.lable}>Phone Number</Text>
-          <View>
-            <TextInput
-              onChangeText={(text) => handleDispatch("set_phoneNumber", text)}
-              placeholder="+995 555 555"
-            />
-            <View style={style.outLine}></View>
-          </View>
-        </View>
-        <View style={style.inputWrapper}>
-          <Text style={style.lable}>Email</Text>
+    // behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={style.mainView}>
+          <View style={style.multyInputWrapper}>
+            <View style={style.inputWrapper}>
+              <Text style={style.lable}>Full name</Text>
+              {<ErrorPopup message={error} onClose={closeError} />}
 
-          <View>
-            <TextInput
-              onChangeText={(text) => handleDispatch("set_email", text)}
-              placeholder="example@gmail.com"
-            />
-            <View style={style.outLine}></View>
-          </View>
-        </View>
-        <View style={style.inputWrapper}>
-          <Text style={style.lable}>Password</Text>
-          <View>
-            <View style={style.passwordInputWrapper}>
-              <TextInput
-                onChangeText={(text) => handleDispatch("set_password", text)}
-                secureTextEntry={showPass}
-                placeholder="**********"
-              />
               <View>
-                <TouchableOpacity onPress={() => setShowPass(!showPass)}>
-                  <Image
-                    style={style.icon}
-                    source={showPass ? witness : closeEye}
-                  />
-                </TouchableOpacity>
+                <TextInput
+                  style={{ width: "85%" }}
+                  onChangeText={(text) => handleDispatch("set_fullName", text)}
+                  placeholder="jon doe"
+                />
+                <View style={style.outLine}></View>
               </View>
             </View>
-            <View style={style.outLine}></View>
-          </View>
+            <View style={style.inputWrapper}>
+              <Text style={style.lable}>Phone Number</Text>
+              <View>
+                <TextInput
+                  style={{ width: "85%" }}
+                  onChangeText={(text) =>
+                    handleDispatch("set_phoneNumber", text)
+                  }
+                  placeholder="+995 555 555"
+                />
+                <View style={style.outLine}></View>
+              </View>
+            </View>
+            <View style={style.inputWrapper}>
+              <Text style={style.lable}>Email</Text>
 
-          <Text
-            style={{
-              fontSize: 12,
-              color: "gray",
-              position: "absolute",
-              top: 60,
-              right: 4,
-            }}
-          >
-            At least 6 characters
-          </Text>
-        </View>
-      </View>
-      <View style={style.optionsWrapper}>
-        {/* <Text style={style.btn}>Create Account</Text> */}
-        <Text onPress={navigateToMoreSignUp} style={style.btn}>
-          Next Step
-        </Text>
-        <Text>
-          Or
-          <Text
-            onPress={() => navigation.navigate(`Login`)}
-            style={{
-              textDecorationLine: "underline",
-              color: "orange",
-              paddingHorizontal: 20,
-            }}
-          >
-            {" Log In "}
-          </Text>
-          with:
-        </Text>
-        <View style={style.iconWrapper}>
+              <View>
+                <TextInput
+                  style={{ width: "85%" }}
+                  onChangeText={(text) => handleDispatch("set_email", text)}
+                  placeholder="example@gmail.com"
+                />
+                <View style={style.outLine}></View>
+              </View>
+            </View>
+            <View style={style.inputWrapper}>
+              <Text style={style.lable}>Password</Text>
+              <View>
+                <View style={style.passwordInputWrapper}>
+                  <TextInput
+                    style={{ width: "85%" }}
+                    onChangeText={(text) =>
+                      handleDispatch("set_password", text)
+                    }
+                    secureTextEntry={showPass}
+                    placeholder="**********"
+                  />
+                  <View>
+                    <TouchableOpacity onPress={() => setShowPass(!showPass)}>
+                      <Image
+                        style={style.icon}
+                        source={showPass ? witness : closeEye}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View style={style.outLine}></View>
+              </View>
+
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: "gray",
+                  position: "absolute",
+                  top: 60,
+                  right: 4,
+                }}
+              >
+                At least 6 characters
+              </Text>
+            </View>
+          </View>
+          <View style={style.optionsWrapper}>
+            {/* <Text style={style.btn}>Create Account</Text> */}
+            <Text onPress={navigateToMoreSignUp} style={style.btn}>
+              Next Step
+            </Text>
+            <Text>
+              if you already have an account
+              <Text
+                onPress={() => navigation.navigate(`Login`)}
+                style={{
+                  textDecorationLine: "underline",
+                  color: "orange",
+                  paddingHorizontal: 20,
+                }}
+              >
+                {" Log In "}
+              </Text>
+            </Text>
+            {/* <View style={style.iconWrapper}>
           <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
+        </View> */}
+          </View>
         </View>
-      </View>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 const style = StyleSheet.create({

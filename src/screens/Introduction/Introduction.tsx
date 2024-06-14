@@ -16,7 +16,6 @@ import { useNavigation } from "@react-navigation/native";
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useSelector } from "react-redux";
 
-
 export default function Intro() {
   const { authState } = UseAuthContext();
   const { authUser } = authState;
@@ -44,7 +43,6 @@ export default function Intro() {
   };
 
   const handleSkip = () => {
-    console.log(authUser);
     if (authUser.email) {
       navigation.navigate(`Home`);
     } else {
@@ -189,6 +187,7 @@ const style = StyleSheet.create({
     borderRadius: 10,
     fontSize: 19,
     fontWeight: "bold",
+    marginBottom: 20,
   },
   textContainer: {
     position: "relative",

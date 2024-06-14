@@ -30,11 +30,12 @@ const Home = () => {
   if (authUser && authUser.email) {
     return (
       <View style={{ backgroundColor: "white" }}>
+        {/* <Button title="logout" onPress={() => logout()} /> */}
+
         {/* <Text>User Name {authUser.email}</Text>
         <Text onPress={() => console.log(authUser)}>Test</Text> */}
         <UserNavbar />
         <UserHeaders />
-        {/* <Button title="logout" onPress={() => logout()} /> */}
       </View>
     );
   } else {
