@@ -110,12 +110,12 @@ export default function MoreSignUpInfi() {
         <View style={style.inputWrapper}>
           <Text style={style.lable}>Gender</Text>
           <View>
-            {/* <DropDownInput
+            <DropDownInput
               setDispatch={setGender}
               Data={genderData.data}
               id="genderId"
               name="sex"
-            /> */}
+            />
 
             <View style={style.outLine}></View>
           </View>

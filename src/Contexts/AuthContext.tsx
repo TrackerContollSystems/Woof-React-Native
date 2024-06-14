@@ -41,7 +41,7 @@ export const AuthContextProvider = ({ children }: AuthChildren) => {
       phoneNumber: "",
       email: "",
       cityId: 0,
-      genderId: 1,
+      genderId: 0,
       birthDate: "",
     },
   };
