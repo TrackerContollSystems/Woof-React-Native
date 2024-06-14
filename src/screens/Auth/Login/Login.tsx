@@ -14,6 +14,7 @@ import closeEye from "../../../assets/Icons/find.png";
 // @ts-ignore
 import witness from "../../../assets/Icons/witness.png";
 import { useNavigation } from "@react-navigation/native";
+import jwt_decode from "jwt-decode";
 
 import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
 import { ErrorPopup, SuccessPopup } from "../../COMPONENTS/Status/StatusSucErr";
@@ -36,8 +37,14 @@ const Login = () => {
     mutationFn: (obj: any) => {
       return LoginPostRequest(obj);
     },
-    onSuccess() {
+    onSuccess(token) {
+      const decodedToken = jwt_decode(token);
+      authDispatch({ type: "set_decoded_user", payload: decodedToken });
+
       navigation.navigate(`Home`);
+    },
+    onError(err) {
+      console.log(err);
     },
   });
   const { isPending, isError, isSuccess, error } = mutation;

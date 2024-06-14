@@ -35,6 +35,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@types/react": "~18.2.79",
+    "@types/react-native": "^0.73.0",
     "@types/react-native-datepicker": "^1.7.6",
     "@types/react-native-video": "^5.0.19",
     "@types/react-native-video-player": "^0.10.7",

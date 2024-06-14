@@ -7,9 +7,9 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import React, { useRef, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
+import React, { useState } from "react";
+
+import jwt_decode from "jwt-decode";
 
 import DropDownInput from "../../COMPONENTS/FormInputs/DropDownInput";
 
@@ -20,7 +20,7 @@ import calendar from "../../../assets/Icons/calendar.png";
 
 import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
 import { UseAuthContext } from "../../../Contexts/AuthContext";
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { RegistrationPostRequest } from "../../../API/Auth/AuthRequest";
 import { ErrorPopup } from "../../COMPONENTS/Status/StatusSucErr";
 import {
@@ -72,8 +72,15 @@ export default function MoreSignUpInfi() {
     mutationFn: (obj: UserInfo) => {
       return RegistrationPostRequest(obj);
     },
-    onSuccess() {
+    onSuccess(token) {
+      const decodedToken = jwt_decode(token);
+      authDispatch({ type: "set_decoded_user", payload: decodedToken });
+
       navigation.navigate(`Home`);
+    },
+    onError(err: any) {
+      console.log("ERROR");
+      console.log(err);
     },
   });
 
@@ -84,7 +91,9 @@ export default function MoreSignUpInfi() {
     mutation.reset();
   };
   const SignUp = async () => {
-    await mutation.mutateAsync(authState.userInputForm);
+    console.log("authState.userInputForm");
+    console.log(authState.userInputForm);
+    await mutation.mutateAsync({ ...authState.userInputForm });
   };
   if (cityData.isPending || genderData.isPending || isPending) {
     return <LoadingAnimation />;
@@ -92,6 +101,9 @@ export default function MoreSignUpInfi() {
 
   return (
     <View style={style.mainView}>
+      <Text onPress={() => console.log(authState.userInputForm)}>
+        LOG LOG LOG{" "}
+      </Text>
       {isError && <ErrorPopup message={errorMessage} onClose={closeError} />}
 
       <View style={style.multyInputWrapper}>

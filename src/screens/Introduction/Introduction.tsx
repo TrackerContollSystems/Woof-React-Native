@@ -47,7 +47,7 @@ export default function Intro() {
     if (authUser.email) {
       navigation.navigate(`Home`);
     } else {
-      navigation.navigate(`Signup`);
+      navigation.navigate(`Login`);
     }
   };
   return (
@@ -122,7 +122,7 @@ export default function Intro() {
             if (authUser && authUser.email) {
               navigation.navigate("Home");
             } else {
-              navigation.navigate("Signup");
+              navigation.navigate(`Login`);
             }
           }
         }}

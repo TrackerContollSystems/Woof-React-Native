@@ -3,13 +3,16 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UseAuthContext } from "../../Contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 const Home = () => {
-  const { authState } = UseAuthContext();
+  const { authState, authDispatch } = UseAuthContext();
+  const navigation: any = useNavigation();
 
   const { authUser } = authState;
   const logout = async () => {
     await AsyncStorage.setItem("token", "");
-
+    authDispatch({ type: "set_decoded_user", payload: {} });
+    navigation.navigate(`Login`);
     console.log("LOG OUT");
   };
   const l = async () => {

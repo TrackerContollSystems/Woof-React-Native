@@ -32,6 +32,7 @@ import {
   ResetPasswordByAuthCode,
 } from "../../../Store/PasswordRecovery/PasswordRecovery.thunk";
 import { useNavigation } from "@react-navigation/native";
+import { UseAuthContext } from "../../../Contexts/AuthContext";
 interface Props {
   onNext: () => void;
 }
@@ -133,6 +134,9 @@ const EnterCodeStep: React.FC<Props> = ({ onNext }) => {
 };
 
 const EnterNewPasswordStep: React.FC = () => {
+   const { authState } = UseAuthContext();
+   const { authUser } = authState;
+
   const navigation: any = useNavigation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { RecoveryObj, error } = useSelector(
@@ -146,11 +150,11 @@ const EnterNewPasswordStep: React.FC = () => {
       dispatch(reSetError("Please provide new password"));
     }
   };
-  // useEffect(() => {
-  //   if (!error && authUser && authUser.email) {
-  //     navigation.navigate(`Home`);
-  //   }
-  // }, [authUser]);
+  useEffect(() => {
+    if (!error && authUser && authUser.email) {
+      navigation.navigate(`Home`);
+    }
+  }, [authUser]);
   return (
     <>
       <Text>შეიყვანეთ ახალი პაროლი</Text>

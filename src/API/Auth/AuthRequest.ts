@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserInfo, decodedTokenType } from "../../Store/Auth/types/UserType";
 import { ApiManager } from "../APIManager";
 import jwt_decode from "jwt-decode";
+import { UserInfo } from "../../Types/UserType";
 
 export const RegistrationPostRequest = async (obj: UserInfo) => {
   try {
@@ -9,13 +9,10 @@ export const RegistrationPostRequest = async (obj: UserInfo) => {
       method: "POST",
       data: obj,
     });
-    const token = res.headers["set-cookie"][0].split(";")[0].split("=")[1];
-    await AsyncStorage.setItem("token", token);
-    console.log(token);
-    const decodedUserInfo: decodedTokenType = jwt_decode(token);
-    console.log(decodedUserInfo);
 
-    return decodedUserInfo;
+    await AsyncStorage.setItem("token", res.data);
+
+    return res.data;
   } catch (error) {
     console.log(error);
     const err: any = error;
@@ -30,11 +27,10 @@ export const LoginPostRequest = async (obj: any) => {
       data: obj,
     });
     console.log(res);
-    const token = res;
-    await AsyncStorage.setItem("token", token);
-    const decodedUserInfo: decodedTokenType = jwt_decode(token);
 
-    return decodedUserInfo;
+    await AsyncStorage.setItem("token", res.data);
+
+    return res.data;
   } catch (error) {
     console.log(error);
     const err: any = error;
