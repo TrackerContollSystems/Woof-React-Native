@@ -25,13 +25,13 @@ export default function UserNavbar() {
           <Text style={{ fontSize: 14, color: "gray", padding: 4 }}>User</Text>
         </View>
 
-        <View style={{ marginLeft: 110 }}>
+        <View style={{ marginLeft: 100 }}>
           <MaterialCommunityIcons
             name="trophy-award"
             size={44}
             color="orange"
           />
-          <Text style={{ fontSize: 12, color: "gray" }}>Award</Text>
+          <Text style={{ fontSize: 12, color: "gray", textAlign: "center" }}>Award</Text>
         </View>
       </View>
 
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
+    color: 'white'
   },
   smallText: {
     fontSize: 16,

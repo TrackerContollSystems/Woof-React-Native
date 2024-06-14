@@ -7,6 +7,7 @@ import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import UserHeaders from "./UserHeaders";
 import UserNavbar from "./UserNavbar";
+import UserHeadersInfo from "./UserHeadersInfo";
 
 const Home = () => {
   const { authState, authDispatch } = UseAuthContext();
@@ -34,6 +35,7 @@ const Home = () => {
         <Text onPress={() => console.log(authUser)}>Test</Text> */}
         <UserNavbar />
         <UserHeaders />
+        <UserHeadersInfo />
         {/* <Button title="logout" onPress={() => logout()} /> */}
       </View>
     );
@@ -42,6 +44,7 @@ const Home = () => {
       <View>
         <UserNavbar />
         <UserHeaders />
+        <UserHeadersInfo />
         {/* <Text onPress={() => console.log(authUser)}>Logged out s</Text> */}
       </View>
     );
