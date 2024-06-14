@@ -17,9 +17,10 @@ import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useSelector } from "react-redux";
 
 export default function Intro() {
-  const [index, setIndex] = useState<number>(0);
-  const { authUser } = useSelector((state: any) => state.AuthSlice);
+  const { authState } = UseAuthContext();
+  const { authUser } = authState;
 
+  const [index, setIndex] = useState<number>(0);
   const NextFun = () => {
     setIndex((state: number) =>
       state < IntroData.length - 1 ? state + 1 : (state = 0)

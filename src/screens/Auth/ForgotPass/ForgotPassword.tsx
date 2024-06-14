@@ -139,7 +139,6 @@ const EnterNewPasswordStep: React.FC = () => {
     (state: any) => state.RecoveryReducer
   );
   const { newPassword, code } = RecoveryObj as RecoveryType;
-  const { authUser } = useSelector((state: any) => state.AuthSlice);
   const handleResetPassword = async () => {
     if (newPassword && code) {
       await dispatch(ResetPasswordByAuthCode({ newPassword, code }));
@@ -147,11 +146,11 @@ const EnterNewPasswordStep: React.FC = () => {
       dispatch(reSetError("Please provide new password"));
     }
   };
-  useEffect(() => {
-    if (!error && authUser && authUser.email) {
-      navigation.navigate(`Home`);
-    }
-  }, [authUser]);
+  // useEffect(() => {
+  //   if (!error && authUser && authUser.email) {
+  //     navigation.navigate(`Home`);
+  //   }
+  // }, [authUser]);
   return (
     <>
       <Text>შეიყვანეთ ახალი პაროლი</Text>

@@ -10,10 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
-import {
-  GetCoutnryData,
-  GetGenderData,
-} from "../../../Store/RefrenceData/RefrenceData.Thunk";
 
 import DropDownInput from "../../COMPONENTS/FormInputs/DropDownInput";
 
@@ -24,10 +20,14 @@ import calendar from "../../../assets/Icons/calendar.png";
 
 import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
 import { UseAuthContext } from "../../../Contexts/AuthContext";
-import { useMutation } from "@tanstack/react-query";
-import { UserInfo } from "../../../Store/Auth/types/UserType";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import { RegistrationPostRequest } from "../../../API/Auth/AuthRequest";
 import { ErrorPopup } from "../../COMPONENTS/Status/StatusSucErr";
+import {
+  GetCityDataRequest,
+  GetGenderDataRequest,
+} from "../../../API/ReferenceData/RegistrationReferenceRequest";
+import { UserInfo } from "../../../Types/UserType";
 export default function MoreSignUpInfi() {
   const { authDispatch, authState } = UseAuthContext();
 
@@ -54,24 +54,18 @@ export default function MoreSignUpInfi() {
   const setGender = (id: number) => {
     handleDispatch("set_genderId", id);
   };
-  const { RefrenceDataloading, genderData, cityData } = useSelector(
-    (state: any) => state.RefrenceReducer
-  );
-  const { userInputForm, loading, success } = useSelector(
-    (state: any) => state.AuthSlice
-  );
-  const { cityId, genderId } = userInputForm;
+
   const navigation: any = useNavigation();
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-  useEffect(() => {
-    const GetToken = async () => {
-      dispatch(GetCoutnryData());
-      dispatch(GetGenderData());
-    };
+  const genderData = useQuery({
+    queryKey: ["gender-id"],
+    queryFn: GetGenderDataRequest,
+  });
 
-    GetToken();
-  }, []);
+  const cityData = useQuery({
+    queryKey: ["city-id"],
+    queryFn: GetCityDataRequest,
+  });
 
   //
   const mutation = useMutation({
@@ -92,7 +86,7 @@ export default function MoreSignUpInfi() {
   const SignUp = async () => {
     await mutation.mutateAsync(authState.userInputForm);
   };
-  if (RefrenceDataloading || isPending) {
+  if (cityData.isPending || genderData.isPending || isPending) {
     return <LoadingAnimation />;
   }
 
@@ -105,7 +99,7 @@ export default function MoreSignUpInfi() {
           <Text style={style.lable}>City</Text>
           <DropDownInput
             setDispatch={setCity}
-            Data={cityData}
+            Data={cityData.data}
             id="cityId"
             name="cityName"
           />
@@ -116,12 +110,12 @@ export default function MoreSignUpInfi() {
         <View style={style.inputWrapper}>
           <Text style={style.lable}>Gender</Text>
           <View>
-            <DropDownInput
+            {/* <DropDownInput
               setDispatch={setGender}
-              Data={genderData}
+              Data={genderData.data}
               id="genderId"
               name="sex"
-            />
+            /> */}
 
             <View style={style.outLine}></View>
           </View>

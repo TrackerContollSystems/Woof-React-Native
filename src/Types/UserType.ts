@@ -15,6 +15,6 @@ export type decodedTokenType = {
   userId: string;
 };
 export type userInitialState = {
-  authUser: decodedTokenType | {};
+  authUser: decodedTokenType | any;
   userInputForm: UserInfo;
 };

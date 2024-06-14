@@ -3,7 +3,6 @@ import { ApiManager } from "../../API/APIManager";
 import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RecoveryType } from "./PasswordRecovery.slice";
-import { setDecodedUserInfo } from "../Auth/Auth.slice";
 
 export const PasswordRecoveryByEmail = createAsyncThunk(
   "post/emailrecovery",
@@ -59,7 +58,7 @@ export const ResetPasswordByAuthCode = createAsyncThunk(
 
       const decodedUserInfo = jwt_decode(token);
       console.log(decodedUserInfo);
-      dispatch(setDecodedUserInfo(decodedUserInfo));
+
       return token;
     } catch (error) {
       console.log(error);

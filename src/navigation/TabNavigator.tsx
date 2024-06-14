@@ -7,6 +7,9 @@ const TabNavigator = () => {
 
   return (
     <View>
+      <Text onPress={() => navigation.navigate(`User Info`)} style={styles.btn}>
+        User info
+      </Text>
       {/* <Text onPress={() => navigation.navigate(`Enter`)}>VIDEO</Text>
       <Text onPress={() => navigation.navigate(`Intro`)} style={styles.btn}>
         Intro

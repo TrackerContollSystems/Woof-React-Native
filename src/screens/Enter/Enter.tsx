@@ -7,7 +7,8 @@ import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useSelector } from "react-redux";
 
 export default function Enter() {
-  const { authUser } = useSelector((state: any) => state.AuthSlice);
+  const { authState } = UseAuthContext();
+  const { authUser } = authState;
 
   const video: any = React.useRef(null);
   const navigation: any = useNavigation();

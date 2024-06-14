@@ -6,11 +6,9 @@ import React, {
   useReducer,
   useState,
 } from "react";
-import { setDecodedUserInfo } from "../Store/Auth/Auth.slice";
-import { useDispatch, useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserInfo, userInitialState } from "../Store/Auth/types/UserType";
+import { userInitialState } from "../Types/UserType";
 type AuthChildren = {
   children: ReactNode;
 };
@@ -28,12 +26,11 @@ type Action =
   | { type: "set_email"; payload: string }
   | { type: "set_cityId"; payload: number }
   | { type: "set_genderId"; payload: number }
-  | { type: "set_birthDate"; payload: string };
+  | { type: "set_birthDate"; payload: string }
+  | { type: "set_decoded_user"; payload: any };
 const AuthContext = createContext<Cell | null>(null);
 
 export const AuthContextProvider = ({ children }: AuthChildren) => {
-  const dispatch = useDispatch();
-  const { authUser } = useSelector((state: any) => state.AuthSlice);
   const [isUserLoggedIn, setisUserLoggedIn] = useState<any>();
   //
   const initialState: userInitialState = {
@@ -44,7 +41,7 @@ export const AuthContextProvider = ({ children }: AuthChildren) => {
       phoneNumber: "",
       email: "",
       cityId: 0,
-      genderId: 0,
+      genderId: 1,
       birthDate: "",
     },
   };
@@ -64,7 +61,8 @@ export const AuthContextProvider = ({ children }: AuthChildren) => {
             [action.type.substring(4)]: action.payload,
           },
         };
-
+      case "set_decoded_user":
+        return { ...state, authUser: action.payload };
       default:
         return state;
     }
@@ -81,19 +79,18 @@ export const AuthContextProvider = ({ children }: AuthChildren) => {
     getToken();
   }, []);
   useEffect(() => {
-    console.log(authUser);
-    if (!authUser.email) {
+    if (!authState.authUser.email) {
       const getTokenFromLocal: any = async () => {
         let token = await AsyncStorage.getItem("token");
         if (token) {
           const decodedToken = jwt_decode(token);
           console.log(token);
-          dispatch(setDecodedUserInfo(decodedToken));
+          authDispatch({ type: "set_decoded_user", payload: decodedToken });
         }
       };
       getTokenFromLocal();
     }
-  }, []);
+  }, [authState]);
   return (
     <AuthContext.Provider value={{ isUserLoggedIn, authState, authDispatch }}>
       {children}

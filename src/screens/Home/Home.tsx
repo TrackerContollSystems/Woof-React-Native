@@ -2,14 +2,14 @@ import { View, Text, Button } from "react-native";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setDecodedUserInfo } from "../../Store/Auth/Auth.slice";
+import { UseAuthContext } from "../../Contexts/AuthContext";
 const Home = () => {
-  const userAuth = useSelector((state: any) => state.AuthSlice.authUser);
-  const dispatch = useDispatch();
+  const { authState } = UseAuthContext();
+
+  const { authUser } = authState;
   const logout = async () => {
-    
-    await AsyncStorage.setItem('token', '')
-    dispatch(setDecodedUserInfo({}));
+    await AsyncStorage.setItem("token", "");
+
     console.log("LOG OUT");
   };
   const l = async () => {
@@ -20,11 +20,11 @@ const Home = () => {
       console.log(error);
     }
   };
-  if (userAuth && userAuth.email) {
+  if (authUser && authUser.email) {
     return (
       <View>
-        <Text>User Name {userAuth.email}</Text>
-        <Text onPress={() => console.log(userAuth)}>Test</Text>
+        <Text>User Name {authUser.email}</Text>
+        <Text onPress={() => console.log(authUser)}>Test</Text>
 
         <Button title="logout" onPress={() => logout()} />
       </View>
@@ -32,7 +32,7 @@ const Home = () => {
   } else {
     return (
       <View>
-        <Text onPress={() => console.log(userAuth)}>Logged out</Text>
+        <Text onPress={() => console.log(authUser)}>Logged out</Text>
       </View>
     );
   }
