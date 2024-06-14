@@ -44,10 +44,24 @@ export default function UserHeaders() {
         </View>
       </ScrollView>
 
-      <View style={styles.containers}>
-        <Text style={styles.bigText}>Big Text Animal ID</Text>
-        <Text style={styles.smallText}>small textsmall</Text>
-      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollViewContent}
+      >
+        <View style={styles.containers}>
+          <Text style={styles.bigText}>Advertisement</Text>
+          <Text style={styles.smallText}>small textsmall</Text>
+        </View>
+        <View style={styles.containers}>
+          <Text style={styles.bigText}>Advertisement</Text>
+          <Text style={styles.smallText}>small textsmall</Text>
+        </View>
+        <View style={styles.containers}>
+          <Text style={styles.bigText}>Advertisement</Text>
+          <Text style={styles.smallText}>small textsmall</Text>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -73,10 +87,10 @@ const styles = StyleSheet.create({
   },
 
   containers: {
-    backgroundColor: "orange",
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 15,
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 25,
+    marginTop: 20,
     marginBottom: 5,
     marginLeft: 5,
     marginRight: 5,
@@ -93,7 +107,7 @@ const styles = StyleSheet.create({
     }),
   },
   bigText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 5,
   },
