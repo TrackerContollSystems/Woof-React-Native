@@ -10,6 +10,7 @@ import React from "react";
 import ForgotPassword from "../screens/Auth/ForgotPass/ForgotPassword";
 import Subscription from "../screens/Subscription/Subscription";
 import { StatusBar } from "expo-status-bar";
+import Map from "../screens/Map/Map";
 
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
@@ -41,6 +42,7 @@ export default function RootNavigation({ children }: any) {
         {/* <Stack.Screen name="Test" component={Test} /> */}
         {/* მომხარებლის უშვალო ინტერფეისები */}
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="Subscription" component={Subscription} />
       </Stack.Navigator>
     </>
