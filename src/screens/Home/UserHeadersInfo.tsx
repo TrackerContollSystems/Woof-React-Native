@@ -1,8 +1,7 @@
 import { View, Text, Platform, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function UserHeadersInfo() {
   return (
@@ -12,15 +11,15 @@ export default function UserHeadersInfo() {
         <Text style={styles.smallText}>small</Text>
       </View>
       <View style={styles.container}>
-      <AntDesign name="calendar" size={54} color="black" />
+        <AntDesign name="calendar" size={54} color="black" />
         <Text style={styles.smallText}>small</Text>
       </View>
       <View style={styles.container}>
-      <MaterialCommunityIcons name="list-status" size={54} color="black" />
+        <MaterialCommunityIcons name="list-status" size={54} color="black" />
         <Text style={styles.smallText}>small</Text>
       </View>
       <View style={styles.container}>
-      <MaterialCommunityIcons name="qrcode-scan" size={54} color="black" />      
+        <MaterialCommunityIcons name="qrcode-scan" size={54} color="black" />
         <Text style={styles.smallText}>small</Text>
       </View>
     </View>
@@ -62,6 +61,6 @@ const styles = StyleSheet.create({
   smallText: {
     fontSize: 16,
     color: "black",
-    marginTop: 3
+    marginTop: 3,
   },
 });

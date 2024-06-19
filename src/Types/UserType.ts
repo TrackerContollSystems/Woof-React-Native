@@ -12,7 +12,7 @@ export type decodedTokenType = {
   iat: number;
   email: string;
   nbf: number;
-  userId: string;
+  nameid: string;
 };
 export type userInitialState = {
   authUser: decodedTokenType | any;

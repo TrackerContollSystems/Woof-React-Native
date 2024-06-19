@@ -1,9 +1,9 @@
-import { View, Text, Button, ScrollView  } from "react-native";
-import React from "react";
+import { View, Text, Button, ActivityIndicator, Image } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UseAuthContext } from "../../Contexts/AuthContext";
-
+import RNFetchBlob from "rn-fetch-blob";
 import { useNavigation } from "@react-navigation/native";
 import UserHeaders from "./UserHeaders";
 import UserNavbar from "./UserNavbar";
@@ -12,6 +12,36 @@ import UserHeadersInfo from "./UserHeadersInfo";
 const Home = () => {
   const { authState, authDispatch } = UseAuthContext();
   const navigation: any = useNavigation();
+  const [imageBase64Array, setImageBase64Array] = useState<any>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    const downloadImage = async () => {
+      try {
+        const response = await fetch(" ");
+        const blob = await response.blob();
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          // setImageBase64(reader.result);
+          setLoading(false);
+        };
+
+        reader.onerror = () => {
+          setError(true);
+          setLoading(false);
+        };
+
+        reader.readAsDataURL(blob);
+      } catch (e) {
+        setError(true);
+        setLoading(false);
+      }
+    };
+
+    downloadImage();
+  }, []);
 
   const { authUser } = authState;
   const logout = async () => {
@@ -30,7 +60,7 @@ const Home = () => {
   };
   if (authUser && authUser.email) {
     return (
-      <ScrollView  style={{ backgroundColor: "white" }}>
+      <View style={{ backgroundColor: "white" }}>
         <Button title="logout" onPress={() => logout()} />
 
         {/* <Text>User Name {authUser.email}</Text>
@@ -38,16 +68,16 @@ const Home = () => {
         <UserNavbar />
         <UserHeaders />
         <UserHeadersInfo />
-      </ScrollView>
+      </View>
     );
   } else {
     return (
-      <ScrollView>
+      <View>
         <UserNavbar />
         <UserHeaders />
         <UserHeadersInfo />
         {/* <Text onPress={() => console.log(authUser)}>Logged out s</Text> */}
-      </ScrollView>
+      </View>
     );
   }
 };
