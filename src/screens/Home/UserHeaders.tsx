@@ -9,22 +9,37 @@ import {
   Modal,
   Platform,
   Image,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { GetReferenceAnimalPhotos } from "../../API/ReferenceData/GetAllAnimalicons";
+import { Ionicons, Foundation } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import {
-  GetAnimalmages,
+  GetReferenceAnimalPhotos,
   GetUserAnimalsRequest,
-} from "../../API/User/GetUserAnimals";
+} from "../../API/ReferenceData/GetAllAnimalicons";
 import { UseAuthContext } from "../../Contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
+
+import AnimalInfo from "./AnimalInfo/AnimalInfo"; 
+
+
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [newAnimalName, setNewAnimalName] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState(null);
-  const [animals, setAnimals] = useState([]);
-  const [imageBase64Array, setImageBase64Array] = useState<any>([]);
+  const [selectedIcon, setSelectedIcon] = useState<number | null>(null);
+  const [animals, setAnimals] = useState<
+    { name: string; icon: string | ArrayBuffer | null }[]
+  >([]);
+  const [imageBase64Array, setImageBase64Array] = useState<
+    (string | ArrayBuffer | null)[]
+  >([]);
+
+
+  const navigation = useNavigation();
+
 
   const referenceaAnimalData = useQuery({
     queryKey: ["get-animals-reference"],
@@ -43,7 +58,7 @@ export default function UserHeaders() {
           const blob = await response.blob();
           const reader = new FileReader();
           reader.onloadend = () => {
-            setImageBase64Array([...animals, reader.result]);
+            setImageBase64Array((prev) => [...prev, reader.result]);
           };
           reader.readAsDataURL(blob);
         }
@@ -53,8 +68,26 @@ export default function UserHeaders() {
   }, [referenceaAnimalData.isSuccess]);
 
   useEffect(() => {
-    console.log(animalData.data);
+    if (animalData.isSuccess) {
+      // setAnimals(animalData.data);
+    }
   }, [animalData.isSuccess]);
+
+  const handleSaveAnimal = () => {
+    if (newAnimalName && selectedIcon !== null) {
+      const newAnimal = {
+        name: newAnimalName,
+        icon: imageBase64Array[selectedIcon],
+      };
+      setAnimals((prev) => [...prev, newAnimal]);
+      setNewAnimalName("");
+      setSelectedIcon(null);
+      setModalVisible(false);
+
+      navigation.navigate('AnimalInfo');
+
+    }
+  };
 
   if (referenceaAnimalData.isPending) {
     return <Text>Loading...</Text>;
@@ -68,16 +101,14 @@ export default function UserHeaders() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
-        {imageBase64Array.length >= 1 &&
-          imageBase64Array.map((animal: any, index: number) => (
+        {animals.length >= 1 &&
+          animals.map((animal, index) => (
             <View key={index} style={styles.animalContainer}>
-              {/* <MaterialCommunityIcons name={animal} size={100} color="grey" /> */}
-              {/* <Text style={styles.animalText}>{animal.label}</Text>
-               */}
               <Image
-                style={{ width: 50, height: 50 }}
-                source={{ uri: animal }}
+                style={{ width: 100, height: 100 }}
+                source={{ uri: animal.icon as string }}
               />
+              <Text style={styles.animalText}>{animal.name}</Text>
             </View>
           ))}
         <TouchableOpacity
@@ -108,43 +139,67 @@ export default function UserHeaders() {
         </View>
       </ScrollView>
 
-      <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Animal</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter animal name"
-              value={newAnimalName}
-              onChangeText={setNewAnimalName}
-            />
-            <View style={styles.iconContainer}>
-              {/* {availableIcons.map((icon, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => setSelectedIcon(icon)}
-                  style={[
-                    styles.iconWrapper,
-                    selectedIcon === icon && styles.selectedIcon,
-                  ]}
-                >
-                  <MaterialCommunityIcons name={icon} size={40} color="grey" />
-                </TouchableOpacity>
-              ))} */}
+      <Modal visible={modalVisible} animationType="fade" transparent={true}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.modalContainer}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setModalVisible(false);
+              Keyboard.dismiss();
+            }}
+          >
+            <View style={styles.modalContainer}>
+              <TouchableWithoutFeedback onPress={() => {}}>
+                <View style={styles.modalContent}>
+                  <Text style={styles.modalTitle}>Add New Animal</Text>
+
+                  <Foundation name="guide-dog" size={200} color="grey" />
+                  <Text style={{ right: 120 }}>Name</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter animal name"
+                    value={newAnimalName}
+                    onChangeText={setNewAnimalName}
+                  />
+                  <View style={styles.iconContainer}>
+                    {imageBase64Array.length >= 1 &&
+                      imageBase64Array.map((animal, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          style={[
+                            styles.iconWrapper,
+                            selectedIcon === index && styles.selectedIcon,
+                          ]}
+                          onPress={() => setSelectedIcon(index)}
+                        >
+                          <Image
+                            style={{ width: 80, height: 80 }}
+                            source={{ uri: animal as string }}
+                          />
+                        </TouchableOpacity>
+                      ))}
+                  </View>
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={handleSaveAnimal}
+                    >
+                      <Text style={styles.buttonText}>Save</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => setModalVisible(false)}
+                    >
+                      <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
             </View>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Add</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -202,6 +257,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    width: "100%",
   },
   modalContent: {
     width: "80%",

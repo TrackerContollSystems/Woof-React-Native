@@ -1,9 +1,8 @@
-import { View, Text, Button, ActivityIndicator, Image } from "react-native";
+import { View, Text, Button, ActivityIndicator, Image, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UseAuthContext } from "../../Contexts/AuthContext";
-import RNFetchBlob from "rn-fetch-blob";
 import { useNavigation } from "@react-navigation/native";
 import UserHeaders from "./UserHeaders";
 import UserNavbar from "./UserNavbar";
@@ -60,7 +59,7 @@ const Home = () => {
   };
   if (authUser && authUser.email) {
     return (
-      <View style={{ backgroundColor: "white" }}>
+      <ScrollView style={{ backgroundColor: "white" }}>
         <Button title="logout" onPress={() => logout()} />
 
         {/* <Text>User Name {authUser.email}</Text>
@@ -68,16 +67,16 @@ const Home = () => {
         <UserNavbar />
         <UserHeaders />
         <UserHeadersInfo />
-      </View>
+      </ScrollView>
     );
   } else {
     return (
-      <View>
+      <ScrollView>
         <UserNavbar />
         <UserHeaders />
         <UserHeadersInfo />
         {/* <Text onPress={() => console.log(authUser)}>Logged out s</Text> */}
-      </View>
+      </ScrollView>
     );
   }
 };
