@@ -12,8 +12,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  ActionSheetIOS,
+  Alert,
 } from "react-native";
 import { Ionicons, Foundation } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { useQuery } from "@tanstack/react-query";
 import {
   GetReferenceAnimalPhotos,
@@ -21,10 +24,6 @@ import {
 } from "../../API/ReferenceData/GetAllAnimalicons";
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-
-import AnimalInfo from "./AnimalInfo/AnimalInfo";
-
-
 
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
@@ -83,7 +82,84 @@ export default function UserHeaders() {
       setSelectedIcon(null);
       setModalVisible(false);
 
-      navigation.navigate("AnimalInfo");
+      navigation.navigate("AnimalInfoDocuments");
+    }
+  };
+
+  const requestCameraPermissions = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission to access camera was denied");
+    }
+  };
+
+  const requestMediaLibraryPermissions = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission to access media library was denied");
+    }
+  };
+
+  const openImagePickerAsync = async (source: any) => {
+    await requestCameraPermissions();
+    await requestMediaLibraryPermissions();
+
+    let result;
+    if (source === "camera") {
+      result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    }
+
+    if (!result.canceled) {
+      const { uri } = result.assets[0];
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageBase64Array((prev) => [...prev, reader.result]);
+      };
+      reader.readAsDataURL(blob);
+    }
+  };
+
+  const handlePickImage = () => {
+    if (Platform.OS === "ios") {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ["Cancel", "Take Photo", "Choose from Library"],
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            openImagePickerAsync("camera");
+          } else if (buttonIndex === 2) {
+            openImagePickerAsync("gallery");
+          }
+        }
+      );
+    } else {
+      Alert.alert(
+        "Select Image",
+        "Choose an option",
+        [
+          { text: "Take Photo", onPress: () => openImagePickerAsync("camera") },
+          {
+            text: "Choose from Library",
+            onPress: () => openImagePickerAsync("gallery"),
+          },
+          { text: "Cancel", style: "cancel" },
+        ],
+        { cancelable: true }
+      );
     }
   };
 
@@ -155,6 +231,7 @@ export default function UserHeaders() {
 
                   <Foundation name="guide-dog" size={200} color="grey" />
                   <Text style={{ right: 120 }}>Name</Text>
+
                   <TextInput
                     style={styles.input}
                     placeholder="Enter animal name"
@@ -162,6 +239,9 @@ export default function UserHeaders() {
                     onChangeText={setNewAnimalName}
                   />
                   <View style={styles.iconContainer}>
+                    <TouchableOpacity onPress={handlePickImage}>
+                      <Ionicons name="camera" size={90} color="black" />
+                    </TouchableOpacity>
                     {imageBase64Array.length >= 1 &&
                       imageBase64Array.map((animal, index) => (
                         <TouchableOpacity
@@ -181,16 +261,16 @@ export default function UserHeaders() {
                   </View>
                   <View style={styles.modalButtons}>
                     <TouchableOpacity
-                      style={styles.button}
-                      onPress={handleSaveAnimal}
-                    >
-                      <Text style={styles.buttonText}>Save</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.button}
+                      style={styles.buttonCancel}
                       onPress={() => setModalVisible(false)}
                     >
                       <Text style={styles.buttonText}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.buttonSave}
+                      onPress={handleSaveAnimal}
+                    >
+                      <Text style={styles.buttonText}>Save</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -306,5 +386,26 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  buttonSave: {
+    flex: 1,
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 5,
+    margin: 5,
+    backgroundColor: "green",
+  },
+  buttonCancel: {
+    flex: 1,
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 5,
+    margin: 5,
+    backgroundColor: "red",
+  },
+  imageCamera: {
+    flex: 9,
+    backgroundColor: "red",
+    marginRight: 5,
   },
 });

@@ -12,6 +12,7 @@ import Subscription from "../screens/Subscription/Subscription";
 import { StatusBar } from "expo-status-bar";
 import Map from "../screens/Map/Map";
 import AnimalInfo from "../screens/Home/AnimalInfo/AnimalInfo";
+import AnimalInfoDocuments from "../screens/Home/AnimalInfo/AnimalInfoDocuments";
 
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
@@ -45,7 +46,8 @@ export default function RootNavigation({ children }: any) {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="Subscription" component={Subscription} />
-        <Stack.Screen name="AnimalInfo" component={AnimalInfo} />
+        {/* <Stack.Screen name="AnimalInfo" component={AnimalInfo} /> */}
+        <Stack.Screen name="AnimalInfoDocuments" component={AnimalInfoDocuments} />
 
       </Stack.Navigator>
     </>
