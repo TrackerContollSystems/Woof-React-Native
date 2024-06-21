@@ -20,8 +20,13 @@ import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
 import AnimalInfo from "./AnimalInfo/AnimalInfo";
+<<<<<<< HEAD
 import { CreateAnimalRequest } from "../../API/User/CreateAnimalRequest";
 import { GetAnimalDetailsByUserRequest } from "../../API/User/GetAnimalDetailsByUserRequest";
+=======
+
+
+>>>>>>> 7332e61b647c2ac5dddd7dd22234662b0dbb1a19
 
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
@@ -35,7 +40,11 @@ export default function UserHeaders() {
     (string | ArrayBuffer | null)[]
   >([]);
 
+<<<<<<< HEAD
   const navigation: any = useNavigation();
+=======
+  const navigation = useNavigation();
+>>>>>>> 7332e61b647c2ac5dddd7dd22234662b0dbb1a19
 
   const referenceaAnimalData = useQuery({
     queryKey: ["get-animals-reference"],
@@ -92,6 +101,11 @@ export default function UserHeaders() {
       setNewAnimalName("");
       setSelectedIcon(null);
       setModalVisible(false);
+<<<<<<< HEAD
+=======
+
+      navigation.navigate("AnimalInfo");
+>>>>>>> 7332e61b647c2ac5dddd7dd22234662b0dbb1a19
     }
   };
 
