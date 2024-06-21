@@ -46,7 +46,6 @@ export default function RootNavigation({ children }: any) {
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="Subscription" component={Subscription} />
         <Stack.Screen name="AnimalInfo" component={AnimalInfo} />
-
       </Stack.Navigator>
     </>
   );
