@@ -17,13 +17,15 @@ import {
 } from "react-native";
 import { Ionicons, Foundation } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   GetReferenceAnimalPhotos,
-  GetUserAnimalsRequest,
+
 } from "../../API/ReferenceData/GetAllAnimalicons";
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
+import { GetAnimalDetailsByUser } from "../../API/User/GetAnimalDetailsByUserRequest";
+import { CreateAnimalRequest } from "../../API/User/CreateAnimalRequest";
 
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
@@ -37,7 +39,8 @@ export default function UserHeaders() {
     (string | ArrayBuffer | null)[]
   >([]);
 
-  const navigation = useNavigation();
+
+  const navigation: any = useNavigation();
 
   const referenceaAnimalData = useQuery({
     queryKey: ["get-animals-reference"],
@@ -45,7 +48,7 @@ export default function UserHeaders() {
   });
   const animalData = useQuery({
     queryKey: ["get-user-animals"],
-    queryFn: GetUserAnimalsRequest,
+    queryFn: GetAnimalDetailsByUser,
   });
 
   useEffect(() => {
@@ -65,22 +68,36 @@ export default function UserHeaders() {
     ImageFetch();
   }, [referenceaAnimalData.isSuccess]);
 
-  useEffect(() => {
-    if (animalData.isSuccess) {
-      // setAnimals(animalData.data);
-    }
-  }, [animalData.isSuccess]);
+  // useEffect(() => {
+  //   if (animalData.isSuccess) {
+  //     // setAnimals(animalData.data);
+  //   }
+  // }, [animalData.isSuccess]);
 
-  const handleSaveAnimal = () => {
+  const mutation = useMutation({
+    mutationFn: (obj: any) => {
+      return CreateAnimalRequest(obj);
+    },
+    onSuccess() {
+      navigation.navigate(`AnimalInfo`);
+    },
+    onError(err) {
+      console.log(err);
+    },
+  });
+  const handleSaveAnimal = async () => {
     if (newAnimalName && selectedIcon !== null) {
       const newAnimal = {
         name: newAnimalName,
         icon: imageBase64Array[selectedIcon],
       };
-      setAnimals((prev) => [...prev, newAnimal]);
+      await mutation.mutateAsync(newAnimal);
+
+      // setAnimals((prev) => [...prev, newAnimal]);
       setNewAnimalName("");
       setSelectedIcon(null);
       setModalVisible(false);
+
 
       navigation.navigate("AnimalInfoDocuments");
     }
