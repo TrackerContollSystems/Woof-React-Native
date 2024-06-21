@@ -22,7 +22,8 @@ import {
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
-import AnimalInfo from "./AnimalInfo/AnimalInfo"; 
+import AnimalInfo from "./AnimalInfo/AnimalInfo";
+
 
 
 export default function UserHeaders() {
@@ -37,9 +38,7 @@ export default function UserHeaders() {
     (string | ArrayBuffer | null)[]
   >([]);
 
-
   const navigation = useNavigation();
-
 
   const referenceaAnimalData = useQuery({
     queryKey: ["get-animals-reference"],
@@ -84,8 +83,7 @@ export default function UserHeaders() {
       setSelectedIcon(null);
       setModalVisible(false);
 
-      navigation.navigate('AnimalInfo');
-
+      navigation.navigate("AnimalInfo");
     }
   };
 

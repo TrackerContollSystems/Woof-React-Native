@@ -1,7 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+import { Fontisto } from '@expo/vector-icons';
 
 export default function AnimalInfo() {
   const handleMicrochipPress = () => {
@@ -13,7 +17,7 @@ export default function AnimalInfo() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.profileContainer}>
         <FontAwesome
           name="user-circle"
@@ -50,10 +54,10 @@ export default function AnimalInfo() {
             style={styles.buttonIcon}
           />
           <Text style={styles.buttonTexts}>Microchip</Text>
-       
-          <View style={{flexDirection: 'row', right: 80}}>
-          <Ionicons name="add" size={16} color="green" />
-          <Text style={{color: 'green'}}>Add</Text>
+
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttons} onPress={handleQRCodePress}>
@@ -64,24 +68,133 @@ export default function AnimalInfo() {
             style={styles.buttonIcon}
           />
           <Text style={styles.buttonTexts}>QR Code</Text>
-          <View style={{flexDirection: 'row', right: 80}}>
-          <Ionicons name="add" size={16} color="green" />
-          <Text style={{color: 'green'}}>Add</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
           </View>
         </TouchableOpacity>
       </View>
       <View>
         <Text style={styles.idstyle}>Does it have any special features?</Text>
 
-        <TouchableOpacity style={styles.buttonsFuature} >
-      
+        <TouchableOpacity style={styles.buttonsFuature}>
           <Text style={styles.buttonTextsFueture}>Get Access</Text>
-       
         </TouchableOpacity>
-<Text style={{marginTop: 5, marginLeft: 5, color: 'grey'}}>Fill in the information about the pet completely</Text>
-
+        <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
+          Fill in the information about the pet completely
+        </Text>
       </View>
-    </View>
+      <View>
+        <Text style={styles.idstyle}>Information about the pet</Text>
+        <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+          <MaterialIcons
+            name="drive-file-rename-outline"
+            size={24}
+            color="black"
+            style={styles.buttonIcon}
+          />
+          <Text style={styles.buttonTexts}>Name</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+          <FontAwesome
+            name="birthday-cake"
+            size={24}
+            color="black"
+            style={styles.buttonIcon}
+          />
+
+          <Text style={styles.buttonTexts}>Date Of Birth</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+          <Entypo
+            name="baidu"
+            size={24}
+            color="black"
+            style={styles.buttonIcon}
+          />
+
+          <Text style={styles.buttonTexts}>Species</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+          <MaterialCommunityIcons
+            name="dog-side"
+            size={24}
+            color="black"
+            style={styles.buttonIcon}
+          />
+
+          <Text style={styles.buttonTexts}>Breed</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+          <MaterialCommunityIcons
+            name="gender-male-female"
+            size={24}
+            color="black"
+            style={styles.buttonIcon}
+          />
+          <Text style={styles.buttonTexts}>Gender</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+       
+          <MaterialIcons name="invert-colors" size={24} color="black"  style={styles.buttonIcon}/>
+          <Text style={styles.buttonTexts}>Color</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+       <Fontisto name="date" size={24} color="black"  style={styles.buttonIcon}/>
+          
+          <Text style={styles.buttonTexts}>Registration Date</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -125,7 +238,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 1,
   },
-  buttonsFuature:{
+  buttonsFuature: {
     backgroundColor: "#eff0ff",
     flexDirection: "row",
     alignItems: "center",
@@ -136,9 +249,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 1,
     borderWidth: 2,
-    borderColor: 'purple',
-    borderStyle: 'dashed',
-  
+    borderColor: "purple",
+    borderStyle: "dashed",
+  },
+  buttonsInformation: {
+    backgroundColor: "#eff0ff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    marginTop: 1,
   },
   buttonText: {
     color: "white",
@@ -149,14 +272,13 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 18,
     fontWeight: "bold",
-  
-    flex: 7
+
+    flex: 7,
   },
-  buttonTextsFueture:{
+  buttonTextsFueture: {
     fontSize: 18,
     fontWeight: "bold",
-    color: 'purple',
-    
+    color: "purple",
   },
   idstyle: {
     display: "flex",
@@ -167,6 +289,6 @@ const styles = StyleSheet.create({
   buttonIcon: {
     marginLeft: 10,
     color: "black",
-    flex: 1
+    flex: 1,
   },
 });
