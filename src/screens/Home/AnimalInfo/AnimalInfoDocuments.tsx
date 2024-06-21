@@ -2,8 +2,12 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function AnimalInfoDocuments() {
+
+    const navigation: any = useNavigation();
+    
   return (
     <View style={styles.container}>
       <View style={styles.iconsRow}>
@@ -12,7 +16,7 @@ export default function AnimalInfoDocuments() {
           <Text style={styles.iconText}>Activate QR Code</Text>
         </View>
         <View style={styles.iconContainer}>
-          <MaterialCommunityIcons name="dog" size={94} color="black" />
+          <MaterialCommunityIcons  onPress={() => navigation.navigate("AnimalInfo")} name="dog" size={94} color="black" />
         </View>
         <View style={styles.iconContainer}>
           <MaterialCommunityIcons name="search-web" size={34} color="black" />

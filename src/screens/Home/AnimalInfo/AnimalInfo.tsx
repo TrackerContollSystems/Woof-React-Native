@@ -193,7 +193,46 @@ export default function AnimalInfo() {
             <Text style={{ color: "green" }}>Add</Text>
           </View>
         </TouchableOpacity>
+        <View>
+        <Text style={styles.idstyle}>Important Information</Text>
+
+        <TouchableOpacity style={styles.buttonsFuature}>
+          <Text style={styles.buttonTextsFueture}>Get Access</Text>
+        </TouchableOpacity>
+        <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
+        Enter important information that will help the finder pay attention to the pet
+        </Text>
       </View>
+      <View>
+        <Text style={styles.idstyle}>Medical Card</Text>
+
+        <TouchableOpacity style={styles.buttonsFuature}>
+          <Text style={styles.buttonTextsFueture}>Get Access</Text>
+        </TouchableOpacity>
+        <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
+        Add information about vaccinations, allergies or other similar habits
+        </Text>
+      </View>
+      <View>
+        <Text style={styles.idstyle}>Veterinary procedures</Text>
+      <TouchableOpacity
+          style={styles.buttonsInformation}
+          onPress={handleQRCodePress}
+        >
+          <MaterialIcons name="local-pharmacy" size={24} color="black"   style={styles.buttonIcon}/>
+
+          <Text style={styles.buttonTexts}>Sterilization</Text>
+          <View style={{ flexDirection: "row", right: 80 }}>
+            <Ionicons name="add" size={16} color="green" />
+            <Text style={{ color: "green" }}>Add</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+     
+      </View>
+      <TouchableOpacity >
+        <Text style={styles.deleteButton}>Delete Account</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -228,7 +267,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttons: {
-    backgroundColor: "#eff0ff",
+    backgroundColor: "rgb(232, 255, 233)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -253,7 +292,7 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
   },
   buttonsInformation: {
-    backgroundColor: "#eff0ff",
+    backgroundColor: "rgb(232, 255, 233)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -291,4 +330,9 @@ const styles = StyleSheet.create({
     color: "black",
     flex: 1,
   },
+  deleteButton: {
+   fontSize: 20,
+    padding: 15,
+    color: 'red'
+  }
 });

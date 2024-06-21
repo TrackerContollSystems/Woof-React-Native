@@ -17,11 +17,8 @@ import {
 } from "react-native";
 import { Ionicons, Foundation } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  GetReferenceAnimalPhotos,
-
-} from "../../API/ReferenceData/GetAllAnimalicons";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { GetReferenceAnimalPhotos } from "../../API/ReferenceData/GetAllAnimalicons";
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { GetAnimalDetailsByUser } from "../../API/User/GetAnimalDetailsByUserRequest";
@@ -31,6 +28,7 @@ export default function UserHeaders() {
   const { authState } = UseAuthContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [newAnimalName, setNewAnimalName] = useState("");
+  const [newAnimalIcon, setNewIcon] = useState("");
   const [selectedIcon, setSelectedIcon] = useState<number | null>(null);
   const [animals, setAnimals] = useState<
     { name: string; icon: string | ArrayBuffer | null }[]
@@ -39,7 +37,21 @@ export default function UserHeaders() {
     (string | ArrayBuffer | null)[]
   >([]);
 
-
+  //   useEffect(()=>{
+  //  const imageFetch = async ()=>{
+  //    if(animalData.isSuccess){
+  //     for(let i = 0; i <  animalData?.data.length ; i ++ ){
+  //   const response = await fetch(animalData.data[i].icon)
+  //   const blob = await response.blob()
+  //   const reader = new FileReader();
+  //   reader.onloadend= () =>{
+  //     setAnimalDataWithBase64((state:any)=> [...state, {name:state.name, icon:reader.result}])
+  //   }
+  //   reader.readAsDataURL(blob);
+  //     }   }
+  //  }
+  //  imageFetch()
+  //   },[animalData.isSuccess])
   const navigation: any = useNavigation();
 
   const referenceaAnimalData = useQuery({
@@ -51,56 +63,31 @@ export default function UserHeaders() {
     queryFn: GetAnimalDetailsByUser,
   });
 
-  useEffect(() => {
-    const ImageFetch = async () => {
-      if (referenceaAnimalData.isSuccess) {
-        for (let i = 0; i < referenceaAnimalData.data.length; i++) {
-          const response = await fetch(referenceaAnimalData.data[i]);
-          const blob = await response.blob();
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setImageBase64Array((prev) => [...prev, reader.result]);
-          };
-          reader.readAsDataURL(blob);
-        }
-      }
-    };
-    ImageFetch();
-  }, [referenceaAnimalData.isSuccess]);
-
-  // useEffect(() => {
-  //   if (animalData.isSuccess) {
-  //     // setAnimals(animalData.data);
-  //   }
-  // }, [animalData.isSuccess]);
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: (obj: any) => {
       return CreateAnimalRequest(obj);
     },
     onSuccess() {
-      navigation.navigate(`AnimalInfo`);
+      // navigation.navigate(`AnimalInfoDocuments`);
+      navigation.navigate("AnimalInfoDocuments", { photoUri: newAnimalIcon });
+      queryClient.invalidateQueries({ queryKey: ["get-user-animals"] });
+      setNewAnimalName("");
+      setSelectedIcon(null);
+      setModalVisible(false);
     },
     onError(err) {
       console.log(err);
     },
   });
+
   const handleSaveAnimal = async () => {
-    if (newAnimalName && selectedIcon !== null) {
-      const newAnimal = {
-        name: newAnimalName,
-        icon: imageBase64Array[selectedIcon],
-      };
-      await mutation.mutateAsync(newAnimal);
-
-      // setAnimals((prev) => [...prev, newAnimal]);
-      setNewAnimalName("");
-      setSelectedIcon(null);
-      setModalVisible(false);
-
-
-      navigation.navigate("AnimalInfoDocuments");
-    }
+    const obj = {
+      Name: newAnimalName,
+      Icon: newAnimalIcon,
+    };
+    await mutation.mutateAsync(obj);
   };
 
   const requestCameraPermissions = async () => {
@@ -180,27 +167,33 @@ export default function UserHeaders() {
     }
   };
 
-  if (referenceaAnimalData.isPending) {
+  if (referenceaAnimalData.isPending || !referenceaAnimalData.isSuccess) {
     return <Text>Loading...</Text>;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>My Animals</Text>
+      <Text onPress={() => console.log(animalData.data)} style={styles.text}>
+        My Animals
+      </Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
-        {animals.length >= 1 &&
-          animals.map((animal, index) => (
-            <View key={index} style={styles.animalContainer}>
+        {animalData?.data?.length >= 1 &&
+          animalData?.data?.map((animal: any, index: number) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("AnimalInfoDocuments")}
+              key={index}
+              style={styles.animalContainer}
+            >
               <Image
                 style={{ width: 100, height: 100 }}
                 source={{ uri: animal.icon as string }}
               />
               <Text style={styles.animalText}>{animal.name}</Text>
-            </View>
+            </TouchableOpacity>
           ))}
         <TouchableOpacity
           style={styles.animalContainer}
@@ -259,22 +252,24 @@ export default function UserHeaders() {
                     <TouchableOpacity onPress={handlePickImage}>
                       <Ionicons name="camera" size={90} color="black" />
                     </TouchableOpacity>
-                    {imageBase64Array.length >= 1 &&
-                      imageBase64Array.map((animal, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          style={[
-                            styles.iconWrapper,
-                            selectedIcon === index && styles.selectedIcon,
-                          ]}
-                          onPress={() => setSelectedIcon(index)}
-                        >
-                          <Image
-                            style={{ width: 80, height: 80 }}
-                            source={{ uri: animal as string }}
-                          />
-                        </TouchableOpacity>
-                      ))}
+                    {referenceaAnimalData?.data?.length >= 1 &&
+                      referenceaAnimalData?.data?.map(
+                        (animal: string, index: number) => (
+                          <TouchableOpacity
+                            key={index}
+                            style={[
+                              styles.iconWrapper,
+                              selectedIcon === index && styles.selectedIcon,
+                            ]}
+                            onPress={() => setNewIcon(animal)}
+                          >
+                            <Image
+                              style={{ width: 80, height: 80 }}
+                              source={{ uri: animal as string }}
+                            />
+                          </TouchableOpacity>
+                        )
+                      )}
                   </View>
                   <View style={styles.modalButtons}>
                     <TouchableOpacity
@@ -310,6 +305,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     alignItems: "center",
+    padding: 5
   },
   animalContainer: {
     alignItems: "center",
