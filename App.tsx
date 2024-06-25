@@ -10,6 +10,7 @@ import { AuthContextProvider } from "./src/Contexts/AuthContext";
 import RootNavigation from "./src/navigation/RootNavigator";
 import TabNavigator from "./src/navigation/TabNavigator";
 import { View, StyleSheet } from "react-native";
+import { PhotoContextProvider } from "./src/Contexts/PhotoPickerContext";
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
@@ -20,16 +21,18 @@ function App() {
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <AuthContextProvider>
-            <NavigationContainer>
-              <View style={styles.container}>
-                <View style={styles.content}>
-                  <RootNavigation />
+            <PhotoContextProvider>
+              <NavigationContainer>
+                <View style={styles.container}>
+                  <View style={styles.content}>
+                    <RootNavigation />
+                  </View>
+                  <View style={styles.footer}>
+                    <TabNavigator />
+                  </View>
                 </View>
-                <View style={styles.footer}>
-                  <TabNavigator />
-                </View>
-              </View>
-            </NavigationContainer>
+              </NavigationContainer>
+            </PhotoContextProvider>
           </AuthContextProvider>
         </QueryClientProvider>
       </Provider>
@@ -46,7 +49,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 80,
-
   },
 });
 

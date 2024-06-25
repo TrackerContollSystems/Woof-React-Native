@@ -12,20 +12,22 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  ActionSheetIOS,
-  Alert,
+  Pressable,
 } from "react-native";
 import { Ionicons, Foundation } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetReferenceAnimalPhotos } from "../../API/ReferenceData/GetAllAnimalicons";
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import { GetAnimalDetailsByUser } from "../../API/User/GetAnimalDetailsByUserRequest";
 import { CreateAnimalRequest } from "../../API/User/CreateAnimalRequest";
+import { UsePhotoContext } from "../../Contexts/PhotoPickerContext";
+import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
 
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
+  const { handlePickImage, photoFromGallery, setPhotoFromGallery } =
+    UsePhotoContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [newAnimalName, setNewAnimalName] = useState("");
   const [newAnimalIcon, setNewIcon] = useState("");
@@ -76,6 +78,7 @@ export default function UserHeaders() {
       setNewAnimalName("");
       setSelectedIcon(null);
       setModalVisible(false);
+      setPhotoFromGallery("");
     },
     onError(err) {
       console.log(err);
@@ -86,85 +89,9 @@ export default function UserHeaders() {
     const obj = {
       Name: newAnimalName,
       Icon: newAnimalIcon,
+      File: photoFromGallery.assets[0],
     };
     await mutation.mutateAsync(obj);
-  };
-
-  const requestCameraPermissions = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Permission to access camera was denied");
-    }
-  };
-
-  const requestMediaLibraryPermissions = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Permission to access media library was denied");
-    }
-  };
-
-  const openImagePickerAsync = async (source: any) => {
-    await requestCameraPermissions();
-    await requestMediaLibraryPermissions();
-
-    let result;
-    if (source === "camera") {
-      result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    } else {
-      result = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    }
-
-    if (!result.canceled) {
-      const { uri } = result.assets[0];
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageBase64Array((prev) => [...prev, reader.result]);
-      };
-      reader.readAsDataURL(blob);
-    }
-  };
-
-  const handlePickImage = () => {
-    if (Platform.OS === "ios") {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options: ["Cancel", "Take Photo", "Choose from Library"],
-          cancelButtonIndex: 0,
-        },
-        (buttonIndex) => {
-          if (buttonIndex === 1) {
-            openImagePickerAsync("camera");
-          } else if (buttonIndex === 2) {
-            openImagePickerAsync("gallery");
-          }
-        }
-      );
-    } else {
-      Alert.alert(
-        "Select Image",
-        "Choose an option",
-        [
-          { text: "Take Photo", onPress: () => openImagePickerAsync("camera") },
-          {
-            text: "Choose from Library",
-            onPress: () => openImagePickerAsync("gallery"),
-          },
-          { text: "Cancel", style: "cancel" },
-        ],
-        { cancelable: true }
-      );
-    }
   };
 
   if (referenceaAnimalData.isPending || !referenceaAnimalData.isSuccess) {
@@ -181,21 +108,6 @@ export default function UserHeaders() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
-        {/* {animalData?.data?.length >= 1 &&
-          animalData?.data?.map((animal: any, index: number) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("AnimalInfoDocuments")}
-              key={index}
-              style={styles.animalContainer}
-            >
-              <Image
-                style={{ width: 100, height: 100 }}
-                source={{ uri: animal.icon as string }}
-              />
-              <Text style={styles.animalText}>{animal.name}</Text>
-            </TouchableOpacity>
-          ))} */}
-
         {animalData?.data?.length >= 1 &&
           animalData?.data?.map((animal: any, index: number) => (
             <TouchableOpacity
@@ -256,11 +168,26 @@ export default function UserHeaders() {
             }}
           >
             <View style={styles.modalContainer}>
-              <TouchableWithoutFeedback onPress={() => {}}>
+              <TouchableWithoutFeedback>
                 <View style={styles.modalContent}>
                   <Text style={styles.modalTitle}>Add New Animal</Text>
+                  {mutation.isPending && <LoadingAnimation />}
+                  {photoFromGallery?.assets[0]?.uri ? (
+                    <Pressable onPress={() => setPhotoFromGallery(null)}>
+                      <Image
+                        style={{ width: 200, height: 200 }}
+                        source={{ uri: photoFromGallery.assets[0].uri }}
+                      />
+                    </Pressable>
+                  ) : (
+                    <Pressable onPress={() => setNewIcon("")}>
+                      <Image
+                        style={{ width: 200, height: 200 }}
+                        source={{ uri: newAnimalIcon }}
+                      />
+                    </Pressable>
+                  )}
 
-                  <Foundation name="guide-dog" size={200} color="grey" />
                   <Text style={{ right: 120 }}>Name</Text>
 
                   <TextInput
@@ -273,6 +200,7 @@ export default function UserHeaders() {
                     <TouchableOpacity onPress={handlePickImage}>
                       <Ionicons name="camera" size={90} color="black" />
                     </TouchableOpacity>
+
                     {referenceaAnimalData?.data?.length >= 1 &&
                       referenceaAnimalData?.data?.map(
                         (animal: string, index: number) => (

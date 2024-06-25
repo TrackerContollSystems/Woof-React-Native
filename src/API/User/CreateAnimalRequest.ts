@@ -1,35 +1,52 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiManager } from "../APIManager";
 import axios from "axios";
+import { Platform } from "react-native";
+import * as FileSystem from "expo-file-system";
 
 export const CreateAnimalRequest = async (body: any) => {
-  try {
-    const token = await AsyncStorage.getItem("token");
-    const { Name, Icon,  } = body;
+  const token = await AsyncStorage.getItem("token");
+  const { Name, Icon, File } = body;
 
-    const formData = new FormData();
-    formData.append('Name', Name);
-    formData.append('Icon', Icon);
-    
-    formData.append('File', null); 
+  const formData = new FormData();
+  formData.append("Name", Name);
 
-    console.log(formData); 
+  if (File) {
+    const fileUri = File.uri;
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
 
-    const res = await axios.post(
-      "https://pwdemo.mygps.ge:4542/Animal/CreateAnimalCover",
-      formData ,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",  
-        },
-      }
-    );
+    if (!fileInfo.exists) {
+      throw new Error("File does not exist");
+    }
 
-    return res;
-  } catch (error) {
-    console.log(error);
-    const err: any = error;
-    throw new Error(err);
+    // Assume JPEG if MIME type is not provided
+    const fileType = File.mimeType || "image/jpeg";
+    formData.append("File", {
+      uri: fileUri,
+      name: File.fileName || fileUri.split("/").pop(),
+      type: fileType,
+    } as any);
+    formData.append("Icon", null);
+  } else {
+    formData.append("File", null);
+    formData.append("Icon", Icon);
   }
+
+  console.log("FormData:", formData); // Log FormData for debugging
+
+  const response = await fetch(
+    "https://pwdemo.mygps.ge:4542/Animal/CreateAnimalCover",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      body: formData,
+    }
+  )
+    .then((res) => res)
+    .catch((err) => console.log(err));
+
+  return response;
 };

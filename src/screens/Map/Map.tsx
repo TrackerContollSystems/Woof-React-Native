@@ -1,121 +1,114 @@
-
-
-import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { View, Text, StyleSheet } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import * as Location from "expo-location";
+import { useQuery } from "@tanstack/react-query";
+import { GetCoordinates } from "../../API/Map/GetCoordinatesRequest";
+import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
 
-type Location = {
+type LocationType = {
   latitude: number;
   longitude: number;
 };
 
-const initialLocation1: Location = {
-  latitude: 41.7792,
-  longitude: 44.7797,
-};
-
-const initialLocation2: Location = {
-  latitude: 41.7993,
-  longitude: 44.7661,
-};
-
 const Map: React.FC = () => {
-  const [location1, setLocation1] = useState<Location>(initialLocation1);
-  const [location2, setLocation2] = useState<Location>(initialLocation2);
+  const coordinate = useQuery({
+    queryKey: ["get-animal-coordinates"],
+    queryFn: GetCoordinates,
+    refetchInterval: 1000,
+  });
 
-  const initialRegion = {
-    latitude: (location1.latitude + location2.latitude) / 2,
-    longitude: (location1.longitude + location2.longitude) / 2,
-    latitudeDelta: Math.abs(location1.latitude - location2.latitude) * 2,
-    longitudeDelta: Math.abs(location1.longitude - location2.longitude) * 2,
-  };
+  const [currentLocation, setCurrentLocation] = useState<LocationType>({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [animalLocation, setAnimalLocation] = useState<LocationType>({
+    latitude: 0,
+    longitude: 0,
+  });
+
+  useEffect(() => {
+    const fetchCurrentLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    };
+
+    fetchCurrentLocation();
+  }, []);
+
+  useEffect(() => {
+    if (coordinate.isSuccess) {
+      setAnimalLocation({
+        latitude: coordinate.data.latitude,
+        longitude: coordinate.data.longitude,
+      });
+    }
+  }, [coordinate.isSuccess]);
 
   const mapViewRef = useRef<MapView>(null);
 
   const polylineCoordinates = [
-    { latitude: location1.latitude, longitude: location1.longitude },
-    { latitude: location2.latitude, longitude: location2.longitude },
+    {
+      latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude,
+    },
+    { latitude: animalLocation.latitude, longitude: animalLocation.longitude },
   ];
 
-  const navigateToLocation = (location: Location, delta: number = 0.02) => {
-    if (mapViewRef.current) {
-      const region = {
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: delta,
-        longitudeDelta: delta * (initialRegion.longitudeDelta / initialRegion.latitudeDelta),
-      };
-      mapViewRef.current.animateToRegion(region, 1000);
-    }
-  };
-
-  const zoomIn = () => {
-    navigateToLocation(location1, initialRegion.latitudeDelta / 2);
-  };
-
-  const zoomOut = () => {
-    navigateToLocation(location1, initialRegion.latitudeDelta * 2);
-  };
+  if (coordinate.isLoading) {
+    return <LoadingAnimation />;
+  }
 
   return (
     <View style={styles.container}>
       <MapView
         ref={mapViewRef}
         style={styles.map}
-        initialRegion={initialRegion}
+        initialRegion={{
+          latitude: (currentLocation.latitude + animalLocation.latitude) / 2,
+          longitude: (currentLocation.longitude + animalLocation.longitude) / 2,
+          latitudeDelta:
+            Math.abs(currentLocation.latitude - animalLocation.latitude) * 2,
+          longitudeDelta:
+            Math.abs(currentLocation.longitude - animalLocation.longitude) * 2,
+        }}
       >
         <Marker
           coordinate={{
-            latitude: location1.latitude,
-            longitude: location1.longitude,
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
           }}
-          title="Location 1"
-          description="Description for Location 1"
+          title="Current Location"
+          description="This is your current location"
         >
-          <EvilIcons name="location" size={40} color="black" />
+          <EvilIcons name="location" size={40} color="blue" />
         </Marker>
         <Marker
           coordinate={{
-            latitude: location2.latitude,
-            longitude: location2.longitude,
+            latitude: animalLocation.latitude,
+            longitude: animalLocation.longitude,
           }}
-          title="Location 2"
-          description="Description for Location 2"
-        />
+          title="Animal Location"
+          description="This is the animal's location"
+        >
+          <EvilIcons name="location" size={40} color="red" />
+        </Marker>
         <Polyline
           coordinates={polylineCoordinates}
           strokeColor="grey"
           strokeWidth={3}
         />
       </MapView>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.roundButton, { top: "50%" }]}
-          onPress={() => navigateToLocation(location1)}
-        >
-          <Text style={styles.buttonText}>1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.roundButton, { top: "60%" }]}
-          onPress={() => navigateToLocation(location2)}
-        >
-          <Text style={styles.buttonText}>2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.roundButton, { top: "70%" }]}
-          onPress={zoomIn}
-        >
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.roundButton, { top: "80%" }]}
-          onPress={zoomOut}
-        >
-          <Text style={styles.buttonText}>-</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -128,28 +121,6 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  buttonContainer: {
-    position: "absolute",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    right: 10,
-    top: "20%",
-  },
-  roundButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
 });
 
 export default Map;
-

@@ -20,6 +20,7 @@
     "expo": "^51.0.0",
     "expo-av": "~14.0.5",
     "expo-image-picker": "^15.0.5",
+    "expo-location": "~17.0.1",
     "expo-status-bar": "~1.12.1",
     "jwt-decode": "^3.1.2",
     "nativewind": "^2.0.11",

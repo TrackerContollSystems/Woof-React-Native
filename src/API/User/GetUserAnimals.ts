@@ -4,10 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const GetUserAnimalsRequest = async (userId: any) => {
   const usrId = userId.queryKey[1];
-
-  console.log("USER ID");
-  console.log(usrId);
-  console.log("USER ID");
   try {
     const token = await AsyncStorage.getItem("token");
 
