@@ -20,6 +20,8 @@ import RNPickerSelect from "react-native-picker-select";
 import AnimalIdentifier from "./AnimalIdentifier";
 import styles from "./AnimalInfoStyle";
 import CustomModal from "./ModalAnimal";
+import DatePicker from 'react-native-datepicker';
+
 
 export default function AnimalInfo() {
   const [name, setName] = useState("");
@@ -145,7 +147,7 @@ export default function AnimalInfo() {
             Name
           </Text>
 
-          <View style={{ flexDirection: "row", right: 80 }}>
+          <View style={{ flexDirection: "row", right: 60 }}>
             {name ? (
               <Text style={{ color: "black" }}>{name}</Text>
             ) : (
@@ -170,7 +172,7 @@ export default function AnimalInfo() {
           <Text style={[styles.buttonTexts, { color: dob ? "grey" : "red" }]}>
             Date Of Birth
           </Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
+          <View style={{ flexDirection: "row", right: 60 }}>
             {dob ? (
               <Text style={{ color: "black" }}>{dob}</Text>
             ) : (
@@ -197,9 +199,9 @@ export default function AnimalInfo() {
           >
             Species
           </Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
+          <View style={{ flexDirection: "row", right: 60 }}>
             {species ? (
-              <Text style={{ color: "black" }}>{species}</Text>
+              <Text style={{ color: "black"}}>{species}</Text>
             ) : (
               <>
                 <TouchableOpacity
@@ -227,7 +229,7 @@ export default function AnimalInfo() {
           <Text style={[styles.buttonTexts, { color: breed ? "grey" : "red" }]}>
             Breed
           </Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
+          <View style={{ flexDirection: "row", right: 60 }}>
             {breed ? (
               <Text style={{ color: "black" }}>{breed}</Text>
             ) : (
@@ -254,7 +256,7 @@ export default function AnimalInfo() {
           >
             Gender
           </Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
+          <View style={{ flexDirection: "row", right: 60 }}>
             {gender ? (
               <Text style={{ color: "black" }}>{gender}</Text>
             ) : (
@@ -279,7 +281,7 @@ export default function AnimalInfo() {
           <Text style={[styles.buttonTexts, { color: color ? "grey" : "red" }]}>
             Color
           </Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
+          <View style={{ flexDirection: "row", right: 60 }}>
             {color ? (
               <Text style={{ color: "black" }}>{color}</Text>
             ) : (
@@ -314,7 +316,7 @@ export default function AnimalInfo() {
           >
             Registration Date
           </Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
+          <View style={{ flexDirection: "row", right: 60 }}>
             {registrationDate ? (
               <Text style={{ color: "black" }}>{registrationDate}</Text>
             ) : (
@@ -370,7 +372,7 @@ export default function AnimalInfo() {
             >
               Sterilization
             </Text>
-            <View style={{ flexDirection: "row", right: 80 }}>
+            <View style={{ flexDirection: "row", right: 60 }}>
               {sterilization ? (
                 <Text style={{ color: "black" }}>{sterilization}</Text>
               ) : (

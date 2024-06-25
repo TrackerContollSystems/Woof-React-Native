@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, Modal, TouchableOpacity, TextInput } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-import styles from './AnimalInfoStyle';
+import React from "react";
+import { View, Text, Modal, TouchableOpacity, TextInput } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import styles from "./AnimalInfoStyle";
 
 type CustomModalProps = {
   visible: boolean;
@@ -20,6 +21,13 @@ const CustomModal: React.FC<CustomModalProps> = ({
   value,
   setValue,
 }) => {
+  const handleChange = (event: any, selectedDate?: Date) => {
+    if (selectedDate) {
+      const formattedDate = selectedDate.toISOString().split("T")[0];
+      setValue(formattedDate);
+    }
+  };
+
   return (
     <Modal
       animationType="fade"
@@ -30,7 +38,15 @@ const CustomModal: React.FC<CustomModalProps> = ({
       <View style={styles.modalContainer}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>{title}</Text>
-          {title === "Species" ? (
+          {title === "Date Of Birth" ? (
+            <DateTimePicker
+              value={value ? new Date(value) : new Date()}
+              mode="date"
+              display="default"
+              onChange={handleChange}
+              maximumDate={new Date()}
+            />
+          ) : title === "Species" ? (
             <RNPickerSelect
               onValueChange={(value) => setValue(value)}
               items={[

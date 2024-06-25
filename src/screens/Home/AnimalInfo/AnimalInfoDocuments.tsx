@@ -1,21 +1,35 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image  } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+
+interface RouteParams {
+    photoUri: string;
+    animalName: string
+  }
 
 export default function AnimalInfoDocuments() {
 
     const navigation: any = useNavigation();
+    const route = useRoute<RouteProp<Record<string, RouteParams>, string>>();
+  const { photoUri, animalName } = route.params;
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ title: animalName });
+  }, [navigation, animalName]);
     
   return (
     <View style={styles.container}>
       <View style={styles.iconsRow}>
         <View style={styles.iconContainer}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{animalName}</Text>
           <MaterialCommunityIcons name="qrcode-scan" size={34} color="black" />
           <Text style={styles.iconText}>Activate QR Code</Text>
         </View>
-        <View style={styles.iconContainer}>
+        <View style={styles.iconContainer} >
+
+        <Image style={{width: 100, height: 100, borderRadius: 45}} source={{ uri: photoUri }} />
           <MaterialCommunityIcons  onPress={() => navigation.navigate("AnimalInfo")} name="dog" size={94} color="black" />
         </View>
         <View style={styles.iconContainer}>

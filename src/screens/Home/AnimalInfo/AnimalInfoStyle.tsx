@@ -42,7 +42,7 @@ export default StyleSheet.create({
     marginTop: 1,
   },
   buttonsFuature: {
-    backgroundColor: "#eff0ff",
+    backgroundColor: "rgb(232, 255, 233)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -52,7 +52,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginTop: 1,
     borderWidth: 2,
-    borderColor: "purple",
+    borderColor: "rgb(255, 171, 255)",
     borderStyle: "dashed",
   },
   buttonsInformation: {
@@ -75,12 +75,12 @@ export default StyleSheet.create({
     color: "red",
     fontSize: 15,
     fontWeight: "bold",
-    flex: 7,
+    flex: 6,
   },
   buttonTextsFueture: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "purple",
+    color: "rgb(255, 171, 255)",
   },
   idstyle: {
     display: "flex",
@@ -142,5 +142,24 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  datePickerButton: {
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    width: "100%",
+    paddingHorizontal: 10,
+    marginBottom: 15,
+  },
+  datePickerText: {
+    fontSize: 16,
+    color: "gray",
+  },
+  datePicker: {
+    width: 200,
+    marginBottom: 20,
   },
 });

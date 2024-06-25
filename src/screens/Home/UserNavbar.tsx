@@ -25,7 +25,7 @@ export default function UserNavbar() {
           <Text style={{ fontSize: 14, color: "gray", padding: 4 }}>User</Text>
         </View>
 
-        <View style={{ marginLeft: 95 }}>
+        <View style={{ marginLeft: 85 }}>
           <MaterialCommunityIcons
             name="trophy-award"
             size={44}

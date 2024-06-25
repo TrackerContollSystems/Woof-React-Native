@@ -1,4 +1,4 @@
-import { View, Text, Platform, StyleSheet } from "react-native";
+import { View, Text, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -6,22 +6,22 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 export default function UserHeadersInfo() {
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.container}>
+      <TouchableOpacity style={styles.container}>
         <AntDesign name="exclamationcircle" size={54} color="green" />
         <Text style={styles.smallText}>small</Text>
-      </View>
-      <View style={styles.container}>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.container}>
         <AntDesign name="calendar" size={54} color="black" />
         <Text style={styles.smallText}>small</Text>
-      </View>
-      <View style={styles.container}>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.container}>
         <MaterialCommunityIcons name="list-status" size={54} color="black" />
         <Text style={styles.smallText}>small</Text>
-      </View>
-      <View style={styles.container}>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.container}>
         <MaterialCommunityIcons name="qrcode-scan" size={54} color="black" />
         <Text style={styles.smallText}>small</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }

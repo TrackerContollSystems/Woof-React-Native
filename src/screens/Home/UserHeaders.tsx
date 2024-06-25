@@ -181,7 +181,7 @@ export default function UserHeaders() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
-        {animalData?.data?.length >= 1 &&
+        {/* {animalData?.data?.length >= 1 &&
           animalData?.data?.map((animal: any, index: number) => (
             <TouchableOpacity
               onPress={() => navigation.navigate("AnimalInfoDocuments")}
@@ -194,7 +194,28 @@ export default function UserHeaders() {
               />
               <Text style={styles.animalText}>{animal.name}</Text>
             </TouchableOpacity>
+          ))} */}
+
+        {animalData?.data?.length >= 1 &&
+          animalData?.data?.map((animal: any, index: number) => (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("AnimalInfoDocuments", {
+                  animalName: animal.name,
+                  photoUri: animal.icon,
+                })
+              }
+              key={index}
+              style={styles.animalContainer}
+            >
+              <Image
+                style={{ width: 100, height: 100, borderRadius: 45 }}
+                source={{ uri: animal.icon as string }}
+              />
+              <Text style={styles.animalText}>{animal.name}</Text>
+            </TouchableOpacity>
           ))}
+
         <TouchableOpacity
           style={styles.animalContainer}
           onPress={() => setModalVisible(true)}
@@ -305,7 +326,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     alignItems: "center",
-    padding: 5
+    padding: 5,
   },
   animalContainer: {
     alignItems: "center",
