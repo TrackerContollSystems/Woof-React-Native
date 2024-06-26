@@ -23,6 +23,8 @@ import { GetAnimalDetailsByUser } from "../../API/User/GetAnimalDetailsByUserReq
 import { CreateAnimalRequest } from "../../API/User/CreateAnimalRequest";
 import { UsePhotoContext } from "../../Contexts/PhotoPickerContext";
 import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
+import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
@@ -39,21 +41,6 @@ export default function UserHeaders() {
     (string | ArrayBuffer | null)[]
   >([]);
 
-  //   useEffect(()=>{
-  //  const imageFetch = async ()=>{
-  //    if(animalData.isSuccess){
-  //     for(let i = 0; i <  animalData?.data.length ; i ++ ){
-  //   const response = await fetch(animalData.data[i].icon)
-  //   const blob = await response.blob()
-  //   const reader = new FileReader();
-  //   reader.onloadend= () =>{
-  //     setAnimalDataWithBase64((state:any)=> [...state, {name:state.name, icon:reader.result}])
-  //   }
-  //   reader.readAsDataURL(blob);
-  //     }   }
-  //  }
-  //  imageFetch()
-  //   },[animalData.isSuccess])
   const navigation: any = useNavigation();
 
   const referenceaAnimalData = useQuery({
@@ -72,7 +59,6 @@ export default function UserHeaders() {
       return CreateAnimalRequest(obj);
     },
     onSuccess() {
-      // navigation.navigate(`AnimalInfoDocuments`);
       navigation.navigate("AnimalInfoDocuments", { photoUri: newAnimalIcon });
       queryClient.invalidateQueries({ queryKey: ["get-user-animals"] });
       setNewAnimalName("");
@@ -172,21 +158,39 @@ export default function UserHeaders() {
                 <View style={styles.modalContent}>
                   <Text style={styles.modalTitle}>Add New Animal</Text>
                   {mutation.isPending && <LoadingAnimation />}
-                  {photoFromGallery?.assets[0]?.uri ? (
-                    <Pressable onPress={() => setPhotoFromGallery(null)}>
-                      <Image
-                        style={{ width: 200, height: 200 }}
-                        source={{ uri: photoFromGallery.assets[0].uri }}
-                      />
-                    </Pressable>
-                  ) : (
-                    <Pressable onPress={() => setNewIcon("")}>
-                      <Image
-                        style={{ width: 200, height: 200 }}
-                        source={{ uri: newAnimalIcon }}
-                      />
-                    </Pressable>
-                  )}
+                  <View>
+                    {photoFromGallery?.assets[0]?.uri ? (
+                      <Pressable onPress={() => setPhotoFromGallery(null)}>
+                        <Image
+                          style={{ width: 200, height: 200 }}
+                          source={{ uri: photoFromGallery.assets[0].uri }}
+                        />
+                      </Pressable>
+                    ) : (
+                      <Pressable onPress={() => setNewIcon("")}>
+                        {newAnimalIcon ? (
+
+                          <Image
+                            style={{ width: 200, height: 200 }}
+                            source={{ uri: newAnimalIcon }}
+                          />
+                        ) : (
+                          <View style={{ width: 200, height: 200 }}>
+                            <MaterialIcons
+                              name="photo-size-select-large"
+                              size={200}
+                              color="rgb(211, 210, 210)"
+                              onPress={handlePickImage}
+                            />
+                          </View>
+                        )}
+                      </Pressable>
+                    )}
+
+
+
+
+                  </View>
 
                   <Text style={{ right: 120 }}>Name</Text>
 
@@ -198,7 +202,11 @@ export default function UserHeaders() {
                   />
                   <View style={styles.iconContainer}>
                     <TouchableOpacity onPress={handlePickImage}>
-                      <Ionicons name="camera" size={90} color="black" />
+                      <MaterialCommunityIcons
+                        name="camera-plus-outline"
+                        size={90}
+                        color="rgb(211, 210, 210)"
+                      />
                     </TouchableOpacity>
 
                     {referenceaAnimalData?.data?.length >= 1 &&
@@ -210,7 +218,11 @@ export default function UserHeaders() {
                               styles.iconWrapper,
                               selectedIcon === index && styles.selectedIcon,
                             ]}
-                            onPress={() => setNewIcon(animal)}
+                            onPress={() =>
+                              selectedIcon === index
+                                ? (setSelectedIcon(null), setNewIcon(""))
+                                : (setSelectedIcon(index), setNewIcon(animal))
+                            }
                           >
                             <Image
                               style={{ width: 80, height: 80 }}

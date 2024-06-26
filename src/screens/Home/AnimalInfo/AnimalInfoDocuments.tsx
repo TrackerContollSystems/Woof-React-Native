@@ -23,7 +23,7 @@ export default function AnimalInfoDocuments() {
     <View style={styles.container}>
       <View style={styles.iconsRow}>
         <View style={styles.iconContainer}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{animalName}</Text>
+        {/* <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{animalName}</Text> */}
           <MaterialCommunityIcons name="qrcode-scan" size={34} color="black" />
           <Text style={styles.iconText}>Activate QR Code</Text>
         </View>
