@@ -25,6 +25,7 @@
     "jwt-decode": "^3.1.2",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
+    "react-content-loader": "^7.0.2",
     "react-native": "0.74.2",
     "react-native-date-picker": "^5.0.4",
     "react-native-datepicker": "^1.7.2",

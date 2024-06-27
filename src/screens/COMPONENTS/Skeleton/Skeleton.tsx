@@ -1,50 +1,24 @@
-// components/SkeletonLoader.tsx
-import React from "react";
-import { View, StyleSheet, Animated } from "react-native";
+import React from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
-const SkeletonLoader = () => {
-  const shimmerAnimated = new Animated.Value(-600);
-
-  Animated.loop(
-    Animated.timing(shimmerAnimated, {
-      toValue: 1,
-      duration: 1200,
-      useNativeDriver: true,
-    })
-  ).start();
-
+const SkeletonLoading = () => {
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.shimmer,
-          {
-            transform: [
-              {
-                translateX: shimmerAnimated.interpolate({
-                  inputRange: [-600, 1],
-                  outputRange: [-600, 800],
-                }),
-              },
-            ],
-          },
-        ]}
-      />
+    <View style={styles.skeletonContainer}>
+      <ActivityIndicator size="large" color="green" />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  shimmer: {
-    backgroundColor: "#f0f0f0",
+  skeletonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
     height: 200,
-    width: 200,
+    backgroundColor: '#f0f0f0', // Placeholder background color
+    borderRadius: 10,
+    marginBottom: 10,
   },
 });
 
-export default SkeletonLoader;
+export default SkeletonLoading;
