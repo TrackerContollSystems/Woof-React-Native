@@ -20,8 +20,7 @@ import RNPickerSelect from "react-native-picker-select";
 import AnimalIdentifier from "./AnimalIdentifier";
 import styles from "./AnimalInfoStyle";
 import CustomModal from "./ModalAnimal";
-import DatePicker from 'react-native-datepicker';
-
+import DatePicker from "react-native-datepicker";
 
 export default function AnimalInfo() {
   const [name, setName] = useState("");
@@ -35,7 +34,9 @@ export default function AnimalInfo() {
 
   const [modalVisible, setModalVisible] = useState(false);
   // const [currentField, setCurrentField] = useState("");
-  const [currentField, setCurrentField] = useState<(value: string) => void>(() => () => {});
+  const [currentField, setCurrentField] = useState<(value: string) => void>(
+    () => () => {}
+  );
   const [currentValue, setCurrentValue] = useState("");
   const [modalTitle, setModalTitle] = useState("");
 
@@ -89,36 +90,8 @@ export default function AnimalInfo() {
       <View>
         <Text style={styles.idstyle}>Identifiers</Text>
 
-        {/* <TouchableOpacity style={styles.buttons} onPress={handleMicrochipPress}>
-          <FontAwesome
-            name="microchip"
-            size={24}
-            color="white"
-            style={styles.buttonIcon}
-          />
-          <Text style={styles.buttonTexts}>Microchip</Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
-            <Ionicons name="add" size={16} color="green" />
-            <Text style={{ color: "green" }}>Add</Text>
-          </View>
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity style={styles.buttons} onPress={handleQRCodePress}>
-          <FontAwesome
-            name="qrcode"
-            size={24}
-            color="white"
-            style={styles.buttonIcon}
-          />
-          <Text style={styles.buttonTexts}>QR Code</Text>
-          <View style={{ flexDirection: "row", right: 80 }}>
-            <Ionicons name="add" size={16} color="green" />
-            <Text style={{ color: "green" }}>Add</Text>
-          </View>
-        </TouchableOpacity> */}
-
         <AnimalIdentifier title="Microchip" onPress={handleMicrochipPress} />
         <AnimalIdentifier title="QR Code" onPress={handleQRCodePress} />
-
       </View>
       <View>
         <Text style={styles.idstyle}>Does it have any special features?</Text>
@@ -201,7 +174,7 @@ export default function AnimalInfo() {
           </Text>
           <View style={{ flexDirection: "row", right: 60 }}>
             {species ? (
-              <Text style={{ color: "black"}}>{species}</Text>
+              <Text style={{ color: "black" }}>{species}</Text>
             ) : (
               <>
                 <TouchableOpacity
@@ -397,203 +370,6 @@ export default function AnimalInfo() {
         value={currentValue}
         setValue={setCurrentValue}
       />
-
-      {/* <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>{modalTitle}</Text>
-            {modalTitle === "Species" && (
-              <RNPickerSelect
-                onValueChange={(value) => setCurrentValue(value)}
-                items={[
-                  { label: "Dog", value: "Dog" },
-                  { label: "Cat", value: "Cat" },
-                ]}
-                value={currentValue}
-                placeholder={{ label: "Click select species...", value: null }}
-              />
-            )}
-            {modalTitle === "Gender" && (
-              <RNPickerSelect
-                onValueChange={(value) => setCurrentValue(value)}
-                items={[
-                  { label: "Male", value: "Male" },
-                  { label: "Female", value: "Female" },
-                ]}
-                value={currentValue}
-                placeholder={{ label: "Click select gender...", value: null }}
-              />
-            )}
-            {modalTitle !== "Species" && modalTitle !== "Gender" && (
-              <TextInput
-                style={styles.modalInput}
-                value={currentValue}
-                onChangeText={(text) => setCurrentValue(text)}
-              />
-            )}
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.modalButtonTexts}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.modalButton} onPress={handleSave}>
-                <Text style={styles.modalButtonText}>OK</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal> */}
     </ScrollView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     padding: 7,
-//     backgroundColor: "white",
-//   },
-//   profileContainer: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//   },
-//   icon: {
-//     marginRight: 10,
-//   },
-//   textContainer: {
-//     flex: 1,
-//   },
-//   mainText: {
-//     fontSize: 14,
-//     fontWeight: "bold",
-//     paddingBottom: 5,
-//   },
-//   button: {
-//     backgroundColor: "green",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     paddingVertical: 8,
-//     marginHorizontal: 10,
-//     borderRadius: 50,
-//     marginTop: 10,
-//   },
-//   buttons: {
-//     backgroundColor: "rgb(232, 255, 233)",
-//     flexDirection: "row",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     paddingVertical: 8,
-//     paddingHorizontal: 15,
-//     marginHorizontal: 10,
-//     borderRadius: 10,
-//     marginTop: 1,
-//   },
-//   buttonsFuature: {
-//     backgroundColor: "#eff0ff",
-//     flexDirection: "row",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     paddingVertical: 8,
-//     paddingHorizontal: 15,
-//     marginHorizontal: 10,
-//     borderRadius: 10,
-//     marginTop: 1,
-//     borderWidth: 2,
-//     borderColor: "purple",
-//     borderStyle: "dashed",
-//   },
-//   buttonsInformation: {
-//     backgroundColor: "rgb(232, 255, 233)",
-//     flexDirection: "row",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     paddingVertical: 8,
-//     paddingHorizontal: 15,
-//     marginHorizontal: 10,
-//     borderRadius: 10,
-//     marginTop: 1,
-//   },
-//   buttonText: {
-//     color: "white",
-//     fontSize: 18,
-//     fontWeight: "bold",
-//   },
-//   buttonTexts: {
-//     color: "red",
-//     fontSize: 15,
-//     fontWeight: "bold",
-//     flex: 7,
-//   },
-//   buttonTextsFueture: {
-//     fontSize: 18,
-//     fontWeight: "bold",
-//     color: "purple",
-//   },
-//   idstyle: {
-//     display: "flex",
-//     fontWeight: "bold",
-//     marginTop: 20,
-//     padding: 5,
-//   },
-//   buttonIcon: {
-//     marginLeft: 10,
-//     color: "black",
-//     flex: 1,
-//   },
-//   deleteButton: {
-//     fontSize: 20,
-//     padding: 15,
-//     color: "red",
-//   },
-//   modalContainer: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: "rgba(0, 0, 0, 0.5)",
-//   },
-//   modalView: {
-//     width: 300,
-//     padding: 20,
-//     backgroundColor: "white",
-//     borderRadius: 10,
-//     alignItems: "center",
-//   },
-//   modalText: {
-//     fontSize: 18,
-//     marginBottom: 10,
-//   },
-//   modalInput: {
-//     width: "100%",
-//     height: 40,
-//     borderColor: "gray",
-//     borderWidth: 1,
-//     marginBottom: 10,
-//     paddingHorizontal: 10,
-//   },
-//   modalButtons: {
-//     flexDirection: "row",
-//     left: 75,
-//   },
-//   modalButton: {
-//     padding: 10,
-//   },
-//   modalButtonText: {
-//     fontSize: 16,
-//     color: "blue",
-//   },
-//   modalButtonTexts: {
-//     fontSize: 16,
-//     color: "red",
-//   },
-//   addButton: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });

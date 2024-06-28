@@ -11,8 +11,8 @@ export const CreateAnimalRequest = async (body: any) => {
   const formData = new FormData();
   formData.append("Name", Name);
 
-  if (File) {
-    const fileUri = File.uri;
+  if (File && File?.uri) {
+    const fileUri = File?.uri;
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
 
     if (!fileInfo.exists) {

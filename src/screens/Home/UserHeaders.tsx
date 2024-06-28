@@ -14,7 +14,11 @@ import {
   KeyboardAvoidingView,
   Pressable,
 } from "react-native";
-import { Ionicons, Foundation } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetReferenceAnimalPhotos } from "../../API/ReferenceData/GetAllAnimalicons";
 import { UseAuthContext } from "../../Contexts/AuthContext";
@@ -22,12 +26,11 @@ import { useNavigation } from "@react-navigation/native";
 import { GetAnimalDetailsByUser } from "../../API/User/GetAnimalDetailsByUserRequest";
 import { CreateAnimalRequest } from "../../API/User/CreateAnimalRequest";
 import { UsePhotoContext } from "../../Contexts/PhotoPickerContext";
-import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
-import { MaterialIcons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimalLoadingSkeleton from "../COMPONENTS/Skeleton/AnimalLoadingSkeleton";
 import AnimalModalLoadingSkeleton from "../COMPONENTS/Skeleton/AnimalModalLoadingSkeleton";
-
+import AnimalPhotoLoader from "./AnimalInfo/Components/AnimalPhotoLoader";
+import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
+ 
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
   const { handlePickImage, photoFromGallery, setPhotoFromGallery } =
@@ -42,6 +45,8 @@ export default function UserHeaders() {
   const [imageBase64Array, setImageBase64Array] = useState<
     (string | ArrayBuffer | null)[]
   >([]);
+  const [modalLoading, setModalLoading] = useState(true);
+  const [showLoadingSkeleton, setShowLoadingSkeleton] = useState(true);
 
   const navigation: any = useNavigation();
 
@@ -61,12 +66,13 @@ export default function UserHeaders() {
       return CreateAnimalRequest(obj);
     },
     onSuccess() {
-      navigation.navigate("AnimalInfoDocuments", { photoUri: newAnimalIcon });
       queryClient.invalidateQueries({ queryKey: ["get-user-animals"] });
       setNewAnimalName("");
       setSelectedIcon(null);
       setModalVisible(false);
-      setPhotoFromGallery("");
+      setPhotoFromGallery(null);
+      // navigation.navigate("AnimalInfoDocuments");
+
     },
     onError(err) {
       console.log(err);
@@ -74,63 +80,68 @@ export default function UserHeaders() {
   });
 
   const handleSaveAnimal = async () => {
-    const obj = {
+      const obj = {
       Name: newAnimalName,
       Icon: newAnimalIcon,
-      File: photoFromGallery.assets[0],
-    };
+      File:null
+     };
+    console.log( photoFromGallery?.assets[0])
+    
+    if( photoFromGallery?.assets[0]){
+      obj.File =  photoFromGallery?.assets[0]
+    }
+ 
     await mutation.mutateAsync(obj);
+    // navigation.navigate("AnimalInfoDocuments");
   };
 
-  // if (referenceaAnimalData.isPending || !referenceaAnimalData.isSuccess) {
-  //   return <Text>Loading...</Text>;
-  // }
+  useEffect(() => {
+    if (modalVisible) {
+      setModalLoading(true);
+      setTimeout(() => {
+        setModalLoading(false);
+      }, 1000);
+    }
+  }, [modalVisible]);
 
+  useEffect(() => {
+    if (animalData.isSuccess) {
+      setTimeout(() => {
+        setShowLoadingSkeleton(false);
+      }, 1000); 
+    }
+  }, [animalData.isSuccess]);
+ if(mutation.isPending || animalData.isPending|| referenceaAnimalData.isPending){
+  return <LoadingAnimation/>
+ }
   return (
     <View style={styles.container}>
-      <Text onPress={() => console.log(animalData.data)} style={styles.text}>
+       <Text onPress={() => console.log(animalData.data)} style={styles.text}>
         My Animals
       </Text>
+  
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
-        {!animalData.isPending
-          ? new Array(5)
-              .fill("")
-              .map((val: string, i: number) => (
-                <AnimalLoadingSkeleton key={i} />
-              ))
-          : animalData?.data?.length >= 1 &&
-            animalData?.data?.map((animal: any, index: number) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("AnimalInfoDocuments", {
-                    animalName: animal.name,
-                    photoUri: animal.icon,
-                  })
-                }
-                key={index}
-                style={styles.animalContainer}
-              >
-                <Image
-                  style={{ width: 100, height: 100, borderRadius: 45 }}
-                  source={{ uri: animal.icon as string }}
-                />
-                <Text style={styles.animalText}>{animal.name}</Text>
-              </TouchableOpacity>
-            ))}
-
-        <TouchableOpacity
+          <TouchableOpacity
           style={styles.animalContainer}
           onPress={() => setModalVisible(true)}
         >
           <Ionicons name="add-circle-sharp" size={100} color="green" />
           <Text style={styles.animalText}>Add</Text>
         </TouchableOpacity>
-      </ScrollView>
+        {  animalData?.data?.length >= 1
+          && animalData?.data?.map((animal: any, index: number) =>  {
+            const {uri,name,icon} = animal
+            return <AnimalPhotoLoader key={index}  name={name} icon={icon} />
+          })
+           }
 
+    
+      </ScrollView>
+  
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -150,122 +161,143 @@ export default function UserHeaders() {
         </View>
       </ScrollView>
 
-
       <Modal visible={modalVisible} animationType="fade" transparent={true}>
-  <KeyboardAvoidingView
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    style={styles.modalContainer}
-  >
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setModalVisible(false);
-        Keyboard.dismiss();
-      }}
-    >
-      <View style={styles.modalContainer}>
-        <TouchableWithoutFeedback>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Animal</Text>
-            {!animalData.isPending ? (
-              <AnimalModalLoadingSkeleton />
-            ) : (
-              <>
-                <View>
-                  {photoFromGallery?.assets[0]?.uri ? (
-                    <Pressable onPress={() => setPhotoFromGallery(null)}>
-                      <Image
-                        style={{ width: 200, height: 200 }}
-                        source={{ uri: photoFromGallery.assets[0].uri }}
-                      />
-                    </Pressable>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.modalContainer}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setModalVisible(false);
+              Keyboard.dismiss();
+            }}
+          >
+            <View style={styles.modalContainer}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                  <Text style={styles.modalTitle}>Add New Animal</Text>
+                  {modalLoading ? (
+                    <AnimalModalLoadingSkeleton />
                   ) : (
-                    <Pressable onPress={() => setNewIcon("")}>
-                      {newAnimalIcon ? (
-                        <Image
-                          style={{ width: 200, height: 200 }}
-                          source={{ uri: newAnimalIcon }}
-                        />
-                      ) : (
-                        <View style={{ width: 200, height: 200 }}>
-                          <MaterialIcons
-                            name="photo-size-select-large"
-                            size={200}
+                    <>
+                      <View>
+                        {photoFromGallery?.assets[0]?.uri ? (
+                          <View style={styles.imageWrapper}>
+                            <Pressable
+                              onPress={() => setPhotoFromGallery(null)}
+                            >
+                              <Image
+                                style={{ width: 200, height: 200 }}
+                                source={{ uri: photoFromGallery.assets[0].uri }}
+                              />
+                              <Pressable
+                                style={styles.cancelButton}
+                                onPress={() => setPhotoFromGallery(null)}
+                              >
+                                <MaterialIcons
+                                  name="cancel"
+                                  size={24}
+                                  color="red"
+                                />
+                              </Pressable>
+                            </Pressable>
+                          </View>
+                        ) : (
+                          <View style={styles.imageWrapper}>
+                            {newAnimalIcon ? (
+                              <Pressable onPress={() => setNewIcon("")}>
+                                <Image
+                                  style={{ width: 200, height: 200 }}
+                                  source={{ uri: newAnimalIcon }}
+                                />
+                                <Pressable
+                                  style={styles.cancelButton}
+                                  onPress={() => setNewIcon("")}
+                                >
+                                  <MaterialIcons
+                                    name="cancel"
+                                    size={24}
+                                    color="red"
+                                  />
+                                </Pressable>
+                              </Pressable>
+                            ) : (
+                              <TouchableOpacity
+                                style={{ width: 200, height: 200 }}
+                                onPress={handlePickImage}
+                              >
+                                <MaterialIcons
+                                  name="photo-size-select-large"
+                                  size={200}
+                                  color="rgb(211, 210, 210)"
+                                />
+                              </TouchableOpacity>
+                            )}
+                          </View>
+                        )}
+                      </View>
+
+                      <Text style={{ right: 120 }}>Name</Text>
+
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Enter animal name"
+                        value={newAnimalName}
+                        onChangeText={setNewAnimalName}
+                      />
+                      <View style={styles.iconContainer}>
+                        <TouchableOpacity onPress={handlePickImage}>
+                          <MaterialCommunityIcons
+                            name="camera-plus-outline"
+                            size={90}
                             color="rgb(211, 210, 210)"
-                            onPress={handlePickImage}
-                          />
-                        </View>
-                      )}
-                    </Pressable>
-                  )}
-                </View>
-
-                <Text style={{ right: 120 }}>Name</Text>
-
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter animal name"
-                  value={newAnimalName}
-                  onChangeText={setNewAnimalName}
-                />
-                <View style={styles.iconContainer}>
-                  <TouchableOpacity onPress={handlePickImage}>
-                    <MaterialCommunityIcons
-                      name="camera-plus-outline"
-                      size={90}
-                      color="rgb(211, 210, 210)"
-                    />
-                  </TouchableOpacity>
-
-                  {referenceaAnimalData.isSuccess &&
-                    referenceaAnimalData?.data?.length >= 1 &&
-                    referenceaAnimalData?.data?.map(
-                      (animal: string, index: number) => (
-                        <TouchableOpacity
-                          key={index}
-                          style={[
-                            styles.iconWrapper,
-                            selectedIcon === index && styles.selectedIcon,
-                          ]}
-                          onPress={() =>
-                            selectedIcon === index
-                              ? (setSelectedIcon(null), setNewIcon(""))
-                              : (setSelectedIcon(index), setNewIcon(animal))
-                          }
-                        >
-                          <Image
-                            style={{ width: 80, height: 80 }}
-                            source={{ uri: animal as string }}
                           />
                         </TouchableOpacity>
-                      )
-                    )}
+
+                        {referenceaAnimalData.isSuccess &&
+                          referenceaAnimalData?.data?.length >= 1 &&
+                          referenceaAnimalData?.data?.map(
+                            (animal: string, index: number) => (
+                              <TouchableOpacity
+                                key={index}
+                                style={[styles.iconWrapper]}
+                                onPress={() =>
+                                  selectedIcon === index
+                                    ? (setSelectedIcon(null), setNewIcon(""))
+                                    : (setSelectedIcon(index),
+                                      setNewIcon(animal))
+                                }
+                              >
+                                <Image
+                                  style={{ width: 80, height: 80 }}
+                                  source={{ uri: animal as string }}
+                                />
+                              </TouchableOpacity>
+                            )
+                          )}
+                      </View>
+                      <View style={styles.modalButtons}>
+                        <TouchableOpacity
+                          style={styles.buttonCancel}
+                          onPress={() => setModalVisible(false)}
+                        >
+                          <Text style={styles.buttonText}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.buttonSave}
+                          onPress={handleSaveAnimal}
+                        >
+                          <Text style={styles.buttonText}>Save</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </>
+                  )}
                 </View>
-                <View style={styles.modalButtons}>
-                  <TouchableOpacity
-                    style={styles.buttonCancel}
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <Text style={styles.buttonText}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.buttonSave}
-                    onPress={handleSaveAnimal}
-                  >
-                    <Text style={styles.buttonText}>Save</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            )}
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    </TouchableWithoutFeedback>
-  </KeyboardAvoidingView>
-</Modal>
-
-
-
-    
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   );
 }
@@ -351,7 +383,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   iconWrapper: {
-    margin: 5,
+    margin: 4,
   },
   selectedIcon: {
     backgroundColor: "lightgrey",
@@ -362,14 +394,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginTop: 10,
-  },
-  button: {
-    flex: 1,
-    alignItems: "center",
-    padding: 10,
-    borderRadius: 5,
-    margin: 5,
-    backgroundColor: "green",
   },
   buttonText: {
     color: "white",
@@ -391,9 +415,14 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: "red",
   },
-  imageCamera: {
-    flex: 9,
-    backgroundColor: "red",
-    marginRight: 5,
+  imageWrapper: {
+    position: "relative",
+    width: 200,
+    height: 200,
+  },
+  cancelButton: {
+    position: "absolute",
+    top: 5,
+    right: 5,
   },
 });
