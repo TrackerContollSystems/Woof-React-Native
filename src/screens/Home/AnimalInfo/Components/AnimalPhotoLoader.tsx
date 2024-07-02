@@ -11,11 +11,6 @@ type AnimalPhotoLoaderProps = {
 };
 const AnimalPhotoLoader: FC<AnimalPhotoLoaderProps> = (data) => {
 
-
- 
- 
-
-
   const navigation: any = useNavigation();
   const [loading,setLoading] = useState(false)
   const {   name, icon } = data;
