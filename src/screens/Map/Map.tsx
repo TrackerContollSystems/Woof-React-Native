@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
-import MapView, { Marker, Polyline } from "react-native-maps";
+import { View, Text, StyleSheet } from "react-native";
+import MapView, { Marker, Polygon, Polyline } from "react-native-maps";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import * as Location from "expo-location";
 import { useQuery } from "@tanstack/react-query";
@@ -30,22 +30,17 @@ const Map: React.FC = () => {
 
   useEffect(() => {
     const fetchCurrentLocation = async () => {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        console.log(status);
-        if (status !== "granted") {
-          console.log("Permission to access location was denied");
-          return;
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        setCurrentLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      } catch (error) {
-        console.log("Error fetching location:", error);
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
       }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
     };
 
     fetchCurrentLocation();
@@ -69,25 +64,78 @@ const Map: React.FC = () => {
     },
     { latitude: animalLocation.latitude, longitude: animalLocation.longitude },
   ];
+  const [longitude, setLongitude] = useState<null | Number>(null);
 
-  if (coordinate.isLoading) {
+  // useEffect(() => {
+  //   if (
+  //     mapViewRef.current &&
+  //     currentLocation.latitude !== 0 &&
+  //     animalLocation.latitude !== 0
+  //   ) {
+  //     const coordinates = [
+  //       {
+  //         latitude: currentLocation.latitude,
+  //         longitude: currentLocation.longitude,
+  //       },
+  //       {
+  //         latitude: animalLocation.latitude,
+  //         longitude: animalLocation.longitude,
+  //       },
+  //     ];
+
+  //     mapViewRef.current.fitToCoordinates(coordinates, {
+  //       edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+  //       animated: true,
+  //     });
+  //   }
+  // }, [currentLocation, animalLocation]);
+
+ const [isZoomed,setIsZoomed] = useState(true)
+ 
+ 
+const georgiaBounds = {
+  minLongitude: 40,  // Assuming Georgia's approximate longitude bounds
+  maxLongitude: 47,
+};
+
+const isWithinGeorgiaBounds = (region:any) => {
+  return (
+    region.longitude >= georgiaBounds.minLongitude &&
+    region.longitude <= georgiaBounds.maxLongitude
+  );
+};
+
+// Adjust your onRegionChangeComplete callback
+const handleRegionChangeComplete = (region:any) => {
+  if (!isWithinGeorgiaBounds(region)) {
+    // If outside Georgia bounds, adjust the map view to focus on Georgia
+    mapViewRef.current?.animateToRegion({
+      latitude: 42.694404590427304,  // Georgia's approximate latitude center
+      longitude: 43.392872883392144, // Georgia's approximate longitude center
+      latitudeDelta: 9.045499067191386, // Adjust delta values as needed for zoom level
+      longitudeDelta: 7.038608269499669,
+    });
+  }
+};
+   if (coordinate.isLoading) {
     return <LoadingAnimation />;
   }
 
   return (
     <View style={styles.container}>
       <MapView
-        ref={mapViewRef}
-        style={styles.map}
-        initialRegion={{
-          latitude: (currentLocation.latitude + animalLocation.latitude) / 2,
-          longitude: (currentLocation.longitude + animalLocation.longitude) / 2,
-          latitudeDelta:
-            Math.abs(currentLocation.latitude - animalLocation.latitude) * 2,
-          longitudeDelta:
-            Math.abs(currentLocation.longitude - animalLocation.longitude) * 2,
-        }}
-      >
+      
+      ref={mapViewRef}
+      style={styles.map}
+      region={{
+        latitude: currentLocation.latitude,
+        longitude: longitude !== null ? longitude : currentLocation.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.033,
+      }}
+      onRegionChangeComplete={handleRegionChangeComplete}
+      zoomEnabled={isZoomed}
+    >
         <Marker
           coordinate={{
             latitude: currentLocation.latitude,
@@ -129,3 +177,5 @@ const styles = StyleSheet.create({
 });
 
 export default Map;
+
+
