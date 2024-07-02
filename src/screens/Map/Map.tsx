@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import * as Location from "expo-location";
@@ -30,17 +30,22 @@ const Map: React.FC = () => {
 
   useEffect(() => {
     const fetchCurrentLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        console.log(status);
+        if (status !== "granted") {
+          console.log("Permission to access location was denied");
+          return;
+        }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
+        let location = await Location.getCurrentPositionAsync({});
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch (error) {
+        console.log("Error fetching location:", error);
+      }
     };
 
     fetchCurrentLocation();
