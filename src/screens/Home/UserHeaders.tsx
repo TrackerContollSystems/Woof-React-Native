@@ -30,7 +30,7 @@ import AnimalLoadingSkeleton from "../COMPONENTS/Skeleton/AnimalLoadingSkeleton"
 import AnimalModalLoadingSkeleton from "../COMPONENTS/Skeleton/AnimalModalLoadingSkeleton";
 import AnimalPhotoLoader from "./AnimalInfo/Components/AnimalPhotoLoader";
 import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
- 
+
 export default function UserHeaders() {
   const { authState } = UseAuthContext();
   const { handlePickImage, photoFromGallery, setPhotoFromGallery } =
@@ -72,7 +72,6 @@ export default function UserHeaders() {
       setModalVisible(false);
       setPhotoFromGallery(null);
       // navigation.navigate("AnimalInfoDocuments");
-
     },
     onError(err) {
       console.log(err);
@@ -80,17 +79,17 @@ export default function UserHeaders() {
   });
 
   const handleSaveAnimal = async () => {
-      const obj = {
+    const obj = {
       Name: newAnimalName,
       Icon: newAnimalIcon,
-      File:null
-     };
-    console.log( photoFromGallery?.assets[0])
-    
-    if( photoFromGallery?.assets[0]){
-      obj.File =  photoFromGallery?.assets[0]
+      File: null,
+    };
+    console.log(photoFromGallery?.assets[0]);
+
+    if (photoFromGallery?.assets[0]) {
+      obj.File = photoFromGallery?.assets[0];
     }
- 
+
     await mutation.mutateAsync(obj);
     // navigation.navigate("AnimalInfoDocuments");
   };
@@ -108,40 +107,44 @@ export default function UserHeaders() {
     if (animalData.isSuccess) {
       setTimeout(() => {
         setShowLoadingSkeleton(false);
-      }, 1000); 
+      }, 1000);
     }
   }, [animalData.isSuccess]);
- if(mutation.isPending || animalData.isPending|| referenceaAnimalData.isPending){
-  return <LoadingAnimation/>
- }
+  if (
+    mutation.isPending ||
+    animalData.isPending ||
+    referenceaAnimalData.isPending
+  ) {
+    return <LoadingAnimation />;
+  }
   return (
     <View style={styles.container}>
-       <Text onPress={() => console.log(animalData.data)} style={styles.text}>
+      <Text onPress={() => console.log(animalData.data)} style={styles.text}>
         My Animals
       </Text>
-  
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollViewContent}
-      >
-          <TouchableOpacity
+
+      <View style={styles.animalcontainet}>
+        <TouchableOpacity
           style={styles.animalContainer}
           onPress={() => setModalVisible(true)}
         >
-          <Ionicons name="add-circle-sharp" size={100} color="green" />
+          <Ionicons name="add-circle-sharp" size={100} color="#2C3F51" />
           <Text style={styles.animalText}>Add</Text>
         </TouchableOpacity>
-        {  animalData?.data?.length >= 1
-          && animalData?.data?.map((animal: any, index: number) =>  {
-            const {uri,name,icon} = animal
-            return <AnimalPhotoLoader key={index}  name={name} icon={icon} />
-          })
-           }
 
-    
-      </ScrollView>
-  
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+        >
+          {animalData?.data?.length >= 1 &&
+            animalData?.data?.map((animal: any, index: number) => {
+              const { uri, name, icon } = animal;
+              return <AnimalPhotoLoader key={index} name={name} icon={icon} />;
+            })}
+        </ScrollView>
+      </View>
+
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -310,22 +313,43 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
   },
+  animalcontainet: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 5,
+    width: "100%",
+  },
   scrollViewContent: {
     alignItems: "center",
     padding: 5,
-  },
-  animalContainer: {
-    alignItems: "center",
-    marginRight: 10,
   },
   animalText: {
     fontSize: 12,
     marginTop: 1,
   },
-  containers: {
+  // animalContainer: {
+  //   alignItems: "center",
+  //   marginRight: 1,
+  // },
+  animalContainer: {
+    alignItems: "center",
+    marginRight: 1,
+    shadowColor: "grey",
     backgroundColor: "white",
+    borderRadius: 5,
+    shadowOffset: {
+      width: 5,
+      height: 0,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    elevation: 2,
+    zIndex: 1000
+  },
+  containers: {
+    backgroundColor: "#2C3F51",
     padding: 20,
-    borderRadius: 25,
+    borderRadius: 2,
     marginTop: 20,
     marginBottom: 5,
     marginLeft: 5,
@@ -335,7 +359,7 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
-        shadowRadius: 4,
+        shadowRadius: 2,
       },
       android: {
         elevation: 5,
@@ -346,9 +370,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 5,
+    color: "white"
   },
   smallText: {
     fontSize: 16,
+    color: "white"
   },
   modalContainer: {
     flex: 1,

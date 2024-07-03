@@ -1,4 +1,3 @@
-
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
@@ -7,97 +6,48 @@ export default StyleSheet.create({
     backgroundColor: "white",
   },
   profileContainer: {
-    flexDirection: "row",
     alignItems: "center",
+    padding: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  buttonsInformation: {
+    // backgroundColor: "rgb(232, 255, 233)",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E4E4E4",
+  },
+  buttonTexts: {
+    fontSize: 18,
+  },
+  buttonValue: {
+    fontSize: 18,
+    color: "black",
+  },
+  buttonsCreate: {
+    backgroundColor: "#2C3F51",
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: "center",
+  },
+  buttonTextsCreate: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
   },
   icon: {
     marginRight: 10,
   },
-  textContainer: {
-    flex: 1,
-  },
-  mainText: {
-    fontSize: 14,
-    fontWeight: "bold",
-    paddingBottom: 5,
-  },
-  button: {
-    backgroundColor: "green",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 8,
-    marginHorizontal: 10,
-    borderRadius: 50,
-    marginTop: 10,
-  },
-  buttons: {
-    backgroundColor: "rgb(232, 255, 233)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginHorizontal: 10,
-    borderRadius: 10,
-    marginTop: 1,
-  },
-  buttonsFuature: {
-    backgroundColor: "rgb(232, 255, 233)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginHorizontal: 10,
-    borderRadius: 10,
-    marginTop: 1,
-    borderWidth: 2,
-    borderColor: "rgb(255, 171, 255)",
-    borderStyle: "dashed",
-  },
-  buttonsInformation: {
-    backgroundColor: "rgb(232, 255, 233)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginHorizontal: 10,
-    borderRadius: 10,
-    marginTop: 1,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  buttonTexts: {
-    color: "red",
-    fontSize: 15,
-    fontWeight: "bold",
-    flex: 6,
-  },
-  buttonTextsFueture: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "rgb(255, 171, 255)",
-  },
-  idstyle: {
-    display: "flex",
-    fontWeight: "bold",
-    marginTop: 20,
-    padding: 5,
-  },
-  buttonIcon: {
-    marginLeft: 10,
-    color: "black",
-    flex: 1,
-  },
-  deleteButton: {
-    fontSize: 20,
-    padding: 15,
-    color: "red",
-  },
+
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -138,28 +88,29 @@ export default StyleSheet.create({
     fontSize: 16,
     color: "red",
   },
-  addButton: {
+  idstyle: {
+    display: "flex",
+    fontWeight: "bold",
+    marginTop: 20,
+    padding: 5,
+  },
+  buttonsFuature: {
+    backgroundColor: "#2C3F51",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    marginTop: 1,
+    borderWidth: 3,
+    borderColor: "white",
+    // borderStyle: "dashed",
   },
-  datePickerButton: {
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 5,
-    width: "100%",
-    paddingHorizontal: 10,
-    marginBottom: 15,
-  },
-  datePickerText: {
-    fontSize: 16,
-    color: "gray",
-  },
-  datePicker: {
-    width: 200,
-    marginBottom: 20,
+  buttonTextsFueture: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
   },
 });

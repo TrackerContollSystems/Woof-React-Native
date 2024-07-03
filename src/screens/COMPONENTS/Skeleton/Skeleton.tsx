@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 200,
-    backgroundColor: '#f0f0f0', // Placeholder background color
+    backgroundColor: '#f0f0f0', 
     borderRadius: 10,
     marginBottom: 10,
   },

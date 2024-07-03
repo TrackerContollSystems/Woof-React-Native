@@ -16,8 +16,8 @@ export default function UserNavbar() {
   const { authUser } = authState;
   return (
     <View style={{ marginBottom: 20 }}>
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 7 }}>
-        <FontAwesome name="user-circle" size={60} color="orange" />
+      <View style={{ flexDirection: "row", alignItems: "center", padding: 7 , justifyContent: "space-between"}}>
+        {/* <FontAwesome name="user-circle" size={60} color="orange" /> */}
         <View style={{ marginLeft: 10 }}>
           <Text style={{ fontSize: 18, fontWeight: "bold", padding: 4 }}>
             {authUser.email}
@@ -29,7 +29,7 @@ export default function UserNavbar() {
           <MaterialCommunityIcons
             name="trophy-award"
             size={44}
-            color="orange"
+            color="#E3BC62"
           />
           <Text style={{ fontSize: 12, color: "gray", textAlign: "center" }}>Award</Text>
         </View>
@@ -50,9 +50,10 @@ export default function UserNavbar() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "orange",
+    backgroundColor: "#eff0ff",
+    // backgroundColor: "#fcd06b",
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 8,
     marginTop: 15,
     marginBottom: 15,
     marginLeft: 10,
@@ -61,8 +62,8 @@ const styles = StyleSheet.create({
       ios: {
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
       },
       android: {
         elevation: 5,
@@ -73,20 +74,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
-    color: 'white'
+    color: '#2C3F51'
   },
   smallText: {
     fontSize: 16,
+    color: '#2C3F51'
   },
   button: {
-    backgroundColor: "white",
+    backgroundColor: "#2C3F51",
     padding: 10,
     marginTop: 10,
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 2,
   },
   buttonText: {
-    color: "black",
+    color: "white",
     fontSize: 18,
   },
 });

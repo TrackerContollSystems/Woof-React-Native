@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable  } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable, Platform  } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
@@ -39,19 +39,19 @@ export default function AnimalInfoDocuments() {
       </View>
       <View style={styles.mainContainer}>
       <TouchableOpacity style={styles.containers}>
-        <AntDesign name="exclamationcircle" size={54} color="green" />
+        <AntDesign name="exclamationcircle" size={54} color="#2C3F51" />
         <Text style={styles.smallText}>Notes</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.containers}>
-        <AntDesign name="calendar" size={54} color="black" />
+        <AntDesign name="calendar" size={54} color="#2C3F51" />
         <Text style={styles.smallText}>Map</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.containers}>
-        <MaterialCommunityIcons name="list-status" size={54} color="black" />
+        <MaterialCommunityIcons name="list-status" size={54} color="#2C3F51" />
         <Text style={styles.smallText}>Documents</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.containers}>
-        <MaterialCommunityIcons name="qrcode-scan" size={54} color="black" />
+        <MaterialCommunityIcons name="qrcode-scan" size={54} color="#2C3F51" />
         <Text style={styles.smallText}>The Animal Is Lost</Text>
       </TouchableOpacity>
     </View>
@@ -96,24 +96,24 @@ const styles = StyleSheet.create({
 
   containers: {
     width: "45%",
-    backgroundColor: "rgb(216, 255, 217)",
-    borderRadius: 10,
+    backgroundColor: "#eff0ff",
+    borderRadius: 3,
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
     marginBottom: 10,
-    // ...Platform.select({
-    //   ios: {
-    //     shadowColor: "#000",
-    //     shadowOffset: { width: 0, height: 2 },
-    //     shadowOpacity: 0.8,
-    //     shadowRadius: 4,
-    //   },
-    //   android: {
-    //     elevation: 5,
-    //   },
-    // }),
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   smallText: {
     fontSize: 16,

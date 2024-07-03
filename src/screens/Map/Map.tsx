@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MapView, { Marker, Polygon, Polyline } from "react-native-maps";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import * as Location from "expo-location";
 import { useQuery } from "@tanstack/react-query";
 import { GetCoordinates } from "../../API/Map/GetCoordinatesRequest";
 import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
+import { Foundation } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 
 type LocationType = {
   latitude: number;
@@ -64,78 +67,60 @@ const Map: React.FC = () => {
     },
     { latitude: animalLocation.latitude, longitude: animalLocation.longitude },
   ];
-  const [longitude, setLongitude] = useState<null | Number>(null);
 
-  // useEffect(() => {
-  //   if (
-  //     mapViewRef.current &&
-  //     currentLocation.latitude !== 0 &&
-  //     animalLocation.latitude !== 0
-  //   ) {
-  //     const coordinates = [
-  //       {
-  //         latitude: currentLocation.latitude,
-  //         longitude: currentLocation.longitude,
-  //       },
-  //       {
-  //         latitude: animalLocation.latitude,
-  //         longitude: animalLocation.longitude,
-  //       },
-  //     ];
+  const [longitude, setLongitude] = useState<null | number>(null);
+  const [isZoomed, setIsZoomed] = useState(true);
 
-  //     mapViewRef.current.fitToCoordinates(coordinates, {
-  //       edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-  //       animated: true,
-  //     });
-  //   }
-  // }, [currentLocation, animalLocation]);
+  const georgiaBounds = {
+    minLongitude: 40,
+    maxLongitude: 47,
+  };
 
- const [isZoomed,setIsZoomed] = useState(true)
- 
- 
-const georgiaBounds = {
-  minLongitude: 40,  // Assuming Georgia's approximate longitude bounds
-  maxLongitude: 47,
-};
+  const isWithinGeorgiaBounds = (region: any) => {
+    return (
+      region.longitude >= georgiaBounds.minLongitude &&
+      region.longitude <= georgiaBounds.maxLongitude
+    );
+  };
 
-const isWithinGeorgiaBounds = (region:any) => {
-  return (
-    region.longitude >= georgiaBounds.minLongitude &&
-    region.longitude <= georgiaBounds.maxLongitude
-  );
-};
+  const handleRegionChangeComplete = (region: any) => {
+    if (!isWithinGeorgiaBounds(region)) {
+      mapViewRef.current?.animateToRegion({
+        latitude: 42.694404590427304,
+        longitude: 43.392872883392144,
+        latitudeDelta: 9.045499067191386,
+        longitudeDelta: 7.038608269499669,
+      });
+    }
+  };
 
-// Adjust your onRegionChangeComplete callback
-const handleRegionChangeComplete = (region:any) => {
-  if (!isWithinGeorgiaBounds(region)) {
-    // If outside Georgia bounds, adjust the map view to focus on Georgia
+  const handleNavigateToCurrentLocation = () => {
     mapViewRef.current?.animateToRegion({
-      latitude: 42.694404590427304,  // Georgia's approximate latitude center
-      longitude: 43.392872883392144, // Georgia's approximate longitude center
-      latitudeDelta: 9.045499067191386, // Adjust delta values as needed for zoom level
-      longitudeDelta: 7.038608269499669,
+      latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude,
+      latitudeDelta: 0.005,
+      longitudeDelta: 0.005,
     });
-  }
-};
-   if (coordinate.isLoading) {
+  };
+
+  if (coordinate.isLoading) {
     return <LoadingAnimation />;
   }
 
   return (
     <View style={styles.container}>
       <MapView
-      
-      ref={mapViewRef}
-      style={styles.map}
-      region={{
-        latitude: currentLocation.latitude,
-        longitude: longitude !== null ? longitude : currentLocation.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.033,
-      }}
-      onRegionChangeComplete={handleRegionChangeComplete}
-      zoomEnabled={isZoomed}
-    >
+        ref={mapViewRef}
+        style={styles.map}
+        region={{
+          latitude: currentLocation.latitude,
+          longitude: longitude !== null ? longitude : currentLocation.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.033,
+        }}
+        onRegionChangeComplete={handleRegionChangeComplete}
+        zoomEnabled={isZoomed}
+      >
         <Marker
           coordinate={{
             latitude: currentLocation.latitude,
@@ -162,6 +147,14 @@ const handleRegionChangeComplete = (region:any) => {
           strokeWidth={3}
         />
       </MapView>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleNavigateToCurrentLocation}
+      >
+        {/* <MaterialCommunityIcons name="target" size={55} color="#D8978B" /> */}
+        <Ionicons name="navigate-circle-outline" size={55} color="#2C3F51" />
+        {/* <Ionicons name="navigate-circle-sharp" size={55} color="#D8978B" /> */}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -174,8 +167,11 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+  button: {
+    position: "absolute",
+    bottom: 50,
+    right: 20,
+  },
 });
 
 export default Map;
-
-
