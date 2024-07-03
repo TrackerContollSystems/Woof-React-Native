@@ -134,8 +134,8 @@ const EnterCodeStep: React.FC<Props> = ({ onNext }) => {
 };
 
 const EnterNewPasswordStep: React.FC = () => {
-   const { authState } = UseAuthContext();
-   const { authUser } = authState;
+  const { authState } = UseAuthContext();
+  const { authUser } = authState;
 
   const navigation: any = useNavigation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();

@@ -11,6 +11,7 @@ import RootNavigation from "./src/navigation/RootNavigator";
 import TabNavigator from "./src/navigation/TabNavigator";
 import { View, StyleSheet } from "react-native";
 import { PhotoContextProvider } from "./src/Contexts/PhotoPickerContext";
+import { UiContextProvider } from "./src/Contexts/UiContext";
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
@@ -22,16 +23,13 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <AuthContextProvider>
             <PhotoContextProvider>
-              <NavigationContainer>
-                <View style={styles.container}>
-                  <View style={styles.content}>
-                    <RootNavigation />
-                  </View>
-                  <View style={styles.footer}>
-                    <TabNavigator />
-                  </View>
-                </View>
-              </NavigationContainer>
+              <UiContextProvider>
+                <NavigationContainer>
+                  <RootNavigation />
+
+                  <TabNavigator />
+                </NavigationContainer>
+              </UiContextProvider>
             </PhotoContextProvider>
           </AuthContextProvider>
         </QueryClientProvider>

@@ -31,9 +31,10 @@ import {
   GetGenderDataRequest,
 } from "../../../API/ReferenceData/RegistrationReferenceRequest";
 import { UserInfo } from "../../../Types/UserType";
+import { UseUiContext } from "../../../Contexts/UiContext";
 export default function MoreSignUpInfi() {
   const { authDispatch, authState } = UseAuthContext();
-
+  const { ColorSchemas, setTheme, theme } = UseUiContext();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const handleDispatch = (type: any, payload: any) => {
@@ -104,7 +105,13 @@ export default function MoreSignUpInfi() {
 
   return (
     <KeyboardAvoidingView
-      style={style.mainView}
+      style={[
+        style.mainView,
+        {
+          backgroundColor:
+            theme == "light" ? ColorSchemas.brandWhite : ColorSchemas.brandBlue,
+        },
+      ]}
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -112,6 +119,7 @@ export default function MoreSignUpInfi() {
           {/* <Text onPress={() => console.log(authState.userInputForm)}>
         LOG LOG LOG{" "}
       </Text> */}
+
           {isError && (
             <ErrorPopup message={errorMessage} onClose={closeError} />
           )}
@@ -165,9 +173,19 @@ export default function MoreSignUpInfi() {
                 <View style={style.outLine}></View>
               </View>
             </View>
-            <Text onPress={() => SignUp()} style={style.btn}>
+            <Text
+              onPress={() => SignUp()}
+              style={[
+                style.btn,
+                {
+                  backgroundColor:
+                    theme == "light" ? ColorSchemas.brandBlue : "orange",
+                },
+              ]}
+            >
               Create Account
             </Text>
+            <Text onPress={() => setTheme("dark")}>Color</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -197,7 +215,6 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
   },
   btn: {
-    backgroundColor: "#2C3F51",
     color: "#EBEEEF",
     paddingVertical: 14,
     width: "97%",
