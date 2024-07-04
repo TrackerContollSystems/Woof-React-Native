@@ -17,7 +17,10 @@ export const GetCoordinates = async () => {
 
     return res.data;
   } catch (error) {
+    console.log("ANIMAL ERROR");
+
     console.log(error);
+    console.log("ANIMAL ERROR");
     const err: any = error;
     throw new Error(err);
   }
