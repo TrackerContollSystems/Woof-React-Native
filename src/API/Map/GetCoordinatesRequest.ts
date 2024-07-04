@@ -5,7 +5,7 @@ export const GetCoordinates = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
     const res = await ApiManager(
-      "MapCoordinate/GetMapCoordinateByDeviceImei?imei=172107729363",
+      "MapCoordinate/GetAllAnimalCoordinatesByUser",
       {
         method: "GET",
         headers: {

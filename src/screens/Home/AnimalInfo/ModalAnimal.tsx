@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, Modal, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, Modal, TouchableOpacity, TextInput,StyleSheet } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import styles from "./AnimalInfoStyle";
+// import styles from "./AnimalInfoStyle";
 
 type CustomModalProps = {
   visible: boolean;
@@ -86,5 +86,48 @@ const CustomModal: React.FC<CustomModalProps> = ({
     </Modal>
   );
 };
+
+const styles = StyleSheet.create ({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalView: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  modalInput: {
+    width: "100%",
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    left: 75,
+  },
+  modalButton: {
+    padding: 10,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    color: "green",
+  },
+  modalButtonTexts: {
+    fontSize: 16,
+    color: "red",
+  },
+})
 
 export default CustomModal;
