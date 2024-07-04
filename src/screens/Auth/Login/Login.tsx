@@ -24,6 +24,8 @@ import { ErrorPopup, SuccessPopup } from "../../COMPONENTS/Status/StatusSucErr";
 import { useMutation } from "@tanstack/react-query";
 import { LoginPostRequest } from "../../../API/Auth/AuthRequest";
 import { UseAuthContext } from "../../../Contexts/AuthContext";
+import AuthButtons from "../../COMPONENTS/Buttons/AuthButtons";
+import AuthButton from "../../COMPONENTS/Buttons/AuthButtons";
 const Login = () => {
   const { authState, authDispatch } = UseAuthContext();
   //
@@ -85,9 +87,7 @@ const Login = () => {
 
   const errorMessage = (error && error.message) || "An error occurred.";
 
-  if (isPending) {
-    return <LoadingAnimation />;
-  } else {
+  {
     return (
       <KeyboardAvoidingView
         style={style.mainView}
@@ -136,7 +136,7 @@ const Login = () => {
                   </View>
                   <View style={style.outLine}></View>
                 </View>
-
+                {isPending && <LoadingAnimation />}
                 <Text
                   style={{
                     textDecorationLine: "underline",
@@ -154,9 +154,8 @@ const Login = () => {
             </View>
 
             <View style={style.optionsWrapper}>
-              <Text onPress={login} style={style.btn}>
-                Sign In
-              </Text>
+              <AuthButton fun={login} title=" Sign In" />
+
               {/* <Text>Or log in with:</Text>
               <View style={style.iconWrapper}>
                 <Image source={GooglePlus} style={{ width: 40, height: 40 }} />
@@ -218,16 +217,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  btn: {
-    backgroundColor: "#2C3F51",
-    color: "#EBEEEF",
-    paddingVertical: 14,
-    width: "97%",
-    textAlign: "center",
-    borderRadius: 10,
-    fontSize: 19,
-    fontWeight: "bold",
-  },
+
   optionsWrapper: {
     display: "flex",
     justifyContent: "space-around",

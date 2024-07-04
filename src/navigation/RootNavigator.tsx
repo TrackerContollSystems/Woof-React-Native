@@ -13,45 +13,70 @@ import { StatusBar } from "expo-status-bar";
 import Map from "../screens/Map/Map";
 import AnimalInfo from "../screens/Home/AnimalInfo/AnimalInfo";
 import AnimalInfoDocuments from "../screens/Home/AnimalInfo/AnimalInfoDocuments";
-
+import { UseAuthContext } from "../Contexts/AuthContext";
 
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
+  const { authState } = UseAuthContext();
 
   return (
     <>
       <StatusBar style="dark" backgroundColor="#ffffff" translucent={false} />
       <Stack.Navigator>
-        <Stack.Screen
-          name="Enter"
-          component={Enter}
-          options={{
-            headerStyle: {
-              backgroundColor: "#FFE300",
-            },
-          }}
-        />
+        {!authState.authUser.email ? (
+          //  auth pages
+          <>
+            <Stack.Screen
+              name="Enter"
+              component={Enter}
+              options={{
+                headerShown: false,
+                headerStyle: {
+                  backgroundColor: "#FFE300",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="Intro"
+              component={Intro}
+              options={{ headerShown: false }}
+            />
 
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={SignUp} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Signup" component={SignUp} />
+            <Stack.Screen name="User Info" component={MoreSignUpInfio} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Enter"
+              component={Enter}
+              options={{
+                headerShown: false,
+                headerStyle: {
+                  backgroundColor: "#FFE300",
+                },
+              }}
+            />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
 
-        <Stack.Screen name="User Info" component={MoreSignUpInfio} />
-        <Stack.Screen
-          name="Intro"
-          component={Intro}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-        {/* <Stack.Screen name="Test" component={Test} /> */}
-        {/* მომხარებლის უშვალო ინტერფეისები */}
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="Subscription" component={Subscription} />
-
-        <Stack.Screen name="AnimalInfo" component={AnimalInfo} />
-        <Stack.Screen name="AnimalInfoDocuments" component={AnimalInfoDocuments} />
-
-
+            {/* მომხარებლის უშვალო ინტერფეისები */}
+            <Stack.Screen
+              // options={{
+              //   headerShown: false,
+              // }}
+              name="Home"
+              component={Home}
+            />
+            <Stack.Screen name="Map" component={Map} />
+            <Stack.Screen name="Subscription" component={Subscription} />
+            <Stack.Screen name="AnimalInfo" component={AnimalInfo} />
+            <Stack.Screen
+              name="AnimalInfoDocuments"
+              component={AnimalInfoDocuments}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </>
   );

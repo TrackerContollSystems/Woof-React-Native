@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { UseAuthContext } from "../../../Contexts/AuthContext";
 import { ErrorPopup } from "../../COMPONENTS/Status/StatusSucErr";
+import AuthButton from "../../COMPONENTS/Buttons/AuthButtons";
 
 export default function SignUp() {
   const { authDispatch, authState } = UseAuthContext();
@@ -176,9 +177,7 @@ export default function SignUp() {
           </View>
           <View style={style.optionsWrapper}>
             {/* <Text style={style.btn}>Create Account</Text> */}
-            <Text onPress={navigateToMoreSignUp} style={style.btn}>
-              Next Step
-            </Text>
+            <AuthButton fun={navigateToMoreSignUp} title="Next Step" />
             <Text>
               if you already have an account
               <Text

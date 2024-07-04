@@ -26,12 +26,11 @@ import { useNavigation } from "@react-navigation/native";
 import { GetAnimalDetailsByUser } from "../../API/User/GetAnimalDetailsByUserRequest";
 import { CreateAnimalRequest } from "../../API/User/CreateAnimalRequest";
 import { UsePhotoContext } from "../../Contexts/PhotoPickerContext";
-import AnimalLoadingSkeleton from "../COMPONENTS/Skeleton/AnimalLoadingSkeleton";
 import AnimalModalLoadingSkeleton from "../COMPONENTS/Skeleton/AnimalModalLoadingSkeleton";
 import AnimalPhotoLoader from "./AnimalInfo/Components/AnimalPhotoLoader";
 import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
 
-export default function UserHeaders() {
+export default function UserMain() {
   const { authState } = UseAuthContext();
   const { handlePickImage, photoFromGallery, setPhotoFromGallery } =
     UsePhotoContext();
@@ -110,19 +109,19 @@ export default function UserHeaders() {
       }, 1000);
     }
   }, [animalData.isSuccess]);
-  if (
-    mutation.isPending ||
-    animalData.isPending ||
-    referenceaAnimalData.isPending
-  ) {
-    return <LoadingAnimation />;
-  }
+
   return (
     <View style={styles.container}>
       <Text onPress={() => console.log(animalData.data)} style={styles.text}>
         My Animals
       </Text>
-
+      {mutation.isPending ||
+        animalData.isPending ||
+        (referenceaAnimalData.isPending && (
+          <View style={{ position: "absolute", zIndex: 10000, left: "35%" }}>
+            <LoadingAnimation />
+          </View>
+        ))}
       <View style={styles.animalcontainet}>
         <TouchableOpacity
           style={styles.animalContainer}
@@ -344,7 +343,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1,
     elevation: 2,
-    zIndex: 1000
+    zIndex: 1000,
   },
   containers: {
     backgroundColor: "#2C3F51",
@@ -370,11 +369,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "white"
+    color: "white",
   },
   smallText: {
     fontSize: 16,
-    color: "white"
+    color: "white",
   },
   modalContainer: {
     flex: 1,

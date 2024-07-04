@@ -32,9 +32,10 @@ import {
 } from "../../../API/ReferenceData/RegistrationReferenceRequest";
 import { UserInfo } from "../../../Types/UserType";
 import { UseUiContext } from "../../../Contexts/UiContext";
+import AuthButton from "../../COMPONENTS/Buttons/AuthButtons";
 export default function MoreSignUpInfi() {
   const { authDispatch, authState } = UseAuthContext();
-  const { ColorSchemas, setTheme, theme } = UseUiContext();
+  const { toggleTheme, colors, theme } = UseUiContext();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const handleDispatch = (type: any, payload: any) => {
@@ -99,6 +100,7 @@ export default function MoreSignUpInfi() {
     console.log(authState.userInputForm);
     await mutation.mutateAsync({ ...authState.userInputForm });
   };
+
   if (cityData.isPending || genderData.isPending || isPending) {
     return <LoadingAnimation />;
   }
@@ -108,8 +110,7 @@ export default function MoreSignUpInfi() {
       style={[
         style.mainView,
         {
-          backgroundColor:
-            theme == "light" ? ColorSchemas.brandWhite : ColorSchemas.brandBlue,
+          backgroundColor: colors.backgroundColor,
         },
       ]}
       // behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -126,7 +127,16 @@ export default function MoreSignUpInfi() {
 
           <View style={style.multyInputWrapper}>
             <View style={style.inputWrapper}>
-              <Text style={style.lable}>City</Text>
+              <Text
+                style={[
+                  style.lable,
+                  {
+                    color: colors.textColor,
+                  },
+                ]}
+              >
+                City
+              </Text>
               <DropDownInput
                 setDispatch={setCity}
                 Data={cityData.data}
@@ -138,7 +148,16 @@ export default function MoreSignUpInfi() {
               </View>
             </View>
             <View style={style.inputWrapper}>
-              <Text style={style.lable}>Gender</Text>
+              <Text
+                style={[
+                  style.lable,
+                  {
+                    color: colors.textColor,
+                  },
+                ]}
+              >
+                Gender
+              </Text>
               <View>
                 <DropDownInput
                   setDispatch={setGender}
@@ -156,7 +175,13 @@ export default function MoreSignUpInfi() {
                 onPress={showDatepicker}
               >
                 <Image style={style.calendarImg} source={calendar} />
-                <Text>Show Date Picker</Text>
+                <Text
+                  style={{
+                    color: colors.textColor,
+                  }}
+                >
+                  Show Date Picker
+                </Text>
               </TouchableOpacity>
 
               <View>
@@ -173,19 +198,8 @@ export default function MoreSignUpInfi() {
                 <View style={style.outLine}></View>
               </View>
             </View>
-            <Text
-              onPress={() => SignUp()}
-              style={[
-                style.btn,
-                {
-                  backgroundColor:
-                    theme == "light" ? ColorSchemas.brandBlue : "orange",
-                },
-              ]}
-            >
-              Create Account
-            </Text>
-            <Text onPress={() => setTheme("dark")}>Color</Text>
+
+            <AuthButton fun={SignUp} title="Create Account" />
           </View>
         </View>
       </TouchableWithoutFeedback>

@@ -9,29 +9,30 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { UseAuthContext } from "../../Contexts/AuthContext";
+import { UseUiContext } from "../../Contexts/UiContext";
+import AuthButton from "../COMPONENTS/Buttons/AuthButtons";
+import GenericButton from "../COMPONENTS/Buttons/GenericButtons";
 
-export default function UserNavbar() {
+export default function UserHeader() {
   const { authState, authDispatch } = UseAuthContext();
-
+  const { colors } = UseUiContext();
   const { authUser } = authState;
   return (
-    <View style={{ marginBottom: 20 }}>
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 7 , justifyContent: "space-between"}}>
+    <View style={styles.mainView}>
+      <View style={styles.topSection}>
         {/* <FontAwesome name="user-circle" size={60} color="orange" /> */}
-        <View style={{ marginLeft: 10 }}>
-          <Text style={{ fontSize: 18, fontWeight: "bold", padding: 4 }}>
-            {authUser.email}
-          </Text>
+        <View style={styles.emailWrapper}>
+          <Text style={styles.emailText}>{authUser.email}</Text>
           <Text style={{ fontSize: 14, color: "gray", padding: 4 }}>User</Text>
         </View>
 
-        <View style={{ marginLeft: 85 }}>
+        <View style={styles.awardWrapper}>
           <MaterialCommunityIcons
             name="trophy-award"
             size={44}
             color="#E3BC62"
           />
-          <Text style={{ fontSize: 12, color: "gray", textAlign: "center" }}>Award</Text>
+          <Text style={styles.awardText}>Award</Text>
         </View>
       </View>
 
@@ -40,15 +41,24 @@ export default function UserNavbar() {
         <Text style={styles.smallText}>
           small textsmall textsmall textsmall textsmall textsmall textsmall text
         </Text>
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={styles.buttonText}>Button</Text>
-        </TouchableOpacity>
+        <GenericButton title="Button" fun={() => console.log("")} />
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  mainView: { marginBottom: 20 },
+  topSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 7,
+    justifyContent: "space-between",
+  },
+  emailWrapper: { marginLeft: 10 },
+  emailText: { fontSize: 18, fontWeight: "bold", padding: 4 },
+  awardWrapper: { marginLeft: 85 },
+  awardText: { fontSize: 12, color: "gray", textAlign: "center" },
   container: {
     backgroundColor: "#eff0ff",
     // backgroundColor: "#fcd06b",
@@ -74,21 +84,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
-    color: '#2C3F51'
+    color: "#2C3F51",
   },
   smallText: {
     fontSize: 16,
-    color: '#2C3F51'
-  },
-  button: {
-    backgroundColor: "#2C3F51",
-    padding: 10,
-    marginTop: 10,
-    alignItems: "center",
-    borderRadius: 2,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 18,
+    color: "#2C3F51",
   },
 });
