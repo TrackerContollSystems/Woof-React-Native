@@ -5,17 +5,19 @@ import { UseUiContext } from "../../../Contexts/UiContext";
 type GenericButtonTypes = {
   title: string;
   fun: () => void;
+  buttonStyles?:any | null
+  textStyle?: any | null
 };
 
 const GenericButton: FC<GenericButtonTypes> = (data) => {
   const { colors } = UseUiContext();
-  const { title, fun } = data;
+  const { title, fun , } = data;
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: colors.buttonColor }]}
+      style={[data.buttonStyles ? data.buttonStyles : styles.button, { backgroundColor: colors.buttonColor }]}
       onPress={() => {}}
     >
-      <Text style={[styles.buttonText, { color: colors.btnTextColor }]}>
+      <Text style={[data.textStyle ? data.textStyle : styles.buttonText, { color: colors.btnTextColor }]}>
         {title}
       </Text>
     </TouchableOpacity>

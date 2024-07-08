@@ -7,7 +7,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Map from "../screens/Map/Map";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { UseAuthContext } from "../Contexts/AuthContext";
+import { Ionicons } from '@expo/vector-icons';
 
+ 
 const TabNavigator = () => {
   const navigation: any = useNavigation();
   const state = useNavigationState((state) => state);
@@ -35,7 +37,7 @@ const TabNavigator = () => {
           <Entypo name="home" size={24} color={getColor("Home")} />
           <Text style={[styles.btn, { color: getColor("Home") }]}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.tab}
           onPress={() => navigation.navigate("Subscription")}
         >
@@ -47,7 +49,7 @@ const TabNavigator = () => {
           <Text style={[styles.btn, { color: getColor("User Info") }]}>
             User Info
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* <Text onPress={() => navigation.navigate(`Enter`)}>VIDEO</Text>
       <Text onPress={() => navigation.navigate(`Intro`)} style={styles.btn}>
@@ -84,6 +86,16 @@ const TabNavigator = () => {
         >
           <FontAwesome6 name="map-location" size={24} color={getColor("Map")} />
           <Text style={[styles.btn, { color: getColor("Map") }]}>Map</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => navigation.navigate("UserSettings")}
+        >
+          <Ionicons name="settings-sharp" size={24} color={getColor("UserSettings")}/>
+          <Text style={[styles.btn, { color: getColor("UserSettings") }]}>
+            Setting 
+          </Text>
         </TouchableOpacity>
       </View>
     );

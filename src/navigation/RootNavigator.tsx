@@ -14,6 +14,8 @@ import Map from "../screens/Map/Map";
 import AnimalInfo from "../screens/Home/AnimalInfo/AnimalInfo";
 import AnimalInfoDocuments from "../screens/Home/AnimalInfo/AnimalInfoDocuments";
 import { UseAuthContext } from "../Contexts/AuthContext";
+import UserSettings from "../screens/Settings/UserSettings";
+
 
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
@@ -71,6 +73,7 @@ export default function RootNavigation({ children }: any) {
             <Stack.Screen name="Map" component={Map} />
             <Stack.Screen name="Subscription" component={Subscription} />
             <Stack.Screen name="AnimalInfo" component={AnimalInfo} />
+            <Stack.Screen name="UserSettings" component={UserSettings} />
             <Stack.Screen
               name="AnimalInfoDocuments"
               component={AnimalInfoDocuments}

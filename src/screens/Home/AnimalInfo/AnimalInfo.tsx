@@ -171,35 +171,46 @@ export default function AnimalInfo() {
       </View>
 
       <View>
-        <TouchableOpacity style={styles.buttonsCreate}>
-          <Text style={styles.buttonTextsCreate}>Create Pet Profile</Text>
-        </TouchableOpacity>
+        <GenericButton
+          buttonStyles={styles.buttonsCreate}
+          textStyle={styles.buttonTextsCreate}
+          title="Create Pet Profile"
+          fun={() => console.log("")}
+        />
       </View>
-    
+
       <View>
         <Text style={styles.idstyle}>Does it have any special features?</Text>
-        <TouchableOpacity style={styles.buttonsFeature}>
-          <Text style={styles.buttonTextsFeature}>Get Access</Text>
-        </TouchableOpacity>
+        <GenericButton
+          buttonStyles={styles.buttonsFeature}
+          textStyle={styles.buttonTextsFeature}
+          title="Get Access"
+          fun={() => console.log("Get Access for special features")}
+        />
         <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
           Fill in the information about the pet completely
         </Text>
       </View>
       <View>
         <Text style={styles.idstyle}>Important Information</Text>
-        <TouchableOpacity style={styles.buttonsFeature}>
-          <Text style={styles.buttonTextsFeature}>Get Access</Text>
-        </TouchableOpacity>
+        <GenericButton
+          buttonStyles={styles.buttonsFeature}
+          textStyle={styles.buttonTextsFeature}
+          title="Get Access"
+          fun={() => console.log("Get Access for important information")}
+        />
         <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
-          Enter important information that will help the finder pay attention to
-          the pet
+          Enter important information that will help the finder pay attention to the pet
         </Text>
       </View>
       <View>
         <Text style={styles.idstyle}>Medical Card</Text>
-        <TouchableOpacity style={styles.buttonsFeature}>
-          <Text style={styles.buttonTextsFeature}>Get Access</Text>
-        </TouchableOpacity>
+        <GenericButton
+          buttonStyles={styles.buttonsFeature}
+          textStyle={styles.buttonTextsFeature}
+          title="Get Access"
+          fun={() => console.log("Get Access for medical card")}
+        />
         <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
           Add information about vaccinations, allergies or other similar habits
         </Text>
@@ -260,7 +271,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 8,
     paddingHorizontal: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     borderRadius: 10,
     marginTop: 1,
     borderWidth: 3,

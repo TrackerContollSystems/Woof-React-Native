@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import MapView, { LatLng, Marker, Polyline } from "react-native-maps";
+import MapView, { LatLng, Marker, Polyline   }   from "react-native-maps";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import * as Location from "expo-location";
 import { useQuery } from "@tanstack/react-query";
@@ -60,9 +60,28 @@ const Map: React.FC = () => {
 
   const [isZoomed, setIsZoomed] = useState(true);
 
-  const handleRegionChangeComplete = (region: any) => {
-    // Implement your logic here if needed
+
+  const georgiaBounds = {
+    minLongitude: 40,
+    maxLongitude: 47,
   };
+
+  const isWithinGeorgiaBounds = (region: any) => {
+    return (
+      region.longitude >= georgiaBounds.minLongitude &&
+      region.longitude <= georgiaBounds.maxLongitude
+    );
+  };
+
+  const handleRegionChangeComplete = (region: any) => {
+    if (!isWithinGeorgiaBounds(region)) {
+      mapViewRef.current?.animateToRegion({
+        latitude: 42.694404590427304,
+        longitude: 43.392872883392144,
+        latitudeDelta: 9.045499067191386,
+        longitudeDelta: 7.038608269499669,
+      });
+    }}
 
   const handleNavigateToCurrentLocation = () => {
     mapViewRef.current?.animateToRegion({
@@ -85,7 +104,7 @@ const Map: React.FC = () => {
         currentLocation.latitude
       },${
         currentLocation.longitude
-      }&destination=${41.6399822},${44.9085742}&key=AIzaSyDSRG7LLiZ1r9gsorJikzbwa35MRDHuk00`;
+      }&destination=${animalLocation.latitude},${animalLocation.longitude}&key=AIzaSyDSRG7LLiZ1r9gsorJikzbwa35MRDHuk00`;
 
       fetch(directionsUrl)
         .then((response) => response.json())
@@ -99,7 +118,7 @@ const Map: React.FC = () => {
           console.error(error);
         });
     }
-
+ 
     // Function to decode Google Maps Polyline encoding
     const decode = (t: string) => {
       let index = 0;
@@ -152,6 +171,8 @@ const Map: React.FC = () => {
         }}
         onRegionChangeComplete={handleRegionChangeComplete}
         zoomEnabled={isZoomed}
+        // @ts-ignore
+        provider={MapView.PROVIDER_GOOGLE}
       >
         {currentLocation && (
           <Marker
@@ -166,7 +187,7 @@ const Map: React.FC = () => {
           </Marker>
         )}
         {animalLocation.latitude && animalLocation.longitude && (
-          <Marker
+                              <Marker
             coordinate={{
               latitude: animalLocation.latitude,
               longitude: animalLocation.longitude,
@@ -182,7 +203,7 @@ const Map: React.FC = () => {
             coordinates={polylineCoordinates}
             strokeColor="blue"
             strokeWidth={4}
-            lineDashPattern={[1, 5]}
+            lineDashPattern={[1, 10]}
           />
         )}
       </MapView>

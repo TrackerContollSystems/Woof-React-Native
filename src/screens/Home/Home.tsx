@@ -27,16 +27,11 @@ const Home = () => {
   }, []);
 
   if (authUser && authUser.email) {
-    const { toggleTheme } = UseUiContext();
+  
     return (
       <ScrollView style={{ backgroundColor: "white" }}>
         <Button title="logout" onPress={() => logout()} />
-        <Text
-          style={{ backgroundColor: "blue", padding: 10 }}
-          onPress={toggleTheme}
-        >
-          Color
-        </Text>
+      
         <UserHeader />
         <UserMain />
         <UserInfo />
