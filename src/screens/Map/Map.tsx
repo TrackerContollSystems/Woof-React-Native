@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import MapView, { LatLng, Marker, Polyline   }   from "react-native-maps";
+import MapView, { LatLng, Marker, Polyline } from "react-native-maps";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import * as Location from "expo-location";
 import { useQuery } from "@tanstack/react-query";
@@ -60,7 +60,6 @@ const Map: React.FC = () => {
 
   const [isZoomed, setIsZoomed] = useState(true);
 
-
   const georgiaBounds = {
     minLongitude: 40,
     maxLongitude: 47,
@@ -81,7 +80,8 @@ const Map: React.FC = () => {
         latitudeDelta: 9.045499067191386,
         longitudeDelta: 7.038608269499669,
       });
-    }}
+    }
+  };
 
   const handleNavigateToCurrentLocation = () => {
     mapViewRef.current?.animateToRegion({
@@ -100,11 +100,7 @@ const Map: React.FC = () => {
       animalLocation.latitude !== 0 &&
       animalLocation.longitude !== 0
     ) {
-      let directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${
-        currentLocation.latitude
-      },${
-        currentLocation.longitude
-      }&destination=${animalLocation.latitude},${animalLocation.longitude}&key=AIzaSyDSRG7LLiZ1r9gsorJikzbwa35MRDHuk00`;
+      let directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${currentLocation.latitude},${currentLocation.longitude}&destination=${animalLocation.latitude},${animalLocation.longitude}&key=AIzaSyDSRG7LLiZ1r9gsorJikzbwa35MRDHuk00`;
 
       fetch(directionsUrl)
         .then((response) => response.json())
@@ -118,8 +114,8 @@ const Map: React.FC = () => {
           console.error(error);
         });
     }
- 
-    // Function to decode Google Maps Polyline encoding
+
+    // Function to decode Google Maps Polyline encoding        
     const decode = (t: string) => {
       let index = 0;
       const latlngs = [];
@@ -187,7 +183,7 @@ const Map: React.FC = () => {
           </Marker>
         )}
         {animalLocation.latitude && animalLocation.longitude && (
-                              <Marker
+          <Marker
             coordinate={{
               latitude: animalLocation.latitude,
               longitude: animalLocation.longitude,
@@ -201,9 +197,12 @@ const Map: React.FC = () => {
         {polylineCoordinates.length > 0 && (
           <Polyline
             coordinates={polylineCoordinates}
-            strokeColor="blue"
-            strokeWidth={4}
-            lineDashPattern={[1, 10]}
+            strokeColor="#44BFFC"
+            strokeWidth={5}
+            lineDashPattern={[5, 2]}
+             lineCap="butt"
+             lineJoin="bevel"
+             geodesic={true}
           />
         )}
       </MapView>

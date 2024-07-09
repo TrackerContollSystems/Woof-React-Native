@@ -14,11 +14,11 @@ const Home = () => {
   const { authUser } = authState;
   const navigation: any = useNavigation();
 
-  const logout = async () => {
-    await AsyncStorage.setItem("token", "");
-    authDispatch({ type: "set_decoded_user", payload: {} });
-    navigation.navigate(`Login`);
-  };
+  // const logout = async () => {
+  //   await AsyncStorage.setItem("token", "");
+  //   authDispatch({ type: "set_decoded_user", payload: {} });
+  //   navigation.navigate(`Login`);
+  // };
 
   useEffect(() => {
     if (!authUser.email) {
@@ -30,7 +30,7 @@ const Home = () => {
   
     return (
       <ScrollView style={{ backgroundColor: "white" }}>
-        <Button title="logout" onPress={() => logout()} />
+        {/* <Button title="logout" onPress={() => logout()} /> */}
       
         <UserHeader />
         <UserMain />
