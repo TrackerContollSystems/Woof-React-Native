@@ -1,4 +1,4 @@
-import { Text, Button, ScrollView } from "react-native";
+import { Text, Button, ScrollView, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UseAuthContext } from "../../Contexts/AuthContext";
@@ -13,6 +13,7 @@ const Home = () => {
   const { authState, authDispatch } = UseAuthContext();
   const { authUser } = authState;
   const navigation: any = useNavigation();
+  const { colors } = UseUiContext();
 
   // const logout = async () => {
   //   await AsyncStorage.setItem("token", "");
@@ -29,13 +30,15 @@ const Home = () => {
   if (authUser && authUser.email) {
   
     return (
-      <ScrollView style={{ backgroundColor: "white" }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.backgroundColor }}>
+      <ScrollView >
         {/* <Button title="logout" onPress={() => logout()} /> */}
       
         <UserHeader />
         <UserMain />
         <UserInfo />
       </ScrollView>
+      </SafeAreaView>
     );
   } else {
     return (

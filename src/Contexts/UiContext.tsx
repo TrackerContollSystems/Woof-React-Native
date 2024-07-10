@@ -29,6 +29,9 @@ const ColorSchemas = {
     textColor: "black",
     btnTextColor: "white",
     buttonColor: "#2C3F51",
+    cardColor:  "#eff0ff",
+    StatusBar:"dark",
+    notifications: "orange"
   },
   dark: {
     //  general colors
@@ -40,9 +43,12 @@ const ColorSchemas = {
     // UI colors
     backgroundColor: "#121212",
     buttonColor: "orange",
+    cardColor:  "#2C3F51",
     // Text Colors
     textColor: "white",
     btnTextColor: "white",
+  StatusBar:"light",
+  notifications: "orange"
   },
 };
 

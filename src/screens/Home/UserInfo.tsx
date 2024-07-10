@@ -8,6 +8,7 @@ import {
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { UseUiContext } from "../../Contexts/UiContext";
 
 type UserInfoDataType = {
   title: string;
@@ -44,14 +45,16 @@ export default function UserInfo() {
     },
   ];
 
+  const { colors } = UseUiContext();
+
   return (
     <View style={styles.mainContainer}>
       {UserInfoData.map((val: UserInfoDataType) => {
         const { title, color, name, Icon } = val;
         return (
-          <TouchableOpacity style={styles.container}>
-            <Icon name={name} size={54} color={color} />
-            <Text style={styles.smallText}>{title}</Text>
+          <TouchableOpacity style={[styles.container, {backgroundColor: colors.cardColor}]}>
+            <Icon name={name} size={54} color={colors.buttonColor} />
+            <Text style={[styles.smallText, { color: colors.textColor }]}>{title}</Text>
           </TouchableOpacity>
         );
       })}

@@ -200,8 +200,7 @@ export default function AnimalInfo() {
           fun={() => console.log("Get Access for important information")}
         />
         <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
-          Enter important information that will help the finder pay attention to
-          the pet
+          Enter important information that will help the finder pay attention to the pet
         </Text>
       </View>
       <View>

@@ -3,6 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import AnimalLoadingSkeleton from "../../../COMPONENTS/Skeleton/AnimalLoadingSkeleton";
+import { UseUiContext } from "../../../../Contexts/UiContext";
 
 type AnimalPhotoLoaderProps = {
  
@@ -14,6 +15,7 @@ const AnimalPhotoLoader: FC<AnimalPhotoLoaderProps> = (data) => {
   const navigation: any = useNavigation();
   const [loading,setLoading] = useState(false)
   const {   name, icon } = data;
+  const { colors } = UseUiContext();
 
 
   const [animalDataWithBase64, setAnimalDataWithBase64] = useState<any>(null);
@@ -68,7 +70,7 @@ const AnimalPhotoLoader: FC<AnimalPhotoLoaderProps> = (data) => {
           style={{ width: 100, height: 100, borderRadius: 45 }}
           source={{ uri: animalDataWithBase64 as string }}
         />
-        <Text style={styles.animalText}>{name}</Text>
+        <Text style={[styles.animalText, { color: colors.textColor }]}>{name}</Text>
       </TouchableOpacity>
     </>
   );

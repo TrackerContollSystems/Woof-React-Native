@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity ,Image} from "react-native";
 import MapView, { LatLng, Marker, Polyline } from "react-native-maps";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import * as Location from "expo-location";
@@ -14,29 +14,29 @@ type LocationType = {
 };
 
 const Map: React.FC = () => {
+  //  getting animals device coordinats from API 
   const coordinate = useQuery({
     queryKey: ["get-animal-coordinates"],
     queryFn: GetCoordinates,
-    refetchInterval: 10000,
+    refetchInterval: 10000, // re fetching data every 10 seconds 
   });
-
+//  state for phones current location 
   const [currentLocation, setCurrentLocation] = useState<LocationType | null>(
     null
   );
-  const [animalLocation, setAnimalLocation] = useState<LocationType>({
-    latitude: 0,
-    longitude: 0,
-  });
 
+// fetching current location 
   useEffect(() => {
     const fetchCurrentLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
+      // checking permissions
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         return;
       }
 
       let location = await Location.getCurrentPositionAsync({});
+      // getting phones location and setting the state 
       setCurrentLocation({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -46,20 +46,33 @@ const Map: React.FC = () => {
     fetchCurrentLocation();
   }, []);
 
+
+
+  //  state for animals device location with comse from the API 
+  const [animalLocation, setAnimalLocation] = useState<LocationType>({
+    latitude: 0,
+    longitude: 0,
+  });
+ 
   useEffect(() => {
+    //  if animal coordinats is successfuily fetched 
     if (coordinate.isSuccess) {
+      // setting state 
       setAnimalLocation({
         latitude: coordinate.data[0].latitude,
         longitude: coordinate.data[0].longitude,
       });
     }
-    console.log(coordinate.data);
+    // console.log(coordinate.data);
   }, [coordinate.isSuccess]);
-
+//  ref for map view  component 
   const mapViewRef = useRef<MapView>(null);
 
-  const [isZoomed, setIsZoomed] = useState(true);
+   
+//  functionality below manages border control so user dose not leave Georgias borders while using the app 
 
+  const [isZoomed, setIsZoomed] = useState(true);
+//  georgias lat and long in general 
   const georgiaBounds = {
     minLongitude: 40,
     maxLongitude: 47,
@@ -71,7 +84,7 @@ const Map: React.FC = () => {
       region.longitude <= georgiaBounds.maxLongitude
     );
   };
-
+//  handling region 
   const handleRegionChangeComplete = (region: any) => {
     if (!isWithinGeorgiaBounds(region)) {
       mapViewRef.current?.animateToRegion({
@@ -82,7 +95,7 @@ const Map: React.FC = () => {
       });
     }
   };
-
+// handling navigation for user to find its phones current location 
   const handleNavigateToCurrentLocation = () => {
     mapViewRef.current?.animateToRegion({
       latitude: currentLocation!.latitude,
@@ -93,21 +106,24 @@ const Map: React.FC = () => {
   };
 
   // Fetch directions and parse the polyline points
+  // polylines are used for direction 
   const [polylineCoordinates, setPolylineCoordinates] = useState<LatLng[]>([]);
   const getDirrection = () => {
+    // console.log(animalLocation)
     if (
       currentLocation &&
       animalLocation.latitude !== 0 &&
       animalLocation.longitude !== 0
     ) {
       let directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${currentLocation.latitude},${currentLocation.longitude}&destination=${animalLocation.latitude},${animalLocation.longitude}&key=AIzaSyDSRG7LLiZ1r9gsorJikzbwa35MRDHuk00`;
+      // let directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${41.2423},${43.0092}&destination=${animalLocation.latitude},${animalLocation.longitude}&key=AIzaSyDSRG7LLiZ1r9gsorJikzbwa35MRDHuk00`;
 
       fetch(directionsUrl)
         .then((response) => response.json())
         .then((responseJson) => {
           const points = responseJson.routes[0].overview_polyline.points;
           const coords = decode(points);
-          console.log(coords);
+          // console.log(coords);
           setPolylineCoordinates(coords);
         })
         .catch((error) => {
@@ -150,7 +166,10 @@ const Map: React.FC = () => {
   };
   useEffect(() => {
     getDirrection();
-  }, [animalLocation]);
+ console.log( coordinate.data)
+  }, [animalLocation,currentLocation]);
+
+
   if (!currentLocation || coordinate.isPending) {
     return <LoadingAnimation />;
   }
@@ -168,19 +187,21 @@ const Map: React.FC = () => {
         onRegionChangeComplete={handleRegionChangeComplete}
         zoomEnabled={isZoomed}
         // @ts-ignore
-        provider={MapView.PROVIDER_GOOGLE}
+        provider={MapView.PROVIDER_GOOGLE} // this makes sure to use google maps as provider for both IOS and Android devices
       >
         {currentLocation && (
           <Marker
-            coordinate={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
-            }}
-            title="Current Location"
-            description="This is your current location"
-          >
-            <EvilIcons name="location" size={40} color="blue" />
-          </Marker>
+          coordinate={{
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+          }}
+          title="Current Location"
+          description="This is your current location"
+        >
+          {/* <EvilIcons name="location" size={40} color="blue" />
+           */}
+           <Image style={{width:30, height:30}} source={{uri:coordinate.data[0].iconUrl}} />
+        </Marker>
         )}
         {animalLocation.latitude && animalLocation.longitude && (
           <Marker
@@ -191,11 +212,11 @@ const Map: React.FC = () => {
             title="Animal Location"
             description="This is the animal's location"
           >
-            <EvilIcons name="location" size={40} color="red" />
+            <EvilIcons name="location" size={40} color="blue" />
           </Marker>
         )}
-        {polylineCoordinates.length > 0 && (
-          <Polyline
+    
+          {animalLocation.latitude && animalLocation.longitude && <Polyline
             coordinates={polylineCoordinates}
             strokeColor="#44BFFC"
             strokeWidth={5}
@@ -204,7 +225,7 @@ const Map: React.FC = () => {
              lineJoin="bevel"
              geodesic={true}
           />
-        )}
+    }
       </MapView>
       <TouchableOpacity
         style={styles.button}

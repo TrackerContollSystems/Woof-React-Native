@@ -7,21 +7,23 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Map from "../screens/Map/Map";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { UseAuthContext } from "../Contexts/AuthContext";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
+import { UseUiContext } from "../Contexts/UiContext";
 
- 
 const TabNavigator = () => {
   const navigation: any = useNavigation();
   const state = useNavigationState((state) => state);
   const { authState } = UseAuthContext();
   const currentRoute = state?.routes ? state.routes[state.index].name : "";
 
+  const { colors } = UseUiContext();
+
   useEffect(() => {
     console.log(currentRoute);
   }, [currentRoute]);
 
   const getColor = (routeName: string) =>
-    routeName === currentRoute ? "black" : "grey";
+    routeName === currentRoute ? colors.textColor : "grey";
 
   if (
     authState.authUser &&
@@ -29,7 +31,15 @@ const TabNavigator = () => {
     currentRoute != "Enter"
   ) {
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: colors.backgroundColor,
+            borderTopColor: colors.brandGray,
+          },
+        ]}
+      >
         <TouchableOpacity
           style={styles.tab}
           onPress={() => navigation.navigate("Home")}
@@ -92,9 +102,13 @@ const TabNavigator = () => {
           style={styles.tab}
           onPress={() => navigation.navigate("UserSettings")}
         >
-          <Ionicons name="settings-sharp" size={24} color={getColor("UserSettings")}/>
+          <Ionicons
+            name="settings-sharp"
+            size={24}
+            color={getColor("UserSettings")}
+          />
           <Text style={[styles.btn, { color: getColor("UserSettings") }]}>
-            Setting 
+            Setting
           </Text>
         </TouchableOpacity>
       </View>
@@ -110,7 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     backgroundColor: "white",
     padding: 15,
-    borderTopWidth: 1,
+    borderTopWidth: 0.5,
     borderTopColor: "#ccc",
   },
   tab: {

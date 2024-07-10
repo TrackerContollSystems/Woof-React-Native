@@ -15,15 +15,17 @@ import AnimalInfo from "../screens/Home/AnimalInfo/AnimalInfo";
 import AnimalInfoDocuments from "../screens/Home/AnimalInfo/AnimalInfoDocuments";
 import { UseAuthContext } from "../Contexts/AuthContext";
 import UserSettings from "../screens/Settings/UserSettings";
+import { SafeAreaView } from "react-native";
+import { UseUiContext } from "../Contexts/UiContext";
 
 
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
   const { authState } = UseAuthContext();
-
+ const {colors} = UseUiContext()
   return (
-    <>
-      <StatusBar style="dark" backgroundColor="#ffffff" translucent={false} />
+    < >
+      <StatusBar style={colors.StatusBar as "dark" | "light"} backgroundColor={colors.backgroundColor} translucent={false} />
       <Stack.Navigator>
         {!authState.authUser.email ? (
           //  auth pages
@@ -64,16 +66,24 @@ export default function RootNavigation({ children }: any) {
 
             {/* მომხარებლის უშვალო ინტერფეისები */}
             <Stack.Screen
-              // options={{
-              //   headerShown: false,
-              // }}
+              options={{
+                headerShown: false,
+              }}
               name="Home"
               component={Home}
             />
             <Stack.Screen name="Map" component={Map} />
             <Stack.Screen name="Subscription" component={Subscription} />
             <Stack.Screen name="AnimalInfo" component={AnimalInfo} />
-            <Stack.Screen name="UserSettings" component={UserSettings} />
+            <Stack.Screen   options={{
+              
+                headerStyle: {
+                  backgroundColor: colors.backgroundColor,
+          
+                }, headerTitleStyle: {
+                  color: colors.textColor, // This sets the color of the header title text
+                },
+              }} name="UserSettings" component={UserSettings} />
             <Stack.Screen
               name="AnimalInfoDocuments"
               component={AnimalInfoDocuments}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,8 @@ export default function UserSettings() {
   const { toggleTheme, theme } = UseUiContext();
   const { authState, authDispatch } = UseAuthContext();
   const navigation: any = useNavigation();
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const { colors } = UseUiContext();
 
   const textStyle = {
     padding: 30,
@@ -30,17 +32,31 @@ export default function UserSettings() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <View style={styles.toggleContainer}>
+    <View style={[styles.container, {backgroundColor: colors.backgroundColor} ]}>
+      <View style={[styles.toggleContainer,]}>
         <Text style={styles.toggleText}>Dark Mode</Text>
         <Switch
           trackColor={{ false: "lightblue", true: "white" }}
-          thumbColor={theme === "dark" ? "green" : "white"}
+          thumbColor={theme === "dark" ? colors.buttonColor : "white"}
           ios_backgroundColor="white"
           onValueChange={toggleTheme}
           value={theme === "dark"}
         />
       </View>
+
+      <View style={[styles.toggleContainer]}>
+        <Text style={styles.toggleText}>Notifications</Text>
+        <Switch
+          trackColor={{ false: "lightblue", true: "white" }}
+          thumbColor={notificationsEnabled ? colors.notifications : "white"}
+          ios_backgroundColor="white"
+          onValueChange={() => setNotificationsEnabled(!notificationsEnabled)}
+          value={notificationsEnabled}
+        />
+      </View>
+
+
+
 
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
         <Text style={styles.logoutButtonText}>Logout</Text>
@@ -50,6 +66,11 @@ export default function UserSettings() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    padding: 20,
+  },
   logoutButton: {
     marginTop: 20,
     backgroundColor: "red",
@@ -57,7 +78,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     width: 300,
-    top: 200,
+    top: 400,
   },
   logoutButtonText: {
     color: "white",
@@ -68,14 +89,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 20,
-    backgroundColor: "lightblue",
+    backgroundColor: "#2C3F51",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    width: "100%",
+    justifyContent: "space-between",
   },
   toggleText: {
-    marginRight: 10,
+  
     fontSize: 16,
-    color: "black",
+    color: "white",
   },
 });

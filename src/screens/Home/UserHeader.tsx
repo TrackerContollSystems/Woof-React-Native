@@ -22,8 +22,12 @@ export default function UserHeader() {
       <View style={styles.topSection}>
         {/* <FontAwesome name="user-circle" size={60} color="orange" /> */}
         <View style={styles.emailWrapper}>
-          <Text style={styles.emailText}>{authUser.email}</Text>
-          <Text style={{ fontSize: 14, color: "gray", padding: 4 }}>User</Text>
+          <Text style={[styles.emailText, { color: colors.textColor }]}>
+            {authUser.email}
+          </Text>
+          <Text style={{ fontSize: 14, color: colors.textColor, padding: 4 }}>
+            User
+          </Text>
         </View>
 
         <View style={styles.awardWrapper}>
@@ -36,9 +40,13 @@ export default function UserHeader() {
         </View>
       </View>
 
-      <View style={styles.container}>
-        <Text style={styles.bigText}>Big Text Animal ID</Text>
-        <Text style={styles.smallText}>
+      <View style={[styles.container, { backgroundColor: colors.cardColor }]}>
+      {/* <View style={styles.container}> */}
+        <Text style={[styles.bigText, { color: colors.textColor }]}>
+          
+          Big Text Animal ID
+        </Text>
+        <Text style={[styles.smallText, { color: colors.textColor }]}>
           small textsmall textsmall textsmall textsmall textsmall textsmall text
         </Text>
         <GenericButton title="Button" fun={() => console.log("")} />
@@ -60,7 +68,7 @@ const styles = StyleSheet.create({
   awardWrapper: { marginLeft: 85 },
   awardText: { fontSize: 12, color: "gray", textAlign: "center" },
   container: {
-    backgroundColor: "#eff0ff",
+    // backgroundColor: "#eff0ff",
     // backgroundColor: "#fcd06b",
     padding: 10,
     borderRadius: 8,

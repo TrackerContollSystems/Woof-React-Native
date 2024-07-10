@@ -29,6 +29,7 @@ import { UsePhotoContext } from "../../Contexts/PhotoPickerContext";
 import AnimalModalLoadingSkeleton from "../COMPONENTS/Skeleton/AnimalModalLoadingSkeleton";
 import AnimalPhotoLoader from "./AnimalInfo/Components/AnimalPhotoLoader";
 import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
+import { UseUiContext } from "../../Contexts/UiContext";
 
 export default function UserMain() {
   const { authState } = UseAuthContext();
@@ -48,6 +49,7 @@ export default function UserMain() {
   const [showLoadingSkeleton, setShowLoadingSkeleton] = useState(true);
 
   const navigation: any = useNavigation();
+  const { colors } = UseUiContext();
 
   const referenceaAnimalData = useQuery({
     queryKey: ["get-animals-reference"],
@@ -112,7 +114,7 @@ export default function UserMain() {
 
   return (
     <View style={styles.container}>
-      <Text onPress={() => console.log(animalData.data)} style={styles.text}>
+      <Text onPress={() => console.log(animalData.data)} style={[styles.text, { color: colors.textColor }]}>
         My Animals
       </Text>
       {mutation.isPending ||
@@ -124,11 +126,11 @@ export default function UserMain() {
         ))}
       <View style={styles.animalcontainet}>
         <TouchableOpacity
-          style={styles.animalContainer}
+          style={[styles.animalContainer, {backgroundColor: colors.backgroundColor}]}
           onPress={() => setModalVisible(true)}
         >
-          <Ionicons name="add-circle-sharp" size={100} color="#2C3F51" />
-          <Text style={styles.animalText}>Add</Text>
+          <Ionicons name="add-circle-sharp" size={100} color={colors.buttonColor} />
+          <Text style={[styles.animalText, { color: colors.textColor }]}>Add</Text>
         </TouchableOpacity>
 
         <ScrollView
