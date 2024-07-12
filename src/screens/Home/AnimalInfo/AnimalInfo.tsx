@@ -5,14 +5,25 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Image,
+  SafeAreaView
 } from "react-native";
 import CustomModal from "./ModalAnimal";
 import { FontAwesome } from "@expo/vector-icons";
 import GenericInput from "../../COMPONENTS/FormInputs/GenericInput";
 import GenericButton from "../../COMPONENTS/Buttons/GenericButtons";
 import { UseUiContext } from "../../../Contexts/UiContext";
+import { RouteProp, useRoute } from "@react-navigation/native";
 
-export default function AnimalInfo() {
+interface RouteParams {
+  photoUri: string;
+  animalName: string;
+ 
+}
+
+
+export default function AnimalInfo(  ) {
+  const route = useRoute<RouteProp<Record<string, RouteParams>, string>>();
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
   const [species, setSpecies] = useState("");
@@ -29,6 +40,7 @@ export default function AnimalInfo() {
   const [currentValue, setCurrentValue] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const { colors } = UseUiContext();
+  const { photoUri, animalName  } = route.params;
 
   const openModal = (
     fieldSetter: React.Dispatch<React.SetStateAction<string>>,
@@ -47,16 +59,12 @@ export default function AnimalInfo() {
   };
 
   const fields = [
-    { title: "Name", value: name, setter: setName },
+    { title: animalName, value: name, setter: setName },
     { title: "Date Of Birth", value: dob, setter: setDob },
     { title: "Species", value: species, setter: setSpecies },
     { title: "Breed", value: breed, setter: setBreed },
     { title: "Color", value: color, setter: setColor },
-    {
-      title: "Registration Date",
-      value: registrationDate,
-      setter: setRegistrationDate,
-    },
+  
   ];
 
   const selectGender = (selectedGender: string) => {
@@ -68,13 +76,17 @@ export default function AnimalInfo() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView>
+    <ScrollView style={[styles.container, {backgroundColor: colors.backgroundColor}]}>
       <View style={styles.profileContainer}>
-        <FontAwesome
-          name="user-circle"
-          size={100}
-          color="orange"
-          style={styles.icon}
+      <Image
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 45,
+            marginTop: 10,
+          }}
+          source={{ uri: photoUri }}
         />
       </View>
 
@@ -88,7 +100,7 @@ export default function AnimalInfo() {
           />
         ))}
         <View style={styles.sterilizationContainer}>
-          <Text style={styles.sterilizationLabel}>Gender</Text>
+          <Text style={[styles.sterilizationLabel,]}>Gender</Text>
           <View style={styles.sterilizationButtons}>
             <TouchableOpacity
               style={[
@@ -128,7 +140,7 @@ export default function AnimalInfo() {
         </View>
 
         <View style={styles.sterilizationContainer}>
-          <Text style={styles.sterilizationLabel}>Sterilization</Text>
+          <Text style={[styles.sterilizationLabel,  ]}>Sterilization</Text>
           <View style={styles.sterilizationButtons}>
             <TouchableOpacity
               style={[
@@ -180,7 +192,7 @@ export default function AnimalInfo() {
       </View>
 
       <View>
-        <Text style={styles.idstyle}>Does it have any special features?</Text>
+        <Text style={[styles.idstyle, {color: colors.textColor}]}>Does it have any special features?</Text>
         <GenericButton
           buttonStyles={styles.buttonsFeature}
           textStyle={styles.buttonTextsFeature}
@@ -192,7 +204,7 @@ export default function AnimalInfo() {
         </Text>
       </View>
       <View>
-        <Text style={styles.idstyle}>Important Information</Text>
+        <Text style={[styles.idstyle, {color: colors.textColor}]}>Important Information</Text>
         <GenericButton
           buttonStyles={styles.buttonsFeature}
           textStyle={styles.buttonTextsFeature}
@@ -204,7 +216,7 @@ export default function AnimalInfo() {
         </Text>
       </View>
       <View>
-        <Text style={styles.idstyle}>Medical Card</Text>
+        <Text style={[styles.idstyle, {color: colors.textColor}]}>Medical Card</Text>
         <GenericButton
           buttonStyles={styles.buttonsFeature}
           textStyle={styles.buttonTextsFeature}
@@ -212,8 +224,9 @@ export default function AnimalInfo() {
           fun={() => console.log("Get Access for medical card")}
         />
         <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
-          Add information about vaccinations, allergies or other similar habits
+          Add information about vaccinations, allergies or other...
         </Text>
+        <Text></Text>
       </View>
 
       <CustomModal
@@ -225,6 +238,7 @@ export default function AnimalInfo() {
         setValue={setCurrentValue}
       />
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -275,7 +289,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 1,
     borderWidth: 3,
-    borderColor: "white",
+    borderColor: "grey",
   },
   buttonTextsFeature: {
     fontSize: 18,

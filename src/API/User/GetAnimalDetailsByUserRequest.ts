@@ -19,3 +19,22 @@ export const GetAnimalDetailsByUser = async () => {
     throw new Error(err);
   }
 };
+
+
+export const GetAnimalDetailsById = async (animalId: number) => {
+  try {
+    const token = await AsyncStorage.getItem("token");
+    const res = await ApiManager.get(`Animal/GetAnimalDetailsById?animalId=${animalId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(res.data)
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    const err: any = error;
+    throw new Error(err);
+  }
+};

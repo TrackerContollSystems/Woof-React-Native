@@ -18,14 +18,17 @@ import UserSettings from "../screens/Settings/UserSettings";
 import { SafeAreaView } from "react-native";
 import { UseUiContext } from "../Contexts/UiContext";
 
-
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
   const { authState } = UseAuthContext();
- const {colors} = UseUiContext()
+  const { colors } = UseUiContext();
   return (
-    < >
-      <StatusBar style={colors.StatusBar as "dark" | "light"} backgroundColor={colors.backgroundColor} translucent={false} />
+    <>
+      <StatusBar
+        style={colors.StatusBar as "dark" | "light"}
+        backgroundColor={colors.backgroundColor}
+        translucent={false}
+      />
       <Stack.Navigator>
         {!authState.authUser.email ? (
           //  auth pages
@@ -72,21 +75,59 @@ export default function RootNavigation({ children }: any) {
               name="Home"
               component={Home}
             />
-            <Stack.Screen name="Map" component={Map} />
-            <Stack.Screen name="Subscription" component={Subscription} />
-            <Stack.Screen name="AnimalInfo" component={AnimalInfo} />
-            <Stack.Screen   options={{
+            <Stack.Screen name="Map" component={Map}   options={{
               
+              headerStyle: {
+                backgroundColor: colors.backgroundColor,
+        
+              }, headerTitleStyle: {
+                color: colors.textColor, // This sets the color of the header title text
+              },
+            }}/>
+            <Stack.Screen name="Subscription" component={Subscription}  options={{
+              
+              headerStyle: {
+                backgroundColor: colors.backgroundColor,
+        
+              }, headerTitleStyle: {
+                color: colors.textColor, // This sets the color of the header title text
+              },
+            }} />
+            <Stack.Screen
+              name="AnimalInfo"
+              component={AnimalInfo}
+              options={{
                 headerStyle: {
                   backgroundColor: colors.backgroundColor,
-          
-                }, headerTitleStyle: {
+                },
+                headerTitleStyle: {
                   color: colors.textColor, // This sets the color of the header title text
                 },
-              }} name="UserSettings" component={UserSettings} />
+              }}
+            />
+            <Stack.Screen
+              options={{
+                headerStyle: {
+                  backgroundColor: colors.backgroundColor,
+                },
+                headerTitleStyle: {
+                  color: colors.textColor, // This sets the color of the header title text
+                },
+              }}
+              name="UserSettings"
+              component={UserSettings}
+            />
             <Stack.Screen
               name="AnimalInfoDocuments"
               component={AnimalInfoDocuments}
+              options={{
+                headerStyle: {
+                  backgroundColor: colors.backgroundColor,
+                },
+                headerTitleStyle: {
+                  color: colors.textColor, // This sets the color of the header title text
+                },
+              }}
             />
           </>
         )}

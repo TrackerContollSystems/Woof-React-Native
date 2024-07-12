@@ -17,6 +17,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import QRCodeScanner from "./Components/QRCodeScanner";
+import { UseUiContext } from "../../../Contexts/UiContext";
 
 interface RouteParams {
   photoUri: string;
@@ -30,6 +31,10 @@ export default function AnimalInfoDocuments() {
 
   const [scanned, setScanned] = useState(false);
   const [selectedIcons, setSelectedIcons] = useState<string[]>([]);
+  const { colors } = UseUiContext();
+  const navigateToMap = () => {
+    navigation.navigate("Map"); 
+  };
 
   const AwardIcons = [
     { name: "trophy-award", component: MaterialCommunityIcons },
@@ -63,7 +68,7 @@ export default function AnimalInfoDocuments() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: colors.backgroundColor}]}>
       {scanned ? (
         <QRCodeScanner onScanned={handleScan} />
       ) : (
@@ -77,13 +82,13 @@ export default function AnimalInfoDocuments() {
                 <MaterialCommunityIcons
                   name="qrcode-scan"
                   size={34}
-                  color="black"
+                  color={colors.buttonColor}
                 />
-                <Text style={styles.iconText}>Activate QR Code</Text>
+                <Text style={[styles.iconText, { color: colors.textColor }]}>Activate QR Code</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.iconContainer}
-                onPress={() => navigation.navigate("AnimalInfo")}
+                onPress={() => navigation.navigate("AnimalInfo", { photoUri, animalName })}
               >
                 <Image
                   style={{
@@ -97,15 +102,15 @@ export default function AnimalInfoDocuments() {
                 {/* <MaterialCommunityIcons  onPress={() => navigation.navigate("AnimalInfo")} name="dog" size={94} color="black" /> */}
               </TouchableOpacity>
               <TouchableOpacity style={styles.iconContainer}>
-                <AntDesign name="notification" size={34} color="black" />
-                <Text style={styles.iconText}>The Animal Is Lost</Text>
+                <AntDesign name="notification" size={34} color={colors.buttonColor} />
+                <Text style={[styles.iconText, { color: colors.textColor }]}>The Animal Is Lost</Text>
               </TouchableOpacity>
             </View>
             <View>
-              <Text style={styles.texts}>Award</Text>
+              <Text style={[styles.texts , { color: colors.textColor }]}>Award</Text>
               <Text style={styles.achievements}>Your pet's achievements</Text>
 
-              <View style={styles.award}>
+              <View style={[styles.award,  {backgroundColor: colors.cardColor}]}>
                 {AwardIcons.map((icon, index) => (
                   <Pressable
                     key={index}
@@ -121,42 +126,42 @@ export default function AnimalInfoDocuments() {
                       name={icon.name}
                       size={64}
                       color={
-                        selectedIcons.includes(icon.name) ? "orange" : "grey"
+                        selectedIcons.includes(icon.name) ? "gold" : "grey"
                       }
                     />
                   </Pressable>
                 ))}
               </View>
             </View>
-            <Text style={styles.smallTexts}>Care</Text>
+            <Text style={[styles.smallTexts, { color: colors.textColor }]}>Care</Text>
             <View style={styles.mainContainer}>
-              <TouchableOpacity style={styles.containers}>
-                <MaterialIcons name="notes" size={54} color="#2C3F51" />
-                <Text style={styles.smallText}>Notes</Text>
+              <TouchableOpacity style={[styles.containers, {backgroundColor: colors.cardColor}]}>
+                <MaterialIcons name="notes" size={54} color={colors.buttonColor} />
+                <Text style={[styles.smallText, { color: colors.textColor }]}>Notes</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.containers}>
+              <TouchableOpacity onPress={navigateToMap} style={[styles.containers, {backgroundColor: colors.cardColor}]}>
                 <FontAwesome6
                   name="map-location-dot"
                   size={54}
-                  color="#2C3F51"
+                  color={colors.buttonColor}
                 />
-                <Text style={styles.smallText}>Map</Text>
+                <Text style={[styles.smallText, { color: colors.textColor }]}>Map</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.containers}>
+              <TouchableOpacity style={[styles.containers, {backgroundColor: colors.cardColor}]}>
                 <MaterialCommunityIcons
                   name="file-document-edit"
                   size={54}
-                  color="#2C3F51"
+                  color={colors.buttonColor}
                 />
-                <Text style={styles.smallText}>Documents</Text>
+                <Text style={[styles.smallText, { color: colors.textColor }]}>Documents</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.containers}>
+              <TouchableOpacity style={[styles.containers, {backgroundColor: colors.cardColor}]}>
                 <MaterialCommunityIcons
                   name="qrcode-scan"
                   size={54}
-                  color="#2C3F51"
+                  color={colors.buttonColor}
                 />
-                <Text style={styles.smallText}>QR CODE</Text>
+                <Text style={[styles.smallText, { color: colors.textColor }]}>QR CODE</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -185,7 +190,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   iconText: {
-    marginTop: 5,
+    marginTop: 10,
     fontSize: 12,
     textAlign: "center",
   },

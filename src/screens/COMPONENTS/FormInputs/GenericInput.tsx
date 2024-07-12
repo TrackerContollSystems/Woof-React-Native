@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { UseUiContext } from "../../../Contexts/UiContext";
 // import styles from "../../Home/AnimalInfo/AnimalInfoStyle";
 
 type GenericInputType = {
@@ -9,9 +10,12 @@ type GenericInputType = {
   };
   
   const GenericInput: React.FC<GenericInputType> = ({ title, value, onPress }) => {
+
+    const { colors } = UseUiContext();
+
     return (
       <TouchableOpacity style={styles.buttonsInformation} onPress={onPress}>
-        {value ? <Text style={styles.buttonValue}>{value}</Text> : <Text style={styles.buttonTexts}>{title}</Text>}
+        {value ? <Text style={[styles.buttonValue,  { color: colors.textColor }]}>{value}</Text> : <Text style={styles.buttonTexts}>{title}</Text>}
       </TouchableOpacity>
     );
   };

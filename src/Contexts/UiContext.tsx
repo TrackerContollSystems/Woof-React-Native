@@ -25,13 +25,15 @@ const ColorSchemas = {
     brandGray: "#D3D3D3",
     brandYellow: "#ffe438",
     // UI colors
+    StatusBar: "dark",
     backgroundColor: "white",
+    cardColor: "#eff0ff",
+    //text colors
     textColor: "black",
+    //buttons colors
     btnTextColor: "white",
     buttonColor: "#2C3F51",
-    cardColor:  "#eff0ff",
-    StatusBar:"dark",
-    notifications: "orange"
+    notifications: "orange",
   },
   dark: {
     //  general colors
@@ -41,14 +43,15 @@ const ColorSchemas = {
     brandGray: "#D3D3D3",
     brandYellow: "#ffe438",
     // UI colors
+    StatusBar: "light",
     backgroundColor: "#121212",
-    buttonColor: "orange",
-    cardColor:  "#2C3F51",
+    cardColor: "#2C3F51",
     // Text Colors
     textColor: "white",
     btnTextColor: "white",
-  StatusBar:"light",
-  notifications: "orange"
+    // buttons colors
+    buttonColor: "orange",
+    notifications: "orange",
   },
 };
 

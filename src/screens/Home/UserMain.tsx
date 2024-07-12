@@ -178,8 +178,8 @@ export default function UserMain() {
           >
             <View style={styles.modalContainer}>
               <TouchableWithoutFeedback>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalTitle}>Add New Animal</Text>
+                <View style={[styles.modalContent, {backgroundColor: colors.backgroundColor}]}>
+                  <Text style={[styles.modalTitle, {color: colors.textColor}]}>Add New Animal</Text>
                   {modalLoading ? (
                     <AnimalModalLoadingSkeleton />
                   ) : (
@@ -241,10 +241,10 @@ export default function UserMain() {
                         )}
                       </View>
 
-                      <Text style={{ right: 120 }}>Name</Text>
+                      <Text style={[{ right: 120 }, {color: colors.textColor}]}>Name</Text>
 
                       <TextInput
-                        style={styles.input}
+                        style={[styles.input, {color: colors.textColor}]}
                         placeholder="Enter animal name"
                         value={newAnimalName}
                         onChangeText={setNewAnimalName}
