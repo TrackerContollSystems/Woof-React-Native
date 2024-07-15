@@ -152,16 +152,13 @@ export default function UserMain() {
         contentContainerStyle={styles.scrollViewContent}
       >
         <View style={styles.containers}>
-          <Text style={styles.bigText}>Advertisement</Text>
-          <Text style={styles.smallText}>small textsmall</Text>
+          <Image source={require('../../assets/TabNavigateIcons/WhatsApp Image 2024-07-14 at 14.00.34_739ac321.jpg')} style={{width: 250, height: 100}} />
         </View>
         <View style={styles.containers}>
-          <Text style={styles.bigText}>Advertisement</Text>
-          <Text style={styles.smallText}>small textsmall</Text>
+        <Image source={require('../../assets/TabNavigateIcons/WhatsApp Image 2024-07-14 at 14.00.34_739ac321.jpg')} style={{width: 250, height: 100}} />
         </View>
         <View style={styles.containers}>
-          <Text style={styles.bigText}>Advertisement</Text>
-          <Text style={styles.smallText}>small textsmall</Text>
+        <Image source={require('../../assets/TabNavigateIcons/WhatsApp Image 2024-07-14 at 14.00.34_739ac321.jpg')} style={{width: 250, height: 100}} />
         </View>
       </ScrollView>
 
@@ -348,9 +345,9 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   containers: {
-    backgroundColor: "#2C3F51",
-    padding: 20,
-    borderRadius: 2,
+    // backgroundColor: "#2C3F51",
+    padding: 10,
+    // borderRadius: 2,
     marginTop: 20,
     marginBottom: 5,
     marginLeft: 5,

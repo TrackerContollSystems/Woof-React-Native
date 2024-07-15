@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React, { useEffect } from "react";
 import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { Entypo } from "@expo/vector-icons";
@@ -44,7 +44,15 @@ const TabNavigator = () => {
           style={styles.tab}
           onPress={() => navigation.navigate("Home")}
         >
-          <Entypo name="home" size={24} color={getColor("Home")} />
+        
+          <Image
+            source={require("../assets/TabNavigateIcons/kennel.png")} 
+            style={{width: 30, height: 30}}
+            resizeMode="contain"
+          />
+        
+         
+          {/* <Entypo name="home" size={24} color={getColor("Home")} /> */}
           <Text style={[styles.btn, { color: getColor("Home") }]}>Home</Text>
         </TouchableOpacity>
         {/* <TouchableOpacity
@@ -80,13 +88,13 @@ const TabNavigator = () => {
           onPress={() => navigation.navigate("Subscription")}
           style={styles.tab}
         >
-          <MaterialIcons
-            name="subscriptions"
-            size={24}
-            color={getColor("Subscription")}
+         <Image
+            source={require("../assets/TabNavigateIcons/chat.png")} 
+            style={{width: 30, height: 30}}
+            resizeMode="contain"
           />
           <Text style={[styles.btn, { color: getColor("Subscription") }]}>
-            Subscription
+            Chat
           </Text>
         </TouchableOpacity>
 
@@ -94,23 +102,41 @@ const TabNavigator = () => {
           style={styles.tab}
           onPress={() => navigation.navigate("Map")}
         >
-          <FontAwesome6 name="map-location" size={24} color={getColor("Map")} />
+          <Image
+            source={require("../assets/TabNavigateIcons/location.png")} 
+            style={{width: 52, height: 30}}
+            // resizeMode="contain"
+          />
           <Text style={[styles.btn, { color: getColor("Map") }]}>Map</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.tab}
+          onPress={() => navigation.navigate("Match")}
+        >
+         <Image
+            source={require("../assets/TabNavigateIcons/animal-therapy.png")} 
+            style={{width: 30, height: 30}}
+            resizeMode="contain"
+          />
+          <Text style={[styles.btn, { color: getColor("Match") }]}>
+            Match
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tab}
           onPress={() => navigation.navigate("UserSettings")}
         >
-          <Ionicons
-            name="settings-sharp"
-            size={24}
-            color={getColor("UserSettings")}
+         <Image
+            source={require("../assets/TabNavigateIcons/application.png")} 
+            style={{width: 30, height: 30}}
+            resizeMode="contain"
           />
           <Text style={[styles.btn, { color: getColor("UserSettings") }]}>
             Setting
           </Text>
         </TouchableOpacity>
+        
       </View>
     );
   } else {
@@ -137,6 +163,9 @@ const styles = StyleSheet.create({
     color: "grey",
     marginTop: 5,
   },
+  imagePhoto: {
+    fontSize: 12
+  }
 });
 
 export default TabNavigator;

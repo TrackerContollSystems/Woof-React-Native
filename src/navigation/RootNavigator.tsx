@@ -17,6 +17,7 @@ import { UseAuthContext } from "../Contexts/AuthContext";
 import UserSettings from "../screens/Settings/UserSettings";
 import { SafeAreaView } from "react-native";
 import { UseUiContext } from "../Contexts/UiContext";
+import Match from "../screens/Match/Match";
 
 export default function RootNavigation({ children }: any) {
   const Stack = createNativeStackNavigator();
@@ -96,6 +97,18 @@ export default function RootNavigation({ children }: any) {
             <Stack.Screen
               name="AnimalInfo"
               component={AnimalInfo}
+              options={{
+                headerStyle: {
+                  backgroundColor: colors.backgroundColor,
+                },
+                headerTitleStyle: {
+                  color: colors.textColor, // This sets the color of the header title text
+                },
+              }}
+            />
+             <Stack.Screen
+              name="Match"
+              component={Match}
               options={{
                 headerStyle: {
                   backgroundColor: colors.backgroundColor,
