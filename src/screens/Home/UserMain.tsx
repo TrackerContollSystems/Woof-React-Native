@@ -15,14 +15,13 @@ import {
   Pressable,
 } from "react-native";
 import {
-  Ionicons,
+ 
   MaterialIcons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetReferenceAnimalPhotos } from "../../API/ReferenceData/GetAllAnimalicons";
-import { UseAuthContext } from "../../Contexts/AuthContext";
-import { useNavigation } from "@react-navigation/native";
+ import { useNavigation } from "@react-navigation/native";
 import { GetAnimalDetailsByUser } from "../../API/User/GetAnimalDetailsByUserRequest";
 import { CreateAnimalRequest } from "../../API/User/CreateAnimalRequest";
 import { UsePhotoContext } from "../../Contexts/PhotoPickerContext";
@@ -32,22 +31,17 @@ import LoadingAnimation from "../COMPONENTS/animations/LoadingAnimation";
 import { UseUiContext } from "../../Contexts/UiContext";
 
 export default function UserMain() {
-  const { authState } = UseAuthContext();
+ 
   const { handlePickImage, photoFromGallery, setPhotoFromGallery } =
     UsePhotoContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [newAnimalName, setNewAnimalName] = useState("");
   const [newAnimalIcon, setNewIcon] = useState("");
   const [selectedIcon, setSelectedIcon] = useState<number | null>(null);
-  const [animals, setAnimals] = useState<
-    { name: string; icon: string | ArrayBuffer | null }[]
-  >([]);
-  const [imageBase64Array, setImageBase64Array] = useState<
-    (string | ArrayBuffer | null)[]
-  >([]);
+ 
+ 
   const [modalLoading, setModalLoading] = useState(true);
-  const [showLoadingSkeleton, setShowLoadingSkeleton] = useState(true);
-
+ 
   const navigation: any = useNavigation();
   const { colors } = UseUiContext();
 
@@ -72,7 +66,7 @@ export default function UserMain() {
       setSelectedIcon(null);
       setModalVisible(false);
       setPhotoFromGallery(null);
-      // navigation.navigate("AnimalInfoDocuments");
+      navigation.navigate("AnimalInfoDocuments", {});
     },
     onError(err) {
       console.log(err);
@@ -85,7 +79,7 @@ export default function UserMain() {
       Icon: newAnimalIcon,
       File: null,
     };
-    console.log(photoFromGallery?.assets[0]);
+ 
 
     if (photoFromGallery?.assets[0]) {
       obj.File = photoFromGallery?.assets[0];
@@ -104,13 +98,7 @@ export default function UserMain() {
     }
   }, [modalVisible]);
 
-  useEffect(() => {
-    if (animalData.isSuccess) {
-      setTimeout(() => {
-        setShowLoadingSkeleton(false);
-      }, 1000);
-    }
-  }, [animalData.isSuccess]);
+ 
 
   return (
     <View style={styles.container}>
@@ -129,7 +117,11 @@ export default function UserMain() {
           style={[styles.animalContainer, {backgroundColor: colors.backgroundColor}]}
           onPress={() => setModalVisible(true)}
         >
-          <Ionicons name="add-circle-sharp" size={100} color={colors.buttonColor} />
+          {/* <Ionicons name="add-circle-sharp" size={100} color={colors.buttonColor} /> */}
+          <Image
+            source={require("../../assets/TabNavigateIcons/paw-print.png")}
+            style={{ width: 90, height: 90 }}
+          />
           <Text style={[styles.animalText, { color: colors.textColor }]}>Add</Text>
         </TouchableOpacity>
 
@@ -140,8 +132,8 @@ export default function UserMain() {
         >
           {animalData?.data?.length >= 1 &&
             animalData?.data?.map((animal: any, index: number) => {
-              const { uri, name, icon } = animal;
-              return <AnimalPhotoLoader key={index} name={name} icon={icon} />;
+              const { animalId, name, icon } = animal;
+              return <AnimalPhotoLoader key={index} name={name} icon={icon}  animalId={animalId} />;
             })}
         </ScrollView>
       </View>
@@ -319,7 +311,8 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     alignItems: "center",
-    padding: 5,
+    padding: 2,
+   
   },
   animalText: {
     fontSize: 12,

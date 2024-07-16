@@ -2,16 +2,15 @@ import React from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
+ 
   Platform,
   StyleSheet,
+  Image,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+ 
 import { UseAuthContext } from "../../Contexts/AuthContext";
 import { UseUiContext } from "../../Contexts/UiContext";
-import AuthButton from "../COMPONENTS/Buttons/AuthButtons";
-import GenericButton from "../COMPONENTS/Buttons/GenericButtons";
+ import GenericButton from "../COMPONENTS/Buttons/GenericButtons";
 
 export default function UserHeader() {
   const { authState, authDispatch } = UseAuthContext();
@@ -20,7 +19,6 @@ export default function UserHeader() {
   return (
     <View style={styles.mainView}>
       <View style={styles.topSection}>
-        {/* <FontAwesome name="user-circle" size={60} color="orange" /> */}
         <View style={styles.emailWrapper}>
           <Text style={[styles.emailText, { color: colors.textColor }]}>
             {authUser.email}
@@ -31,19 +29,17 @@ export default function UserHeader() {
         </View>
 
         <View style={styles.awardWrapper}>
-          <MaterialCommunityIcons
-            name="trophy-award"
-            size={44}
-            color="#E3BC62"
+          <Image
+            source={require("../../assets/TabNavigateIcons/award.png")}
+            style={{ width: 35, height: 35 }}
           />
           <Text style={styles.awardText}>Award</Text>
         </View>
       </View>
 
       <View style={[styles.container, { backgroundColor: colors.cardColor }]}>
-      {/* <View style={styles.container}> */}
+        {/* <View style={styles.container}> */}
         <Text style={[styles.bigText, { color: colors.textColor }]}>
-          
           Big Text Animal ID
         </Text>
         <Text style={[styles.smallText, { color: colors.textColor }]}>
@@ -65,7 +61,7 @@ const styles = StyleSheet.create({
   },
   emailWrapper: { marginLeft: 10 },
   emailText: { fontSize: 18, fontWeight: "bold", padding: 4 },
-  awardWrapper: { marginLeft: 85 },
+  awardWrapper: { marginLeft: 95, padding: 5 },
   awardText: { fontSize: 12, color: "gray", textAlign: "center" },
   container: {
     // backgroundColor: "#eff0ff",

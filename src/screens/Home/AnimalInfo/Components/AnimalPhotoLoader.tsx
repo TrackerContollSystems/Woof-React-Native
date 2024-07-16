@@ -9,17 +9,18 @@ type AnimalPhotoLoaderProps = {
  
   name: string;
   icon: string;
+  animalId:number 
 };
 const AnimalPhotoLoader: FC<AnimalPhotoLoaderProps> = (data) => {
 
   const navigation: any = useNavigation();
   const [loading,setLoading] = useState(false)
-  const {   name, icon } = data;
+  const {   name, icon , animalId } = data;
   const { colors } = UseUiContext();
 
 
   const [animalDataWithBase64, setAnimalDataWithBase64] = useState<any>(null);
-
+ 
   useEffect(() => {
     if (icon ) {
       const imageFetch = async () => {
@@ -62,12 +63,13 @@ const AnimalPhotoLoader: FC<AnimalPhotoLoaderProps> = (data) => {
           navigation.navigate("AnimalInfoDocuments", {
             animalName: name,
             photoUri: icon,
+            id:animalId
           })
         }
         style={styles.animalContainer}
       >
         <Image
-          style={{ width: 100, height: 100, borderRadius: 45 }}
+          style={{ width: 80, height: 80, borderRadius: 45 }}
           source={{ uri: animalDataWithBase64 as string }}
         />
         <Text style={[styles.animalText, { color: colors.textColor }]}>{name}</Text>

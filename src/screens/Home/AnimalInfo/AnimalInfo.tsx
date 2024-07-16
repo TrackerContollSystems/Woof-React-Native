@@ -23,7 +23,7 @@ interface RouteParams {
 
 
 export default function AnimalInfo(  ) {
-  const route = useRoute<RouteProp<Record<string, RouteParams>, string>>();
+  const route = useRoute<any>();
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
   const [species, setSpecies] = useState("");
@@ -40,7 +40,7 @@ export default function AnimalInfo(  ) {
   const [currentValue, setCurrentValue] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const { colors } = UseUiContext();
-  const { photoUri, animalName  } = route.params;
+  const { data  } = route.params;
 
   const openModal = (
     fieldSetter: React.Dispatch<React.SetStateAction<string>>,
@@ -57,11 +57,11 @@ export default function AnimalInfo(  ) {
     currentField(currentValue);
     setModalVisible(false);
   };
-
+ 
   const fields = [
-    { title: animalName, value: name, setter: setName },
+    { title:  data.name, value: name, setter: setName },
     { title: "Date Of Birth", value: dob, setter: setDob },
-    { title: "Species", value: species, setter: setSpecies },
+    { title: data.specie ? data.specie :"Speaces ", value: species, setter: setSpecies },
     { title: "Breed", value: breed, setter: setBreed },
     { title: "Color", value: color, setter: setColor },
   
@@ -74,7 +74,7 @@ export default function AnimalInfo(  ) {
   const selectSterilization = (status: string) => {
     setSterilization(status);
   };
-
+ 
   return (
     <SafeAreaView>
     <ScrollView style={[styles.container, {backgroundColor: colors.backgroundColor}]}>
@@ -86,7 +86,7 @@ export default function AnimalInfo(  ) {
             borderRadius: 45,
             marginTop: 10,
           }}
-          source={{ uri: photoUri }}
+          source={{ uri:  data.icon }}
         />
       </View>
 
@@ -187,7 +187,7 @@ export default function AnimalInfo(  ) {
           buttonStyles={styles.buttonsCreate}
           textStyle={styles.buttonTextsCreate}
           title="Create Pet Profile"
-          fun={() => console.log("")}
+          fun={() => console.log("asfas")}
         />
       </View>
 

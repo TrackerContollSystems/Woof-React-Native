@@ -133,7 +133,7 @@ const TabNavigator = () => {
             resizeMode="contain"
           />
           <Text style={[styles.btn, { color: getColor("UserSettings") }]}>
-            Setting
+            More
           </Text>
         </TouchableOpacity>
         

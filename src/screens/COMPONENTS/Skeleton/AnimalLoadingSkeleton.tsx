@@ -70,8 +70,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 45,
     padding: 10,
-    width: 100,
-    height: 100,
+    width: 80,
+    height:80,
+    
   },
   animalContainers: {
     alignItems: "center",

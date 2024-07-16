@@ -1,7 +1,6 @@
-import { Text, Button, ScrollView, SafeAreaView } from "react-native";
-import React, { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UseAuthContext } from "../../Contexts/AuthContext";
+import { Text,  ScrollView, SafeAreaView } from "react-native";
+import React, { useEffect  } from "react";
+ import { UseAuthContext } from "../../Contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
 import UserHeader from "./UserHeader";
@@ -10,7 +9,7 @@ import UserInfo from "./UserInfo";
 import { UseUiContext } from "../../Contexts/UiContext";
 
 const Home = () => {
-  const { authState, authDispatch } = UseAuthContext();
+  const { authState } = UseAuthContext();
   const { authUser } = authState;
   const navigation: any = useNavigation();
   const { colors } = UseUiContext();

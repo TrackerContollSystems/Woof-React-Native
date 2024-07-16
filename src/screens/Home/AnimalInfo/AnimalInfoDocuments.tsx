@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,15 +9,12 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import QRCodeScanner from "./Components/QRCodeScanner";
 import { UseUiContext } from "../../../Contexts/UiContext";
+import { useQuery } from "@tanstack/react-query";
+import { GetAnimalDetailsById } from "../../../API/User/GetAnimalDetailsByUserRequest";
+import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
 
 interface RouteParams {
   photoUri: string;
@@ -26,19 +23,25 @@ interface RouteParams {
 
 export default function AnimalInfoDocuments() {
   const navigation: any = useNavigation();
-  const route = useRoute<RouteProp<Record<string, RouteParams>, string>>();
+  const route = useRoute<any>();
   const { photoUri, animalName } = route.params;
 
   const [scanned, setScanned] = useState(false);
   const [selectedIcons, setSelectedIcons] = useState<string[]>([]);
   const { colors } = UseUiContext();
   const navigateToMap = () => {
-    navigation.navigate("Map"); 
+    navigation.navigate("Map");
   };
 
   const AwardIcons = [
-    { name: "trophy-award", component: MaterialCommunityIcons },
-    { name: "award", component: FontAwesome5 },
+    {
+      name: "award",
+      uri: require("../../../assets/TabNavigateIcons/trophy-star.png"),
+    },
+    {
+      name: "trophy-award",
+      uri: require("../../../assets/TabNavigateIcons/awards.png"),
+    },
   ];
 
   const toggleIconSelection = (iconName: string) => {
@@ -49,6 +52,13 @@ export default function AnimalInfoDocuments() {
       setSelectedIcons([...selectedIcons, iconName]);
     }
   };
+
+  const SingleAnimalData = useQuery({
+    queryKey: ["get-single-animal-data", route.params.id],
+    queryFn: () => GetAnimalDetailsById(route.params.id),
+  });
+
+  const { data, isPending, isError, isSuccess } = SingleAnimalData;
 
   React.useLayoutEffect(() => {
     navigation.setOptions({ title: animalName });
@@ -67,8 +77,14 @@ export default function AnimalInfoDocuments() {
     setScanned(false);
   };
 
+  if (isPending) {
+    return <LoadingAnimation />;
+  }
+
   return (
-    <View style={[styles.container, {backgroundColor: colors.backgroundColor}]}>
+    <View
+      style={[styles.container, { backgroundColor: colors.backgroundColor }]}
+    >
       {scanned ? (
         <QRCodeScanner onScanned={handleScan} />
       ) : (
@@ -79,16 +95,17 @@ export default function AnimalInfoDocuments() {
                 style={styles.iconContainer}
                 onPress={handleActivateScanner}
               >
-                <MaterialCommunityIcons
-                  name="qrcode-scan"
-                  size={34}
-                  color={colors.buttonColor}
+                <Image
+                  source={require("../../../assets/TabNavigateIcons/qr-code.png")}
+                  style={{ width: 34, height: 34 }}
                 />
-                <Text style={[styles.iconText, { color: colors.textColor }]}>Activate QR Code</Text>
+                <Text style={[styles.iconText, { color: colors.textColor }]}>
+                  Activate QR Code
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.iconContainer}
-                onPress={() => navigation.navigate("AnimalInfo", { photoUri, animalName })}
+                onPress={() => navigation.navigate("AnimalInfo", { data })}
               >
                 <Image
                   style={{
@@ -97,20 +114,29 @@ export default function AnimalInfoDocuments() {
                     borderRadius: 45,
                     marginTop: 10,
                   }}
-                  source={{ uri: photoUri }}
+                  source={{ uri: data.icon }}
                 />
-                {/* <MaterialCommunityIcons  onPress={() => navigation.navigate("AnimalInfo")} name="dog" size={94} color="black" /> */}
               </TouchableOpacity>
+              <View></View>
               <TouchableOpacity style={styles.iconContainer}>
-                <AntDesign name="notification" size={34} color={colors.buttonColor} />
-                <Text style={[styles.iconText, { color: colors.textColor }]}>The Animal Is Lost</Text>
+                <Image
+                  source={require("../../../assets/TabNavigateIcons/alert.png")}
+                  style={{ width: 34, height: 34 }}
+                />
+                <Text style={[styles.iconText, { color: colors.textColor }]}>
+                  Mark as lost
+                </Text>
               </TouchableOpacity>
             </View>
             <View>
-              <Text style={[styles.texts , { color: colors.textColor }]}>Award</Text>
+              <Text style={[styles.texts, { color: colors.textColor }]}>
+                Award
+              </Text>
               <Text style={styles.achievements}>Your pet's achievements</Text>
 
-              <View style={[styles.award,  {backgroundColor: colors.cardColor}]}>
+              <View
+                style={[styles.award, { backgroundColor: colors.cardColor }]}
+              >
                 {AwardIcons.map((icon, index) => (
                   <Pressable
                     key={index}
@@ -122,46 +148,80 @@ export default function AnimalInfoDocuments() {
                     ]}
                     onPress={() => toggleIconSelection(icon.name)}
                   >
-                    <icon.component
-                      name={icon.name}
-                      size={64}
-                      color={
-                        selectedIcons.includes(icon.name) ? "gold" : "grey"
-                      }
+                    <Image
+                      source={icon.uri}
+                      style={{
+                        width: 64,
+                        height: 64,
+                        tintColor: selectedIcons.includes(icon.name)
+                          ? undefined
+                          : "grey",
+                      }}
                     />
                   </Pressable>
                 ))}
               </View>
             </View>
-            <Text style={[styles.smallTexts, { color: colors.textColor }]}>Care</Text>
+            <Text style={[styles.smallTexts, { color: colors.textColor }]}>
+              Care
+            </Text>
             <View style={styles.mainContainer}>
-              <TouchableOpacity style={[styles.containers, {backgroundColor: colors.cardColor}]}>
-                <MaterialIcons name="notes" size={54} color={colors.buttonColor} />
-                <Text style={[styles.smallText, { color: colors.textColor }]}>Notes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={navigateToMap} style={[styles.containers, {backgroundColor: colors.cardColor}]}>
-                <FontAwesome6
-                  name="map-location-dot"
-                  size={54}
-                  color={colors.buttonColor}
+              <TouchableOpacity
+                style={[
+                  styles.containers,
+                  { backgroundColor: colors.cardColor },
+                ]}
+              >
+                <Image
+                  source={require("../../../assets/TabNavigateIcons/notes.png")}
+                  style={{ width: 64, height: 64 }}
                 />
-                <Text style={[styles.smallText, { color: colors.textColor }]}>Map</Text>
+                <Text style={[styles.smallText, { color: colors.textColor }]}>
+                  Notes
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.containers, {backgroundColor: colors.cardColor}]}>
-                <MaterialCommunityIcons
-                  name="file-document-edit"
-                  size={54}
-                  color={colors.buttonColor}
+              <TouchableOpacity
+                onPress={navigateToMap}
+                style={[
+                  styles.containers,
+                  { backgroundColor: colors.cardColor },
+                ]}
+              >
+                <Image
+                  source={require("../../../assets/TabNavigateIcons/map.png")}
+                  style={{ width: 64, height: 64 }}
                 />
-                <Text style={[styles.smallText, { color: colors.textColor }]}>Documents</Text>
+                <Text style={[styles.smallText, { color: colors.textColor }]}>
+                  Map
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.containers, {backgroundColor: colors.cardColor}]}>
-                <MaterialCommunityIcons
-                  name="qrcode-scan"
-                  size={54}
-                  color={colors.buttonColor}
+              <TouchableOpacity
+                style={[
+                  styles.containers,
+                  { backgroundColor: colors.cardColor },
+                ]}
+              >
+                <Image
+                  source={require("../../../assets/TabNavigateIcons/documentation.png")}
+                  style={{ width: 64, height: 64 }}
                 />
-                <Text style={[styles.smallText, { color: colors.textColor }]}>QR CODE</Text>
+                <Text style={[styles.smallText, { color: colors.textColor }]}>
+                  Documents
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.containers,
+                  { backgroundColor: colors.cardColor },
+                ]}
+              >
+                <Image
+                  source={require("../../../assets/TabNavigateIcons/qr-code.png")}
+                  style={{ width: 64, height: 64 }}
+                />
+                <Text style={[styles.smallText, { color: colors.textColor }]}>
+                  QR CODE
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -235,7 +295,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 15,
     marginTop: 20,
-   
   },
   award: {
     width: "90%",
@@ -265,11 +324,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 10,
     marginTop: 10,
-   
   },
   achievements: {
     left: 10,
-     color: 'grey',
-     marginBottom: 5
-  }
+    color: "grey",
+    marginBottom: 5,
+  },
 });
