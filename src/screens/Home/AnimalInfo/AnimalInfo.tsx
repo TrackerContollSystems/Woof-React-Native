@@ -14,6 +14,7 @@ import GenericInput from "../../COMPONENTS/FormInputs/GenericInput";
 import GenericButton from "../../COMPONENTS/Buttons/GenericButtons";
 import { UseUiContext } from "../../../Contexts/UiContext";
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { UpdateAnimalBirth, UpdateAnimalBreed, UpdateAnimalColor, UpdateAnimalName, UpdateAnimalSpecie, UpdateAnimalSterilization } from "../../../API/User/UpdateAnimalInfo";
 
 interface RouteParams {
   photoUri: string;
@@ -30,7 +31,6 @@ export default function AnimalInfo(  ) {
   const [breed, setBreed] = useState("");
   const [gender, setGender] = useState("");
   const [color, setColor] = useState("");
-  const [registrationDate, setRegistrationDate] = useState("");
   const [sterilization, setSterilization] = useState("");
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -53,17 +53,46 @@ export default function AnimalInfo(  ) {
     setModalVisible(true);
   };
 
-  const handleSave = () => {
+  // const handleSave = () => {
+  //   currentField(currentValue);
+  //   setModalVisible(false);
+  // };
+
+  const handleSave = async () => {
     currentField(currentValue);
     setModalVisible(false);
+    try {
+      switch (modalTitle) {
+        case data.name:
+          await UpdateAnimalName(data.animalId, currentValue);
+          break;
+        case data.birthDate ? data.birthDate :"Date Of Birth":
+          await UpdateAnimalBirth(data.animalId, currentValue);
+          break;
+        case data.specie ? data.specie : "Species":
+          await UpdateAnimalSpecie(data.animalId, currentValue);
+          break;
+        case  data.breed ? data.breed : "Breed" :
+          await UpdateAnimalBreed(data.animalId, currentValue);
+          break;
+        case data.color ? data.color : "Color":
+          await UpdateAnimalColor(data.animalId, currentValue);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("Failed to update animal info:", error);
+    }
   };
+
  
   const fields = [
     { title:  data.name, value: name, setter: setName },
-    { title: "Date Of Birth", value: dob, setter: setDob },
-    { title: data.specie ? data.specie :"Speaces ", value: species, setter: setSpecies },
-    { title: "Breed", value: breed, setter: setBreed },
-    { title: "Color", value: color, setter: setColor },
+    { title: data.birthDate ? data.birthDate :"Date Of Birth", value: dob, setter: setDob },
+    { title: data.specie ? data.specie :"Species ", value: species, setter: setSpecies },
+    { title: data.breed ? data.breed : "Breed", value: breed, setter: setBreed },
+    { title: data.color ? data.color : "Color", value: color, setter: setColor },
   
   ];
 
@@ -73,6 +102,7 @@ export default function AnimalInfo(  ) {
 
   const selectSterilization = (status: string) => {
     setSterilization(status);
+    UpdateAnimalSterilization(data.animalId, status);
   };
  
   return (
@@ -182,14 +212,14 @@ export default function AnimalInfo(  ) {
         </View>
       </View>
 
-      <View>
+      {/* <View>
         <GenericButton
           buttonStyles={styles.buttonsCreate}
           textStyle={styles.buttonTextsCreate}
           title="Create Pet Profile"
           fun={() => console.log("asfas")}
         />
-      </View>
+      </View> */}
 
       <View>
         <Text style={[styles.idstyle, {color: colors.textColor}]}>Does it have any special features?</Text>
