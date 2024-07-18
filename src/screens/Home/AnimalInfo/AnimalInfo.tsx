@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,268 +6,314 @@ import {
   ScrollView,
   StyleSheet,
   Image,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
-import CustomModal from "./ModalAnimal";
+import AnimalEditModal from "../../COMPONENTS/Modals/AnimalEditModal";
 import { FontAwesome } from "@expo/vector-icons";
 import GenericInput from "../../COMPONENTS/FormInputs/GenericInput";
 import GenericButton from "../../COMPONENTS/Buttons/GenericButtons";
 import { UseUiContext } from "../../../Contexts/UiContext";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { UpdateAnimalBirth, UpdateAnimalBreed, UpdateAnimalColor, UpdateAnimalName, UpdateAnimalSpecie, UpdateAnimalSterilization } from "../../../API/User/UpdateAnimalInfo";
+import { useRoute } from "@react-navigation/native";
+import {
+  UpdateAnimalBirth,
+  UpdateAnimalBreed,
+  UpdateAnimalColor,
+  UpdateAnimalName,
+  UpdateAnimalSpecie,
+  UpdateAnimalSterilization,
+} from "../../../API/User/UpdateAnimalInfo";
+import { AnimalTypes } from "../../../Types/AnimalTypes";
+import { useMutation } from "@tanstack/react-query";
 
-interface RouteParams {
-  photoUri: string;
-  animalName: string;
- 
-}
+export default function AnimalInfo() {
+  const { colors } = UseUiContext();
 
-
-export default function AnimalInfo(  ) {
-  const route = useRoute<any>();
-  const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
-  const [species, setSpecies] = useState("");
-  const [breed, setBreed] = useState("");
-  const [gender, setGender] = useState("");
-  const [color, setColor] = useState("");
-  const [sterilization, setSterilization] = useState("");
+  const route = useRoute();
+  // const {  name , birthDate, specie,breed, gender,color,genderId, animalId, icon} = route.params.data as AnimalTypes ;
+  const {
+    name,
+    birthDate,
+    specie,
+    breed,
+    gender,
+    color,
+    genderId,
+    animalId,
+    icon,
+  } = (route.params?.data || {}) as AnimalTypes;
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentField, setCurrentField] = useState<(value: string) => void>(
-    () => () => {}
-  );
-  const [currentValue, setCurrentValue] = useState("");
-  const [modalTitle, setModalTitle] = useState("");
-  const { colors } = UseUiContext();
-  const { data  } = route.params;
 
-  const openModal = (
-    fieldSetter: React.Dispatch<React.SetStateAction<string>>,
-    value: string,
-    title: string
-  ) => {
-    setCurrentField(() => fieldSetter);
+  const [currentValue, setCurrentValue] = useState<string | null | number>(
+    null
+  );
+  const [currentField, setCurrentField] = useState<string | null>(null);
+  const [modalTitle, setModalTitle] = useState("");
+
+  const [animalInfoEdit, setAnimalInfoEdit] = useState<AnimalTypes>({
+    animalId: animalId,
+    name: name,
+    birthDate: birthDate,
+    specie: specie,
+    breed: breed,
+    color: color,
+    gender: gender,
+    genderId: genderId,
+    icon: icon,
+  });
+  
+  const handleAnimalInfoEdit = (val: string | null | number, type: string) => {
+    setAnimalInfoEdit((prevState) => ({
+      ...prevState,
+      [type]: val,
+    }));
+  }
+  
+  const openModal = (value: string | null | number, title: string) => {
     setCurrentValue(value);
     setModalTitle(title);
     setModalVisible(true);
   };
 
-  // const handleSave = () => {
-  //   currentField(currentValue);
-  //   setModalVisible(false);
+  // const openModal = (field: string, title: string) => {
+  //   setCurrentField(field);
+  //   setModalTitle(title);
+  //   setModalVisible(true);
   // };
 
-  const handleSave = async () => {
-    currentField(currentValue);
-    setModalVisible(false);
+  const breedMutation = useMutation({
+    mutationFn: ({ animalId, field }: { animalId: any; field: any }) => {
+      return UpdateAnimalBreed(animalId, field);
+    },
+    onSuccess(res) {
+      console.log(res);
+    },
+    onError(err) {
+      console.log(err);
+    },
+  });
+
+  const handleBreedMutation = async (animalId: any, field: any) => {
+    console.log(animalId, field);
+    await breedMutation.mutateAsync(animalId, field);
+  };
+  const handleSave = async (caseTitle: string) => {
     try {
-      switch (modalTitle) {
-        case data.name:
-          await UpdateAnimalName(data.animalId, currentValue);
+      setModalVisible(false);
+      switch (caseTitle) {
+        case "Name":
+          await UpdateAnimalName(animalId, animalInfoEdit.name);
           break;
-        case data.birthDate ? data.birthDate :"Date Of Birth":
-          await UpdateAnimalBirth(data.animalId, currentValue);
+        case "Date Of Birth":
+          await UpdateAnimalBirth(animalId, animalInfoEdit.birthDate);
           break;
-        case data.specie ? data.specie : "Species":
-          await UpdateAnimalSpecie(data.animalId, currentValue);
+        case "Species":
+          await handleBreedMutation(animalId, animalInfoEdit.specie);
           break;
-        case  data.breed ? data.breed : "Breed" :
-          await UpdateAnimalBreed(data.animalId, currentValue);
+        case "Breed":
+          await UpdateAnimalBreed(animalId, animalInfoEdit.breed);
           break;
-        case data.color ? data.color : "Color":
-          await UpdateAnimalColor(data.animalId, currentValue);
+        case "Color":
+          await UpdateAnimalColor(animalId, animalInfoEdit.color);
           break;
         default:
           break;
+
       }
     } catch (error) {
       console.error("Failed to update animal info:", error);
     }
   };
 
- 
-  const fields = [
-    { title:  data.name, value: name, setter: setName },
-    { title: data.birthDate ? data.birthDate :"Date Of Birth", value: dob, setter: setDob },
-    { title: data.specie ? data.specie :"Species ", value: species, setter: setSpecies },
-    { title: data.breed ? data.breed : "Breed", value: breed, setter: setBreed },
-    { title: data.color ? data.color : "Color", value: color, setter: setColor },
-  
-  ];
-
   const selectGender = (selectedGender: string) => {
-    setGender(selectedGender);
+    setAnimalInfoEdit((state: AnimalTypes) => ({
+      ...state,
+      gender: selectedGender,
+    }));
   };
 
-  const selectSterilization = (status: string) => {
-    setSterilization(status);
-    UpdateAnimalSterilization(data.animalId, status);
-  };
- 
+  // const selectSterilization = (status: string) => {
+
+  //   UpdateAnimalSterilization(data.animalId, status);
+  //  setAnimalInfoEdit((state:AnimalTypes)=> {
+  //   ...state ,
+  //  })
+  // };
+  const fields = [
+    // { title:  name, value: animalInfoEdit.name, caseType:"Name"  },
+    { title: name, value: "name", caseType: "Name" },
+    { title: birthDate, value: "birthDate", caseType: "Date Of Birth" },
+    { title: specie, value: "specie", caseType: "Species" },
+    { title: breed, value: "breed", caseType: "Breed" },
+    { title: color, value: "color", caseType: "Color" },
+  ];
   return (
     <SafeAreaView>
-    <ScrollView style={[styles.container, {backgroundColor: colors.backgroundColor}]}>
-      <View style={styles.profileContainer}>
-      <Image
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 45,
-            marginTop: 10,
-          }}
-          source={{ uri:  data.icon }}
-        />
-      </View>
-
-      <View>
-        {fields.map((field, index) => (
-          <GenericInput
-            key={index}
-            title={field.title}
-            value={field.value}
-            onPress={() => openModal(field.setter, field.value, field.title)}
+      <ScrollView
+        style={[styles.container, { backgroundColor: colors.backgroundColor }]}
+      >
+        <View style={styles.profileContainer}>
+          <Image
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 45,
+              marginTop: 10,
+            }}
+            source={{ uri: icon }}
           />
-        ))}
-        <View style={styles.sterilizationContainer}>
-          <Text style={[styles.sterilizationLabel,]}>Gender</Text>
-          <View style={styles.sterilizationButtons}>
-            <TouchableOpacity
-              style={[
-                styles.sterilizationButton,
-                styles.sterilizationButtonLeft,
-                gender === "Boy" && styles.sterilizationButtonSelected,
-              ]}
-              onPress={() => selectGender("Boy")}
-            >
-              <Text
-                style={[
-                  styles.sterilizationButtonText,
-                  gender === "Boy" && styles.sterilizationButtonTextSelected,
-                ]}
-              >
-                Boy
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.sterilizationButton,
-                styles.sterilizationButtonRight,
-                gender === "Girl" && styles.sterilizationButtonSelected,
-              ]}
-              onPress={() => selectGender("Girl")}
-            >
-              <Text
-                style={[
-                  styles.sterilizationButtonText,
-                  gender === "Girl" && styles.sterilizationButtonTextSelected,
-                ]}
-              >
-                Girl
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
-        <View style={styles.sterilizationContainer}>
-          <Text style={[styles.sterilizationLabel,  ]}>Sterilization</Text>
-          <View style={styles.sterilizationButtons}>
-            <TouchableOpacity
-              style={[
-                styles.sterilizationButton,
-                styles.sterilizationButtonLeft,
-                sterilization === "Yes" && styles.sterilizationButtonSelected,
-              ]}
-              onPress={() => selectSterilization("Yes")}
-            >
-              <Text
+        <View>
+          {fields.map((field, index) => (
+            <GenericInput
+              key={index}
+              title={field.title ? field.title : field.caseType}
+              // value={field.value}
+              value={animalInfoEdit[field.value]}
+              onPress={() => openModal(field.value, field.caseType)}
+            />
+          ))}
+          <View style={styles.sterilizationContainer}>
+            <Text style={styles.sterilizationLabel}>Gender</Text>
+            <View style={styles.sterilizationButtons}>
+              <TouchableOpacity
                 style={[
-                  styles.sterilizationButtonText,
-                  sterilization === "Yes" &&
-                    styles.sterilizationButtonTextSelected,
+                  styles.sterilizationButton,
+                  styles.sterilizationButtonLeft,
+                  gender === "Boy" && styles.sterilizationButtonSelected,
                 ]}
+                onPress={() => selectGender("Boy")}
               >
-                Yes
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.sterilizationButton,
-                styles.sterilizationButtonRight,
-                sterilization === "No" && styles.sterilizationButtonSelected,
-              ]}
-              onPress={() => selectSterilization("No")}
-            >
-              <Text
+                <Text
+                  style={[
+                    styles.sterilizationButtonText,
+                    gender === "Boy" && styles.sterilizationButtonTextSelected,
+                  ]}
+                >
+                  Boy
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
-                  styles.sterilizationButtonText,
-                  sterilization === "No" &&
-                    styles.sterilizationButtonTextSelected,
+                  styles.sterilizationButton,
+                  styles.sterilizationButtonRight,
+                  gender === "Girl" && styles.sterilizationButtonSelected,
                 ]}
+                onPress={() => selectGender("Girl")}
               >
-                No
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.sterilizationButtonText,
+                    gender === "Girl" && styles.sterilizationButtonTextSelected,
+                  ]}
+                >
+                  Girl
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
+          {/* <View style={styles.sterilizationContainer}>
+            <Text style={styles.sterilizationLabel}>Sterilization</Text>
+            <View style={styles.sterilizationButtons}>
+              <TouchableOpacity
+                style={[
+                  styles.sterilizationButton,
+                  styles.sterilizationButtonLeft,
+                  sterilization === "Yes" && styles.sterilizationButtonSelected,
+                ]}
+                onPress={() => selectSterilization("Yes")}
+              >
+                <Text
+                  style={[
+                    styles.sterilizationButtonText,
+                    sterilization === "Yes" &&
+                      styles.sterilizationButtonTextSelected,
+                  ]}
+                >
+                  Yes
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.sterilizationButton,
+                  styles.sterilizationButtonRight,
+                  sterilization === "No" && styles.sterilizationButtonSelected,
+                ]}
+                onPress={() => selectSterilization("No")}
+              >
+                <Text
+                  style={[
+                    styles.sterilizationButtonText,
+                    sterilization === "No" &&
+                      styles.sterilizationButtonTextSelected,
+                  ]}
+                >
+                  No
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View> */}
         </View>
-      </View>
 
-      {/* <View>
-        <GenericButton
-          buttonStyles={styles.buttonsCreate}
-          textStyle={styles.buttonTextsCreate}
-          title="Create Pet Profile"
-          fun={() => console.log("asfas")}
-        />
-      </View> */}
+        <View>
+          <Text style={[styles.idstyle, { color: colors.textColor }]}>
+            Does it have any special features?
+          </Text>
+          <GenericButton
+            buttonStyles={styles.buttonsFeature}
+            textStyle={styles.buttonTextsFeature}
+            title="Get Access"
+            fun={() => console.log("Get Access for special features")}
+          />
+          <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
+            Fill in the information about the pet completely
+          </Text>
+        </View>
+        <View>
+          <Text style={[styles.idstyle, { color: colors.textColor }]}>
+            Important Information
+          </Text>
+          <GenericButton
+            buttonStyles={styles.buttonsFeature}
+            textStyle={styles.buttonTextsFeature}
+            title="Get Access"
+            fun={() => console.log("Get Access for important information")}
+          />
+          <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
+            Enter important information that will help the finder pay attention
+            to the pet
+          </Text>
+        </View>
+        <View>
+          <Text style={[styles.idstyle, { color: colors.textColor }]}>
+            Medical Card
+          </Text>
+          <GenericButton
+            buttonStyles={styles.buttonsFeature}
+            textStyle={styles.buttonTextsFeature}
+            title="Get Access"
+            fun={() => console.log("Get Access for medical card")}
+          />
+          <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
+            Add information about vaccinations, allergies or other...
+          </Text>
+          <Text></Text>
+        </View>
 
-      <View>
-        <Text style={[styles.idstyle, {color: colors.textColor}]}>Does it have any special features?</Text>
-        <GenericButton
-          buttonStyles={styles.buttonsFeature}
-          textStyle={styles.buttonTextsFeature}
-          title="Get Access"
-          fun={() => console.log("Get Access for special features")}
+        <AnimalEditModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSave={handleSave}
+          title={modalTitle}
+          value={currentValue}
+          // value={animalInfoEdit.specie} 
+          setValue={handleAnimalInfoEdit}
+          // value={animalInfoEdit[currentField]}
+          // field={currentField}
         />
-        <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
-          Fill in the information about the pet completely
-        </Text>
-      </View>
-      <View>
-        <Text style={[styles.idstyle, {color: colors.textColor}]}>Important Information</Text>
-        <GenericButton
-          buttonStyles={styles.buttonsFeature}
-          textStyle={styles.buttonTextsFeature}
-          title="Get Access"
-          fun={() => console.log("Get Access for important information")}
-        />
-        <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
-          Enter important information that will help the finder pay attention to the pet
-        </Text>
-      </View>
-      <View>
-        <Text style={[styles.idstyle, {color: colors.textColor}]}>Medical Card</Text>
-        <GenericButton
-          buttonStyles={styles.buttonsFeature}
-          textStyle={styles.buttonTextsFeature}
-          title="Get Access"
-          fun={() => console.log("Get Access for medical card")}
-        />
-        <Text style={{ marginTop: 5, marginLeft: 5, color: "grey" }}>
-          Add information about vaccinations, allergies or other...
-        </Text>
-        <Text></Text>
-      </View>
-
-      <CustomModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSave}
-        title={modalTitle}
-        value={currentValue}
-        setValue={setCurrentValue}
-      />
-    </ScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -303,10 +349,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   idstyle: {
-    display: "flex",
+    marginTop: 15,
     fontWeight: "bold",
-    marginTop: 20,
-    padding: 5,
+    fontSize: 16,
   },
   buttonsFeature: {
     backgroundColor: "#2C3F51",

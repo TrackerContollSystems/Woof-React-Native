@@ -8,14 +8,17 @@ const getAuthHeader = async () => {
     "Content-Type": "application/json",
   };
 };
-
-export const UpdateAnimalName = async (animalId: number, name: string) => {
+export const UpdateAnimalName = async (animalId: number, updatedField: any) => {
+  console.log(animalId, updatedField);
   try {
+    const obj = {
+      id: animalId,
+      updatedField: updatedField,
+    };
     const headers = await getAuthHeader();
-    const res = await ApiManager.patch("Animal/UpdateAnimalName", {
-      animalId,
-      name,
-    }, { headers });
+    const res = await ApiManager.patch("Animal/UpdateAnimalName", obj, {
+      headers,
+    });
     return res.data;
   } catch (error) {
     console.log(error);
@@ -24,13 +27,19 @@ export const UpdateAnimalName = async (animalId: number, name: string) => {
   }
 };
 
-export const UpdateAnimalBirth = async (animalId: number, birthDate: string) => {
+export const UpdateAnimalBirth = async (
+  animalId: number,
+  updatedField: any
+) => {
+  const obj = {
+    id: animalId,
+    updatedField: updatedField,
+  };
   try {
     const headers = await getAuthHeader();
-    const res = await ApiManager.patch("Animal/UpdateAnimalBirth", {
-      animalId,
-      birthDate,
-    }, { headers });
+    const res = await ApiManager.patch("Animal/UpdateAnimalBirth", obj, {
+      headers,
+    });
     return res.data;
   } catch (error) {
     console.log(error);
@@ -39,13 +48,19 @@ export const UpdateAnimalBirth = async (animalId: number, birthDate: string) => 
   }
 };
 
-export const UpdateAnimalSpecie = async (animalId: number, specie: string) => {
+export const UpdateAnimalSpecie = async (
+  animalId: number,
+  updatedField: any
+) => {
+  const obj = {
+    id: animalId,
+    updatedField: updatedField,
+  };
   try {
     const headers = await getAuthHeader();
-    const res = await ApiManager.patch("Animal/UpdateAnimalSpecie", {
-      animalId,
-      specie,
-    }, { headers });
+    const res = await ApiManager.patch("Animal/UpdateAnimalSpecie", obj, {
+      headers,
+    });
     return res.data;
   } catch (error) {
     console.log(error);
@@ -54,13 +69,21 @@ export const UpdateAnimalSpecie = async (animalId: number, specie: string) => {
   }
 };
 
-export const UpdateAnimalBreed = async (animalId: number, breed: string) => {
+export const UpdateAnimalBreed = async (
+  animalId: number,
+  updatedField: any
+) => {
+  const obj = {
+    id: animalId,
+    updatedField: updatedField,
+  };
+
   try {
     const headers = await getAuthHeader();
-    const res = await ApiManager.patch("Animal/UpdateAnimalBreed", {
-      animalId,
-      breed,
-    }, { headers });
+    const res = await ApiManager.patch("Animal/UpdateAnimalBreed", obj, {
+      headers,
+    });
+    console.log(res);
     return res.data;
   } catch (error) {
     console.log(error);
@@ -69,13 +92,21 @@ export const UpdateAnimalBreed = async (animalId: number, breed: string) => {
   }
 };
 
-export const UpdateAnimalSterilization = async (animalId: number, sterilization: string) => {
+export const UpdateAnimalSterilization = async (
+  animalId: number,
+  updatedField: any
+) => {
   try {
+    const obj = {
+      id: animalId,
+      updatedField: updatedField,
+    };
     const headers = await getAuthHeader();
-    const res = await ApiManager.patch("Animal/UpdateAnimalSterilization", {
-      animalId,
-      sterilization,
-    }, { headers });
+    const res = await ApiManager.patch(
+      "Animal/UpdateAnimalSterilization",
+      obj,
+      { headers }
+    );
     return res.data;
   } catch (error) {
     console.log(error);
@@ -84,13 +115,19 @@ export const UpdateAnimalSterilization = async (animalId: number, sterilization:
   }
 };
 
-export const UpdateAnimalColor = async (animalId: number, color: string) => {
+export const UpdateAnimalColor = async (
+  animalId: number,
+  updatedField: any
+) => {
   try {
+    const obj = {
+      id: animalId,
+      updatedField: updatedField,
+    };
     const headers = await getAuthHeader();
-    const res = await ApiManager.patch("Animal/UpdateAnimalColor", {
-      animalId,
-      color,
-    }, { headers });
+    const res = await ApiManager.patch("Animal/UpdateAnimalColor", obj, {
+      headers,
+    });
     return res.data;
   } catch (error) {
     console.log(error);

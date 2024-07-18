@@ -5,8 +5,9 @@ import { UseUiContext } from "../../../Contexts/UiContext";
 
 type GenericInputType = {
     title: string;
-    value: string;
+    value: string | null | number ;
     onPress: () => void;
+
   };
   
   const GenericInput: React.FC<GenericInputType> = ({ title, value, onPress }) => {
@@ -15,14 +16,14 @@ type GenericInputType = {
 
     return (
       <TouchableOpacity style={styles.buttonsInformation} onPress={onPress}>
-        {value ? <Text style={[styles.buttonValue,  { color: colors.textColor }]}>{value}</Text> : <Text style={styles.buttonTexts}>{title}</Text>}
+        {value ? <Text style={[styles.buttonValue,  { color: colors.textColor }]}>{title}</Text> : <Text style={styles.buttonTexts}>{title}</Text>}
       </TouchableOpacity>
     );
   };
 
   const styles = StyleSheet.create({
     buttonsInformation: {
-        // backgroundColor: "rgb(232, 255, 233)",
+       
         paddingVertical: 10,
         paddingHorizontal: 15,
         marginHorizontal: 10,

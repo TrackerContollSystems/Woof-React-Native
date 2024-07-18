@@ -59,7 +59,9 @@ export default function AnimalInfoDocuments() {
   });
 
   const { data, isPending, isError, isSuccess } = SingleAnimalData;
+ 
 
+  // React.useEffect(()=>{console.log( data)},[data])
   React.useLayoutEffect(() => {
     navigation.setOptions({ title: animalName });
   }, [navigation, animalName]);

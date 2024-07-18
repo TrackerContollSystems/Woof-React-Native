@@ -12,16 +12,17 @@ import {
 import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-type CustomModalProps = {
+type AnimalEditModalProps = {
   visible: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (caseTitle:string ) => void;
   title: string;
-  value: string;
-  setValue: (value: string) => void;
+  value: string | null | number;
+  // setValue: (val: string, type:string ) => void;
+  setValue: (val: string | null | number, type: string) => void; 
 };
 
-const CustomModal: React.FC<CustomModalProps> = ({
+const AnimalEditModal: React.FC<AnimalEditModalProps> = ({
   visible,
   onClose,
   onSave,
@@ -29,11 +30,21 @@ const CustomModal: React.FC<CustomModalProps> = ({
   value,
   setValue,
 }) => {
-  const handleChange = (event: any, selectedDate?: Date) => {
+  const handleChange = (event: any, selectedDate?: Date ) => {
     if (selectedDate) {
-      const formattedDate = selectedDate.toISOString().split("T")[0];
-      setValue(formattedDate);
+      setValue(selectedDate.toISOString().split("T")[0], value as string);
     }
+      setValue(event.text, value as string);
+  
+  };
+
+ 
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleSave = () => {
+    onSave(selectedDate.toISOString().split("T")[0]); 
+    onClose();
   };
 
   return (
@@ -54,29 +65,33 @@ const CustomModal: React.FC<CustomModalProps> = ({
             <View style={styles.modalView}>
               <Text style={styles.modalText}>{title}</Text>
               {title === "Date Of Birth" ? (
+             
                 <DateTimePicker
-                  value={value ? new Date(value) : new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={handleChange}
-                  maximumDate={new Date()}
-                />
+                testID="dateTimePicker"
+                value={selectedDate}
+                mode="date"
+                is24Hour={true}
+                display="default"
+                onChange={handleChange}
+              />
+             
               ) : title === "Species" ? (
                 <RNPickerSelect
-                  onValueChange={(value) => setValue(value)}
-                  items={[
-                    { label: "Dog", value: "Dog" },
-                    { label: "Cat", value: "Cat" },
-                  ]}
-                  value={value}
-                  placeholder={{
-                    label: "Click select species...",
-                    value: null,
-                  }}
-                />
+                onValueChange={(val) => setValue(val, 'specie')} 
+                items={[
+                  { label: "Dog", value: "Dog" },
+                  { label: "Cat", value: "Cat" },
+                ]}
+                value={value as string}
+                placeholder={{
+                  label: "Click to select species...",
+                  value: null,
+                }}
+              />
+              
               ) : title === "Gender" ? (
                 <RNPickerSelect
-                  onValueChange={(value) => setValue(value)}
+                  onValueChange={(val ) => setValue(val, value as string  )}
                   items={[
                     { label: "Male", value: "Male" },
                     { label: "Female", value: "Female" },
@@ -87,15 +102,15 @@ const CustomModal: React.FC<CustomModalProps> = ({
               ) : (
                 <TextInput
                   style={styles.modalInput}
-                  value={value}
-                  onChangeText={(text) => setValue(text)}
+                  // value={value as string}
+                  onChangeText={(text) => setValue(text, value as string)}
                 />
               )}
               <View style={styles.modalButtons}>
                 <TouchableOpacity style={styles.modalButton} onPress={onClose}>
                   <Text style={styles.modalButtonTexts}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.modalButton} onPress={onSave}>
+                <TouchableOpacity style={styles.modalButton} onPress={()=>onSave(title)}>
                   <Text style={styles.modalButtonText}>OK</Text>
                 </TouchableOpacity>
               </View>
@@ -152,4 +167,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomModal;
+export default AnimalEditModal ;
