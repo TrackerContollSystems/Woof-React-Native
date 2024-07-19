@@ -67,7 +67,7 @@ export default function AnimalInfo() {
       ...prevState,
       [type]: val,
     }));
-  }
+  };
   
   const openModal = (value: string | null | number, title: string) => {
     setCurrentValue(value);
@@ -97,33 +97,73 @@ export default function AnimalInfo() {
     console.log(animalId, field);
     await breedMutation.mutateAsync(animalId, field);
   };
+  // const handleSave = async (caseTitle: string) => {
+  //   try {
+  //     setModalVisible(false);
+  //     switch (caseTitle) {
+  //       case "Name":
+  //         await UpdateAnimalName(animalId, animalInfoEdit.name);
+  //         break;
+  //       case "Date Of Birth":
+  //         await UpdateAnimalBirth(animalId, animalInfoEdit.birthDate);
+  //         break;
+  //       case "Species":
+  //         await handleBreedMutation(animalId, animalInfoEdit.specie);
+  //         break;
+  //       case "Breed":
+  //         await UpdateAnimalBreed(animalId, animalInfoEdit.breed);
+  //         break;
+  //       case "Color":
+  //         await UpdateAnimalColor(animalId, animalInfoEdit.color);
+  //         break;
+  //       default:
+  //         break;
+
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to update animal info:", error);
+  //   }
+  // };
+
   const handleSave = async (caseTitle: string) => {
     try {
       setModalVisible(false);
+      let updateFn;
+  
       switch (caseTitle) {
         case "Name":
-          await UpdateAnimalName(animalId, animalInfoEdit.name);
+          updateFn = UpdateAnimalName;
           break;
         case "Date Of Birth":
-          await UpdateAnimalBirth(animalId, animalInfoEdit.birthDate);
+          updateFn = UpdateAnimalBirth;
           break;
         case "Species":
-          await handleBreedMutation(animalId, animalInfoEdit.specie);
+          updateFn = UpdateAnimalSpecie;
           break;
         case "Breed":
-          await UpdateAnimalBreed(animalId, animalInfoEdit.breed);
+          updateFn = UpdateAnimalBreed;
           break;
         case "Color":
-          await UpdateAnimalColor(animalId, animalInfoEdit.color);
+          updateFn = UpdateAnimalColor;
           break;
         default:
-          break;
-
+          return;
       }
+  
+  
+      const updatedInfo = await updateFn(animalId, animalInfoEdit[caseTitle.toLowerCase() as keyof AnimalTypes]);
+  
+      // Update the state with the new data
+      setAnimalInfoEdit((prevState) => ({
+        ...prevState,
+        [caseTitle.toLowerCase()]: updatedInfo,
+      }));
+      
     } catch (error) {
       console.error("Failed to update animal info:", error);
     }
   };
+
 
   const selectGender = (selectedGender: string) => {
     setAnimalInfoEdit((state: AnimalTypes) => ({
@@ -169,8 +209,8 @@ export default function AnimalInfo() {
             <GenericInput
               key={index}
               title={field.title ? field.title : field.caseType}
-              // value={field.value}
-              value={animalInfoEdit[field.value]}
+              value={field.value}
+              // value={animalInfoEdit[field.value]}
               onPress={() => openModal(field.value, field.caseType)}
             />
           ))}

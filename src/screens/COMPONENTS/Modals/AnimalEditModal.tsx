@@ -30,13 +30,21 @@ const AnimalEditModal: React.FC<AnimalEditModalProps> = ({
   value,
   setValue,
 }) => {
-  const handleChange = (event: any, selectedDate?: Date ) => {
-    if (selectedDate) {
-      setValue(selectedDate.toISOString().split("T")[0], value as string);
-    }
-      setValue(event.text, value as string);
+  // const handleChange = (event: any, selectedDate?: Date ) => {
+  //   if (selectedDate) {
+  //     setValue(selectedDate.toISOString().split("T")[0], value as string);
+  //   }
+  //     setValue(event.text, value as string);
   
+  // };
+  const handleChange = (event: any, selectedDate?: Date) => {
+    if (title === "Date Of Birth" && selectedDate) {
+      setValue(selectedDate.toISOString().split("T")[0], title);
+    } else {
+      setValue(event?.text ?? '', title);
+    }
   };
+  
 
  
 
