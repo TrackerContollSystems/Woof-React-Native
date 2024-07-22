@@ -348,8 +348,8 @@ export default function AnimalInfo() {
           onSave={handleSave}
           title={modalTitle}
           value={currentValue}
-          // value={animalInfoEdit.specie} 
           setValue={handleAnimalInfoEdit}
+             // value={animalInfoEdit.specie} 
           // value={animalInfoEdit[currentField]}
           // field={currentField}
         />
@@ -458,3 +458,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
+
+
+
+

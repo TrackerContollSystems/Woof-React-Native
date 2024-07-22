@@ -15,6 +15,7 @@ import { UseUiContext } from "../../../Contexts/UiContext";
 import { useQuery } from "@tanstack/react-query";
 import { GetAnimalDetailsById } from "../../../API/User/GetAnimalDetailsByUserRequest";
 import LoadingAnimation from "../../COMPONENTS/animations/LoadingAnimation";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface RouteParams {
   photoUri: string;
@@ -59,7 +60,6 @@ export default function AnimalInfoDocuments() {
   });
 
   const { data, isPending, isError, isSuccess } = SingleAnimalData;
- 
 
   // React.useEffect(()=>{console.log( data)},[data])
   React.useLayoutEffect(() => {
@@ -118,6 +118,12 @@ export default function AnimalInfoDocuments() {
                   }}
                   source={{ uri: data.icon }}
                 />
+                <Pressable style={styles.cancelButton}>
+                  <Image
+                    source={require("../../../assets/TabNavigateIcons/edit.png")}
+                    style={{ width: 24, height: 24 }}
+                  />
+                </Pressable>
               </TouchableOpacity>
               <View></View>
               <TouchableOpacity style={styles.iconContainer}>
@@ -331,5 +337,10 @@ const styles = StyleSheet.create({
     left: 10,
     color: "grey",
     marginBottom: 5,
+  },
+  cancelButton: {
+    position: "absolute",
+    top: 1,
+    right: 2,
   },
 });

@@ -114,12 +114,26 @@ const AnimalEditModal: React.FC<AnimalEditModalProps> = ({
                   onChangeText={(text) => setValue(text, value as string)}
                 />
               )}
-              <View style={styles.modalButtons}>
+              {/* <View style={styles.modalButtons}>
                 <TouchableOpacity style={styles.modalButton} onPress={onClose}>
                   <Text style={styles.modalButtonTexts}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.modalButton} onPress={()=>onSave(title)}>
                   <Text style={styles.modalButtonText}>OK</Text>
+                </TouchableOpacity>
+              </View> */}
+                <View style={styles.modalButtonContainer}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalCancelButton]}
+                  onPress={onClose}
+                >
+                  <Text style={styles.modalButtonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalSaveButton]}
+                  onPress={() => onSave(title)}
+                >
+                  <Text style={styles.modalButtonText}>Save</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -163,15 +177,32 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   modalButton: {
-    padding: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 5,
+    
   },
   modalButtonText: {
-    fontSize: 16,
-    color: "green",
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
   },
   modalButtonTexts: {
     fontSize: 16,
     color: "red",
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+    marginTop: 20,
+  },
+  modalCancelButton: {
+    backgroundColor: "red",
+    right: 2
+  },
+  modalSaveButton: {
+    backgroundColor: "green",
   },
 });
 
