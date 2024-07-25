@@ -114,14 +114,6 @@ const AnimalEditModal: React.FC<AnimalEditModalProps> = ({
                   onChangeText={(text) => setValue(text, value as string)}
                 />
               )}
-              {/* <View style={styles.modalButtons}>
-                <TouchableOpacity style={styles.modalButton} onPress={onClose}>
-                  <Text style={styles.modalButtonTexts}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalButton} onPress={()=>onSave(title)}>
-                  <Text style={styles.modalButtonText}>OK</Text>
-                </TouchableOpacity>
-              </View> */}
                 <View style={styles.modalButtonContainer}>
                 <TouchableOpacity
                   style={[styles.modalButton, styles.modalCancelButton]}
